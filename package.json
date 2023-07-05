@@ -1,0 +1,65 @@
+{
+    "name": "hora",
+    "productName": "hora",
+    "version": "2.0.0",
+    "description": "An utility app",
+    "main": ".webpack/main",
+    "scripts": {
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "publish": "electron-forge publish",
+        "lint": "eslint --ext .ts,.tsx .",
+        "format": "prettier --write ."
+    },
+    "keywords": [
+        "timetable"
+    ],
+    "author": {
+        "name": "Cibi",
+        "email": "94194323+cbxdv@users.noreply.github.com"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@electron-forge/cli": "^6.2.1",
+        "@electron-forge/maker-deb": "^6.2.1",
+        "@electron-forge/maker-dmg": "^6.2.1",
+        "@electron-forge/maker-rpm": "^6.2.1",
+        "@electron-forge/maker-squirrel": "^6.2.1",
+        "@electron-forge/maker-zip": "^6.2.1",
+        "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
+        "@electron-forge/plugin-webpack": "^6.2.1",
+        "@electron-forge/publisher-github": "^6.2.1",
+        "@svgr/webpack": "^8.0.1",
+        "@types/react": "^18.2.14",
+        "@types/react-dom": "^18.2.6",
+        "@types/styled-components": "^5.1.26",
+        "@typescript-eslint/eslint-plugin": "^5.0.0",
+        "@typescript-eslint/parser": "^5.0.0",
+        "@vercel/webpack-asset-relocator-loader": "1.7.3",
+        "css-loader": "^6.0.0",
+        "electron": "25.2.0",
+        "electron-is-dev": "^2.0.0",
+        "eslint": "^8.0.1",
+        "eslint-plugin-import": "^2.25.0",
+        "file-loader": "^6.2.0",
+        "fork-ts-checker-webpack-plugin": "^7.2.13",
+        "node-loader": "^2.0.0",
+        "prettier": "^2.8.8",
+        "style-loader": "^3.0.0",
+        "ts-loader": "^9.2.2",
+        "ts-node": "^10.0.0",
+        "typescript": "~4.5.4",
+        "url-loader": "^4.1.1"
+    },
+    "dependencies": {
+        "@reduxjs/toolkit": "^1.9.5",
+        "electron-squirrel-startup": "^1.0.0",
+        "electron-store": "^8.1.0",
+        "nanoid": "^4.0.2",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-redux": "^8.1.1",
+        "styled-components": "^6.0.1"
+    }
+}

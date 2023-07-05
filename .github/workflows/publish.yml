@@ -1,0 +1,61 @@
+name: Build & Publish
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build-macos:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v1
+
+            - name: Use Node.js 16.x
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16.x
+
+            - name: install dependencies
+              run: yarn
+
+            - name: build
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: yarn electron-forge publish --platform=darwin
+
+    build-windows:
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v1
+
+            - name: Use Node.js 16.x
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16.x
+
+            - name: install dependencies
+              run: yarn
+
+            - name: build
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: yarn electron-forge publish --platform=win32
+
+    build-linux:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+
+            - name: Use Node.js 16.x
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16.x
+
+            - name: install dependencies
+              run: yarn
+
+            - name: build
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: yarn electron-forge publish --platform=linux
