@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import * as s from './styles'
+import { getPixelsToScrollInList } from '../../utilities/styleUtils'
 
 const TimeSelector: React.FC<TimeInputProps> = ({
     hours,
@@ -10,10 +11,14 @@ const TimeSelector: React.FC<TimeInputProps> = ({
     setAmpm,
     closeHandler
 }) => {
-    const ref = useRef<HTMLDivElement>(null)
+    const selectorRef = useRef<HTMLDivElement>(null)
+    const hoursRef = useRef<HTMLDivElement>(null)
+    const hoursSelectedRef = useRef<HTMLDivElement>(null)
+    const minsRef = useRef<HTMLDivElement>(null)
+    const minsSelectedRef = useRef<HTMLDivElement>(null)
 
     const handleClickOutside = (event: MouseEvent) => {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
+        if (selectorRef.current && !selectorRef.current.contains(event.target as Node)) {
             event.stopPropagation()
             closeHandler()
         }
@@ -29,6 +34,19 @@ const TimeSelector: React.FC<TimeInputProps> = ({
     useEffect(() => {
         document.addEventListener('click', handleClickOutside, true)
         document.addEventListener('keydown', keyBindHandler, true)
+
+        // Brings selected items into the view
+        setTimeout(() => {
+            if (hoursRef?.current && hoursSelectedRef?.current) {
+                const position = getPixelsToScrollInList(hoursRef, hoursSelectedRef)
+                hoursRef.current.scrollTo({ top: position, behavior: 'smooth' })
+            }
+            if (minsRef?.current && minsSelectedRef?.current) {
+                const position = getPixelsToScrollInList(minsRef, minsSelectedRef)
+                minsRef.current.scrollTo({ top: position, behavior: 'smooth' })
+            }
+        }, 100)
+
         return () => {
             document.removeEventListener('click', handleClickOutside, true)
             document.removeEventListener('keydown', keyBindHandler, true)
@@ -42,6 +60,7 @@ const TimeSelector: React.FC<TimeInputProps> = ({
                 <s.DropdownItem
                     onClick={() => setHours(i)}
                     $selected={i === hours}
+                    ref={i === hours ? hoursSelectedRef : null}
                     key={i}
                     style={{ justifyContent: 'center' }}
                 >
@@ -59,6 +78,7 @@ const TimeSelector: React.FC<TimeInputProps> = ({
                 <s.DropdownItem
                     onClick={() => setMinutes(i)}
                     $selected={i === minutes}
+                    ref={i === minutes ? minsSelectedRef : null}
                     key={i}
                     style={{ justifyContent: 'center' }}
                 >
@@ -70,9 +90,9 @@ const TimeSelector: React.FC<TimeInputProps> = ({
     }
 
     return (
-        <s.TimeInputContainer ref={ref}>
-            <s.TimeInputComponent>{generateHours()}</s.TimeInputComponent>
-            <s.TimeInputComponent>{generateMinutes()}</s.TimeInputComponent>
+        <s.TimeInputContainer ref={selectorRef}>
+            <s.TimeInputComponent ref={hoursRef}>{generateHours()}</s.TimeInputComponent>
+            <s.TimeInputComponent ref={minsRef}>{generateMinutes()}</s.TimeInputComponent>
             <s.TimeInputComponent>
                 {['AM', 'PM'].map((m) => (
                     <s.DropdownItem

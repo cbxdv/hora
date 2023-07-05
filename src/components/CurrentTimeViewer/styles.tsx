@@ -1,5 +1,5 @@
 import { styled } from 'styled-components'
-import { flexCenter } from '../../styles/styleUtils'
+import { flexCenter } from '../../styles/styleDefinitions'
 
 export const TimeContainer = styled.div`
     ${flexCenter({ flexDirection: 'column' })};

@@ -1,6 +1,6 @@
 import { styled } from 'styled-components'
 import { motion } from 'framer-motion'
-import { buttonStyles, flexCenter } from '../../styles/styleUtils'
+import { buttonStyles, flexCenter } from '../../styles/styleDefinitions'
 
 export const IconButtonContainer = styled(motion.button).attrs(() => ({
     whileHover: { filter: 'invert(8%)' },

@@ -1,6 +1,6 @@
 import { styled } from 'styled-components'
 import { motion } from 'framer-motion'
-import { flexCenter } from '../../styles/styleUtils'
+import { flexCenter } from '../../styles/styleDefinitions'
 
 export const SettingsContainer = styled.div`
     width: 100%;

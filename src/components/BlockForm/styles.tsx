@@ -1,5 +1,5 @@
 import { styled } from 'styled-components'
-import { flexCenter, subtleBorder } from '../../styles/styleUtils'
+import { flexCenter, subtleBorder } from '../../styles/styleDefinitions'
 
 export const BlockFormContainer = styled.div`
     height: 100%;
