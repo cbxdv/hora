@@ -6,6 +6,7 @@ const GlobalStyles = createGlobalStyle`
         padding: 0;
         box-sizing: border-box;
         scroll-behavior: smooth;
+        transition: background-color .3s linear;
     }
 
     *::-webkit-scrollbar {

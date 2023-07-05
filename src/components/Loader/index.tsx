@@ -1,8 +1,11 @@
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
 
 const Loader = () => <Ring />
 
-const Ring = styled.div`
+const Ring = styled(motion.div).attrs(() => ({
+    exit: { opacity: 0 }
+}))`
     display: inline-block;
     width: 80px;
     height: 80px;
@@ -18,6 +21,7 @@ const Ring = styled.div`
         border-color: #ffffff transparent #ffffff transparent;
         animation: ring-animation 1.2s linear infinite;
     }
+
     @keyframes ring-animation {
         0% {
             transform: rotate(0deg);

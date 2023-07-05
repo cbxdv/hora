@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import TextButton from '../TextButton'
 import { ITimeBlockBase, dayIdTypes } from '../../@types/TimeBlockInterfaces'
 import Modal from '../Modal'
@@ -152,6 +153,7 @@ const BlockForm = () => {
                     <s.TitleInput
                         value={title}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                        autoFocus
                     />
                     {title.length === 0 && <s.TitlePlaceholder>Enter a title</s.TitlePlaceholder>}
                 </s.TitleContainer>
@@ -167,14 +169,16 @@ const BlockForm = () => {
                             >
                                 <ArrowDownIcon />
                             </s.InputValueArrowContainer>
-                            {isDayDDVisible && (
-                                <ValueDropdown
-                                    selected={day}
-                                    items={dayDropItems}
-                                    selectHandler={(value: number) => setDay(value as dayIdTypes)}
-                                    closeHandler={() => setIsDayDDVisible(false)}
-                                />
-                            )}
+                            <AnimatePresence>
+                                {isDayDDVisible && (
+                                    <ValueDropdown
+                                        selected={day}
+                                        items={dayDropItems}
+                                        selectHandler={(value: number) => setDay(value as dayIdTypes)}
+                                        closeHandler={() => setIsDayDDVisible(false)}
+                                    />
+                                )}
+                            </AnimatePresence>
                         </s.InputValue>
                     </s.InputContainer>
 
@@ -192,17 +196,19 @@ const BlockForm = () => {
                             >
                                 <ArrowDownIcon />
                             </s.InputValueArrowContainer>
-                            {isStartTimeDDVisible && (
-                                <TimeSelector
-                                    hours={startHours}
-                                    setHours={setStartHours}
-                                    minutes={startMinutes}
-                                    setMinutes={setStartMinutes}
-                                    ampm={startAmpm}
-                                    setAmpm={setStartAmpm}
-                                    closeHandler={() => setIsStartTimeDDVisible(false)}
-                                />
-                            )}
+                            <AnimatePresence>
+                                {isStartTimeDDVisible && (
+                                    <TimeSelector
+                                        hours={startHours}
+                                        setHours={setStartHours}
+                                        minutes={startMinutes}
+                                        setMinutes={setStartMinutes}
+                                        ampm={startAmpm}
+                                        setAmpm={setStartAmpm}
+                                        closeHandler={() => setIsStartTimeDDVisible(false)}
+                                    />
+                                )}
+                            </AnimatePresence>
                         </s.InputValue>
                     </s.InputContainer>
 
@@ -217,17 +223,19 @@ const BlockForm = () => {
                             <s.InputValueArrowContainer $isVisible={isEndTimeDDVisible}>
                                 <ArrowDownIcon />
                             </s.InputValueArrowContainer>
-                            {isEndTimeDDVisible && (
-                                <TimeSelector
-                                    hours={endHours}
-                                    setHours={setEndHours}
-                                    minutes={endMinutes}
-                                    setMinutes={setEndMinutes}
-                                    ampm={endAmpm}
-                                    setAmpm={setEndAmpm}
-                                    closeHandler={() => setIsEndTimeDDVisible(false)}
-                                />
-                            )}
+                            <AnimatePresence>
+                                {isEndTimeDDVisible && (
+                                    <TimeSelector
+                                        hours={endHours}
+                                        setHours={setEndHours}
+                                        minutes={endMinutes}
+                                        setMinutes={setEndMinutes}
+                                        ampm={endAmpm}
+                                        setAmpm={setEndAmpm}
+                                        closeHandler={() => setIsEndTimeDDVisible(false)}
+                                    />
+                                )}
+                            </AnimatePresence>
                         </s.InputValue>
                     </s.InputContainer>
 
@@ -251,13 +259,15 @@ const BlockForm = () => {
                             >
                                 <ArrowDownIcon />
                             </s.InputValueArrowContainer>
-                            {isColorDDVisible && (
-                                <ColorSelector
-                                    selected={color}
-                                    changeHandler={(selectedColor: string) => setColor(selectedColor)}
-                                    closeHandler={() => setIsColorDDVisible(false)}
-                                />
-                            )}
+                            <AnimatePresence>
+                                {isColorDDVisible && (
+                                    <ColorSelector
+                                        selected={color}
+                                        changeHandler={(selectedColor: string) => setColor(selectedColor)}
+                                        closeHandler={() => setIsColorDDVisible(false)}
+                                    />
+                                )}
+                            </AnimatePresence>
                         </s.InputValue>
                     </s.InputContainer>
                 </s.BodySectionContainer>

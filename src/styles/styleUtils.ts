@@ -31,10 +31,10 @@ export function flexCenter(options: FlexCenterInterface = {}) {
 }
 
 /**
- * Provides a border for the element when in light theme
+ * Provides a border for the subtle & easy border for the element
  */
-export const lightBorder = () => css`
-    border: 0.1px solid ${({ theme }) => (theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `transparent`)};
+export const subtleBorder = css`
+    border: 0.1px solid ${({ theme }) => (theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.05)`)};
 `
 
 export const buttonStyles = (danger?: boolean) => css`
@@ -49,13 +49,5 @@ export const buttonStyles = (danger?: boolean) => css`
     font-weight: 500;
     border-radius: 8px;
     cursor: pointer;
-    ${lightBorder()};
-
-    &:hover {
-        background-color: ${({ theme }) => (danger ? `rgba(179, 77, 78, 0.25)` : theme.hover)};
-    }
-
-    &:active {
-        background-color: ${({ theme }) => (danger ? `rgba(169, 67, 68, 0.25)` : theme.active)};
-    }
+    ${subtleBorder};
 `

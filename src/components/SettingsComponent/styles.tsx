@@ -1,5 +1,6 @@
 import { styled } from 'styled-components'
-import { flexCenter, lightBorder } from '../../styles/styleUtils'
+import { motion } from 'framer-motion'
+import { flexCenter } from '../../styles/styleUtils'
 
 export const SettingsContainer = styled.div`
     width: 100%;
@@ -16,26 +17,21 @@ export const SettingsSidebar = styled.div`
     }
 `
 
-export const SidebarItem = styled.li<{ $selected?: boolean }>`
+export const SidebarItem = styled(motion.li).attrs(({ theme }) => ({
+    whileHover: {
+        borderColor: `${theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}`
+    }
+}))<{ $selected?: boolean }>`
     height: 25px;
     width: 120px;
     margin: 5px 0;
-    background: ${(props) => (props.$selected ? props.theme.shade2 : `transparent`)};
+    background-color: ${(props) => (props.$selected ? props.theme.hover : `transparent`)};
     border: 0.1px solid transparent;
-    ${(props) => (props.$selected ? lightBorder() : ``)};
     font-size: 12px;
     border-radius: 8px;
     ${flexCenter({ justifyContent: 'flex-start' })};
     padding: 10px;
-    z-index: 2;
-
-    &:hover {
-        background: ${({ theme }) => theme.hover};
-    }
-
-    &:active {
-        background: ${({ theme }) => theme.active};
-    }
+    cursor: pointer;
 `
 
 export const SettingsMain = styled.div`
@@ -157,3 +153,9 @@ export const AboutLink = styled.div`
         margin-right: 5px;
     }
 `
+
+export const SettingsComponentItem = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 }
+}))``

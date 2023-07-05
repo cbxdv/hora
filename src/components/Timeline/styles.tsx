@@ -11,7 +11,7 @@ export const TimelineStarter = styled.div`
     background-color: ${(props) => props.theme.background};
     position: sticky;
     top: 90px;
-    z-index: 2;
+    z-index: 1;
 `
 
 export const TimelineContainer = styled.div`
@@ -22,7 +22,6 @@ export const TimelineContainer = styled.div`
 
     p {
         transform: translateY(-50%);
-        z-index: 1;
     }
 
     & p:first-of-type {

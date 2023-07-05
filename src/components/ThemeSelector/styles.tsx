@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
 import { flexCenter } from '../../styles/styleUtils'
 
 export const ThemeSelectorContainer = styled.div`
@@ -8,7 +9,10 @@ export const ThemeSelectorContainer = styled.div`
     margin-bottom: 5px;
 `
 
-export const ThemeButton = styled.div<{ $selected?: boolean }>`
+export const ThemeButton = styled(motion.div).attrs(({ theme }) => ({
+    whileHover: { borderColor: `${theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}` },
+    whileTap: { filter: 'invert(15%)', scale: 0.98 }
+}))<{ $selected?: boolean }>`
     width: 90px;
     border-radius: 8px;
     margin: 0 10px;
@@ -17,10 +21,7 @@ export const ThemeButton = styled.div<{ $selected?: boolean }>`
     cursor: pointer;
     transition: 0.1s transform linear;
     position: relative;
-
-    &:active {
-        transform: scale(0.96);
-    }
+    scale: 1;
 `
 
 export const ThemeButtonImage = styled.div`

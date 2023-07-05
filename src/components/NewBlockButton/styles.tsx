@@ -1,10 +1,15 @@
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
 import { buttonStyles } from '../../styles/styleUtils'
 
-export const NewBlockButtonContainer = styled.div`
+export const NewBlockButtonContainer = styled(motion.button).attrs(() => ({
+    whileHover: { filter: 'invert(8%)' },
+    whileTap: { filter: 'invert(15%)', scale: 0.98 }
+}))`
     ${buttonStyles()};
     height: 36px;
     font-size: 14px;
+    scale: 1;
 `
 
 export const ButtonIconContainer = styled.div`

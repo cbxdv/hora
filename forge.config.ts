@@ -22,7 +22,7 @@ const config: ForgeConfig = {
     makers: [
         new MakerSquirrel({
             name: 'hora',
-            iconUrl: 'https://raw.githubusercontent.com/cbxdv/hora/master/build/icon.ico',
+            iconUrl: 'https://raw.githubusercontent.com/cbxdv/hora/main/build/icon.ico',
             setupIcon: './build/icon.ico'
         }),
         new MakerZIP({}),

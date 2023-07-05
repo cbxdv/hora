@@ -1,10 +1,15 @@
 import { styled } from 'styled-components'
+import { motion } from 'framer-motion'
 import { buttonStyles, flexCenter } from '../../styles/styleUtils'
 
-export const IconButtonContainer = styled.button<{ $size: number }>`
+export const IconButtonContainer = styled(motion.button).attrs(() => ({
+    whileHover: { filter: 'invert(8%)' },
+    whileTap: { filter: 'invert(15%)', scale: 0.98 }
+}))<{ $size: number }>`
     ${buttonStyles()};
     width: ${({ $size }) => $size}px;
     height: ${({ $size }) => $size}px;
+    scale: 1;
 `
 
 export const IconContainer = styled.div`

@@ -12,16 +12,26 @@ const TimeSelector: React.FC<TimeInputProps> = ({
 }) => {
     const ref = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (ref.current && !ref.current.contains(event.target as Node)) {
-                event.stopPropagation()
-                closeHandler(false)
-            }
+    const handleClickOutside = (event: MouseEvent) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+            event.stopPropagation()
+            closeHandler()
         }
+    }
+
+    const keyBindHandler = (event: KeyboardEvent) => {
+        event.stopPropagation()
+        if (event.key === 'Escape') {
+            closeHandler()
+        }
+    }
+
+    useEffect(() => {
         document.addEventListener('click', handleClickOutside, true)
+        document.addEventListener('keydown', keyBindHandler, true)
         return () => {
             document.removeEventListener('click', handleClickOutside, true)
+            document.removeEventListener('keydown', keyBindHandler, true)
         }
     }, [])
 
@@ -88,7 +98,7 @@ type TimeInputProps = {
     setMinutes: (newMinutes: number) => void
     ampm: 'am' | 'pm'
     setAmpm: (newAmpm: 'am' | 'pm') => void
-    closeHandler: (value: boolean) => void
+    closeHandler: () => void
 }
 
 export default TimeSelector

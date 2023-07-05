@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import Modal from '../Modal'
 import { useAppDispatch } from '../../redux/store'
 import { hideSettings } from '../../redux/slices/appSlice'
@@ -41,7 +42,9 @@ const SettingsComponent = () => {
                         </s.SidebarItem>
                     </ul>
                 </s.SettingsSidebar>
-                <s.SettingsMain>{getCurrentTab()}</s.SettingsMain>
+                <s.SettingsMain>
+                    <AnimatePresence>{getCurrentTab()}</AnimatePresence>
+                </s.SettingsMain>
             </s.SettingsContainer>
         </Modal>
     )

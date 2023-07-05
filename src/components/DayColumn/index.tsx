@@ -1,4 +1,5 @@
 import TimeBlock from '../TimeBlock'
+import { AnimatePresence } from 'framer-motion'
 import { convertDayIdToName } from '../../utilities/blockTimeUtils'
 import { useAppSelector } from '../../redux/store'
 import { selectBlocksByDayId } from '../../redux/slices/timetableSlice'
@@ -12,9 +13,11 @@ const DayColumn: React.FC<DayColumnProps> = ({ dayId }) => {
         <s.DayColumnContainer $dayId={dayId}>
             <s.DayIndicator $today={dayId === new Date().getDay()}>{convertDayIdToName(dayId)}</s.DayIndicator>
             <s.BlocksContainer>
-                {blocks.map((block) => (
-                    <TimeBlock key={block.id} timeBlock={block} />
-                ))}
+                <AnimatePresence>
+                    {blocks.map((block) => (
+                        <TimeBlock key={block.id} timeBlock={block} />
+                    ))}
+                </AnimatePresence>
                 {new Date().getDay() === dayId && <CurrentTimeLine />}
             </s.BlocksContainer>
         </s.DayColumnContainer>

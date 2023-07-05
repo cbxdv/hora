@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { ThemeProvider, styled } from 'styled-components'
+import { AnimatePresence, motion } from 'framer-motion'
 import GlobalStyles from './styles/globalStyles'
 import { lightThemeColors, darkThemeColors } from './styles/styleConstants'
 import WeekViewer from './components/WeekViewer'
@@ -34,7 +35,7 @@ const App = () => {
     }, [])
 
     return (
-        <>
+        <AnimatePresence>
             {isLoading ? (
                 <Loader />
             ) : (
@@ -47,7 +48,7 @@ const App = () => {
                     </AppMain>
                 </ThemeProvider>
             )}
-        </>
+        </AnimatePresence>
     )
 }
 
@@ -61,6 +62,9 @@ const ModalsContainer = () => {
         if (isBlockFormVisible || isSettingsVisible) {
             return
         }
+        if (!event.ctrlKey) {
+            return
+        }
         switch (event.key.toLowerCase()) {
             case 'a':
                 dispatch(showBlockForm())
@@ -69,7 +73,7 @@ const ModalsContainer = () => {
                 dispatch(showSettings())
                 break
             case 'l':
-                event.ctrlKey && dispatch(toggleTheme())
+                dispatch(toggleTheme())
                 break
         }
     }
@@ -79,17 +83,22 @@ const ModalsContainer = () => {
         return () => {
             window.removeEventListener('keydown', keyBindHandler)
         }
-    }, [])
+    }, [isBlockFormVisible, isSettingsVisible])
 
     return (
-        <>
-            {isBlockFormVisible && <BlockForm />}
-            {isSettingsVisible && <SettingsComponent />}
-        </>
+        <AnimatePresence>
+            {isBlockFormVisible && <BlockForm key='modal' />}
+            {isSettingsVisible && <SettingsComponent key='modal' />}
+        </AnimatePresence>
     )
 }
 
-const AppMain = styled.div`
+const AppMain = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { delayChildren: 0.3 } },
+    exit: { opacity: 0 },
+    transition: { duration: 0.2 }
+}))`
     background: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
 `

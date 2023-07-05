@@ -3,6 +3,7 @@ import { ITimeBlock } from '../../@types/TimeBlockInterfaces'
 import ContextMenu from '../ContextMenu'
 import { blockTimeTo12HourStr } from '../../utilities/blockTimeUtils'
 import { useAppDispatch } from '../../redux/store'
+import { AnimatePresence } from 'framer-motion'
 import {
     blockDeleted,
     showBlockForm,
@@ -54,44 +55,46 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
 
     return (
         <>
-            {isContextMenuVisible && (
-                <ContextMenu
-                    menuItems={[
-                        {
-                            id: 'edit',
-                            name: 'Edit',
-                            icon: EditIcon,
-                            action: () => {
-                                setIsContextMennuVisible(false)
-                                dispatch(updateSelectedBlock(timeBlock))
-                                dispatch(showBlockForm())
-                            }
-                        },
-                        {
-                            id: 'duplicate',
-                            name: 'Duplicate',
-                            icon: DuplicateIcon,
-                            action: () => {
-                                setIsContextMennuVisible(false)
-                                dispatch(updateDuplicateBlock(timeBlock))
-                                dispatch(showBlockForm())
-                            }
-                        },
-                        {
-                            id: 'delete',
-                            name: 'Delete',
-                            icon: TrashIcon,
-                            action: () => {
-                                setIsContextMennuVisible(false)
-                                dispatch(blockDeleted({ day: timeBlock.day, id: timeBlock.id }))
+            <AnimatePresence>
+                {isContextMenuVisible && (
+                    <ContextMenu
+                        menuItems={[
+                            {
+                                id: 'edit',
+                                name: 'Edit',
+                                icon: EditIcon,
+                                action: () => {
+                                    setIsContextMennuVisible(false)
+                                    dispatch(updateSelectedBlock(timeBlock))
+                                    dispatch(showBlockForm())
+                                }
                             },
-                            danger: true
-                        }
-                    ]}
-                    position={mousePos}
-                    closeHandler={() => setIsContextMennuVisible(false)}
-                />
-            )}
+                            {
+                                id: 'duplicate',
+                                name: 'Duplicate',
+                                icon: DuplicateIcon,
+                                action: () => {
+                                    setIsContextMennuVisible(false)
+                                    dispatch(updateDuplicateBlock(timeBlock))
+                                    dispatch(showBlockForm())
+                                }
+                            },
+                            {
+                                id: 'delete',
+                                name: 'Delete',
+                                icon: TrashIcon,
+                                action: () => {
+                                    setIsContextMennuVisible(false)
+                                    dispatch(blockDeleted({ day: timeBlock.day, id: timeBlock.id }))
+                                },
+                                danger: true
+                            }
+                        ]}
+                        position={mousePos}
+                        closeHandler={() => setIsContextMennuVisible(false)}
+                    />
+                )}
+            </AnimatePresence>
             <s.TimeBlockContainer
                 $blockHeight={getBlockHeight()}
                 $blockColor={timeBlock.color}

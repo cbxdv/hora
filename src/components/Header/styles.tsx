@@ -14,7 +14,7 @@ export const HeaderContainer = styled.div`
     padding: 10px 60px;
     position: fixed;
     top: 0;
-    z-index: 2;
+    z-index: 1;
 `
 
 export const DetailsContainer = styled.div`

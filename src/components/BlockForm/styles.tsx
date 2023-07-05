@@ -1,5 +1,5 @@
 import { styled } from 'styled-components'
-import { flexCenter, lightBorder } from '../../styles/styleUtils'
+import { flexCenter, subtleBorder } from '../../styles/styleUtils'
 
 export const BlockFormContainer = styled.div`
     height: 100%;
@@ -75,7 +75,7 @@ export const InputValue = styled.div`
     font-size: 13px;
     padding: 5px 10px;
     position: relative;
-    ${lightBorder()}
+    ${subtleBorder}
 `
 
 export const InputValueArrowContainer = styled.button<{ $isVisible: boolean }>`
@@ -103,7 +103,7 @@ export const DropdownItem = styled.div<{ $selected: boolean }>`
     padding: 0 10px;
     font-size: 12px;
     border-radius: 8px;
-    background-color: ${(props) => (props.$selected ? `${props.theme.active}` : `transparent`)};
+    background-color: ${(props) => (props.$selected ? `${props.theme.hover}` : `transparent`)};
 
     &:hover {
         background-color: ${(props) => props.theme.hover};

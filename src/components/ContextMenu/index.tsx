@@ -42,12 +42,14 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ menuItems, position, closeHan
     }
 
     useEffect(() => {
+        document.addEventListener('scroll', closeHandler, true)
         document.addEventListener('mousedown', handleClickOutside, true)
-        document.addEventListener('keydown', keyBindHandler)
+        document.addEventListener('keydown', keyBindHandler, true)
         correctPositions()
         return () => {
+            document.addEventListener('scroll', closeHandler, true)
             document.removeEventListener('mousedown', handleClickOutside, true)
-            document.removeEventListener('keydown', keyBindHandler)
+            document.removeEventListener('keydown', keyBindHandler, true)
         }
     }, [])
 

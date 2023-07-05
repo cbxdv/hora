@@ -1,9 +1,15 @@
 import { styled } from 'styled-components'
+import { motion } from 'framer-motion'
 import { flexCenter } from '../../styles/styleUtils'
 
 export const ModalContainer = styled.div``
 
-export const ModalDrop = styled.div`
+export const ModalDrop = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.2 }
+}))`
     position: absolute;
     top: 0;
     left: 0;
@@ -14,13 +20,13 @@ export const ModalDrop = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+    z-index: 1;
 `
 
-export const ModalBody = styled.div<{ $height: string; $width: string }>`
-    height: ${(props) => props.$height};
+export const ModalBody = styled.div<{ $height?: string; $width?: string }>`
+    height: ${(props) => (props.$height != null ? `${props.$height}` : `unset`)};
     max-height: 90%;
-    width: ${(props) => props.$width};
+    width: ${(props) => (props.$width != null ? `${props.$width}` : `unset`)};
     max-width: 90%;
     padding: 30px;
     margin: auto;

@@ -1,7 +1,13 @@
 import { styled } from 'styled-components'
+import { motion } from 'framer-motion'
 import { flexCenter } from '../../styles/styleUtils'
 
-export const ContextMenuContainer = styled.div<{ $x: number; $y: number }>`
+export const ContextMenuContainer = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.08 }
+}))<{ $x: number; $y: number }>`
     min-width: 120px;
     position: fixed;
     background: ${(props) => props.theme.contextBackground};
@@ -14,7 +20,12 @@ export const ContextMenuContainer = styled.div<{ $x: number; $y: number }>`
     left: ${(props) => props.$x}px;
 `
 
-export const MenuItem = styled.div<{ $danger?: boolean }>`
+export const MenuItem = styled(motion.div).attrs(({ theme }) => ({
+    whileHover: {
+        borderColor: `${theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}`
+    },
+    whileTap: { filter: 'invert(15%)', scale: 0.98 }
+}))<{ $danger?: boolean }>`
     ${flexCenter({ justifyContent: 'flex-start' })};
     width: 100%;
     padding: 5px 10px;
@@ -24,14 +35,8 @@ export const MenuItem = styled.div<{ $danger?: boolean }>`
     font-size: 14px;
     margin-bottom: 5px;
     border: 0.1px solid transparent;
-
-    &:hover {
-        border-color: ${(props) => (props.theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`)};
-    }
-
-    &:active {
-        opacity: 0.8;
-    }
+    cursor: pointer;
+    scale: 1;
 `
 
 export const MenuItemIcon = styled.div<{ $danger?: boolean }>`

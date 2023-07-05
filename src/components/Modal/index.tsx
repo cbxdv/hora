@@ -5,6 +5,7 @@ import * as s from './styles'
 
 const Modal: React.FC<ModalProps> = ({ title, children, closeHandler, height, width }) => {
     const keyBindHandler = (event: KeyboardEvent) => {
+        event.stopPropagation()
         if (event.key === 'Escape') {
             closeHandler()
         }
@@ -41,10 +42,10 @@ const Modal: React.FC<ModalProps> = ({ title, children, closeHandler, height, wi
 
 type ModalProps = {
     title?: string
-    children: ReactNode
+    children?: ReactNode
     closeHandler: () => void
-    height: string
-    width: string
+    height?: string
+    width?: string
 }
 
 Modal.defaultProps = {

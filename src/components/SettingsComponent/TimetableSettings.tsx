@@ -20,7 +20,7 @@ const TimetableSettings = () => {
     const dayIds: dayIdTypes[] = [1, 2, 3, 4, 5, 6, 0]
 
     return (
-        <>
+        <s.SettingsComponentItem>
             <s.SettingsSection>
                 <s.SectionHeading>Days to Show</s.SectionHeading>
                 <s.SectionBodyGrid>
@@ -80,7 +80,7 @@ const TimetableSettings = () => {
                     <TextButton text='Clear all Blocks' danger onClick={() => dispatch(blocksCleared())} />
                 </s.DangerMiddle>
             </s.SettingsSection>
-        </>
+        </s.SettingsComponentItem>
     )
 }
 
