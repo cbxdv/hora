@@ -54,5 +54,11 @@ export const timetableIS: ITimetableState = {
         isBlockFormVisible: false,
         selectedBlock: null,
         blockToBeDuplicated: null
+    },
+    formCache: {
+        startTime: null,
+        endTime: null,
+        day: null,
+        subjects: []
     }
 }

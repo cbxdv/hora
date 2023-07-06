@@ -4,7 +4,7 @@ import { flexCenter } from '../../styles/styleDefinitions'
 
 export const ValueDropdownContainer = styled(motion.div).attrs(() => ({
     initial: { height: 0 },
-    animate: { height: '150px' },
+    animate: { height: 'unset' },
     exit: { height: 0 },
     transition: { duration: 0.2 }
 }))`
@@ -18,7 +18,7 @@ export const ValueDropdownContainer = styled(motion.div).attrs(() => ({
     font-size: 13px;
     padding: 0 5px;
     z-index: 1;
-    height: 150px;
+    max-height: 150px;
     overflow: scroll;
     box-shadow: ${({ theme }) => (theme.name === 'light' ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
 `

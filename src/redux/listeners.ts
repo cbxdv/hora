@@ -11,7 +11,9 @@ import {
     timetableInitialize,
     toggleDaysToShow,
     toggleTTNotification,
-    updateTTNotifyBefore
+    updateTTFormCache,
+    updateTTNotifyBefore,
+    updateTTSubjects
 } from './slices/timetableSlice'
 import {
     appInitialized,
@@ -28,11 +30,12 @@ import {
 } from './slices/appSlice'
 import { normalizeAppData, normalizeTimetableData } from '../utilities/storeUtils'
 import { themeTypes, IAppSettings } from '../@types/AppInterfaces'
-import { ITimetableDiskData } from '../@types/TimetableInterfaces'
+import { ITimetableDiskData, ITimetableFormCache, ITimetableSubject } from '../@types/TimetableInterfaces'
 import { initializeServiceData, selectNotificationData, updateServiceData } from './slices/serviceSlice'
 import { ITimeBlock, dayIdTypes } from '../@types/TimeBlockInterfaces'
 import { generateNotifObjects, startNS, stopNS } from '../utilities/notificationsUtils'
 import { INotifObject, notifyPropertiesType } from '../@types/ServiceInterfaces'
+import { estimateNextBlock, generateSubjects, updateSubjects } from '../utilities/timetableUtils'
 
 const listenerMiddleware = createListenerMiddleware<IState>()
 
@@ -69,9 +72,11 @@ listenerMiddleware.startListening({
             notifyEndBefore: timetableData.settings.notifyEndBefore
         }
         const notifObjects: INotifObject[] = generateNotifObjects(blocksForNotification, notifConfigs)
+        const timetableSubjects: ITimetableSubject[] = generateSubjects(timetableData.blocks)
 
         // Populate state with data
         listenerApi.dispatch(timetableInitialize(timetableData))
+        listenerApi.dispatch(updateTTSubjects(timetableSubjects))
         listenerApi.dispatch(initializeServiceData(notifObjects))
         listenerApi.dispatch(
             appInitialized({
@@ -159,6 +164,31 @@ listenerMiddleware.startListening({
         } else {
             api.disableAutoLogin()
         }
+    }
+})
+
+// Listener for updating form cache
+listenerMiddleware.startListening({
+    actionCreator: blockAdded,
+    effect: (action, listenerApi) => {
+        const state = listenerApi.getState()
+        const cache = estimateNextBlock(action.payload)
+        const estimatedCache: ITimetableFormCache = {
+            ...cache,
+            subjects: state.timetable.formCache.subjects
+        }
+        listenerApi.dispatch(updateTTFormCache(estimatedCache))
+    }
+})
+
+// Listener for updating subjects
+listenerMiddleware.startListening({
+    matcher: isAnyOf(blockAdded, blockUpdated),
+    effect: (action, listenerApi) => {
+        const state = listenerApi.getState()
+        const oldSubjects = state.timetable.formCache.subjects
+        const newSubjects = updateSubjects(oldSubjects, action.payload)
+        listenerApi.dispatch(updateTTSubjects(newSubjects))
     }
 })
 

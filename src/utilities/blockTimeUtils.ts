@@ -1,4 +1,4 @@
-import { IBlockTime, dayIdTypes } from '../@types/TimeBlockInterfaces'
+import { IBlockTime, ITimeBlockBase, dayIdTypes } from '../@types/TimeBlockInterfaces'
 
 /**
  * Get a 12-hour based time string
@@ -88,3 +88,44 @@ export const hours12To24 = (hours: number, ampm: 'am' | 'pm') => {
  * @returns String representing `am` or `pm`
  */
 export const getAmPm = (hours: number) => (hours < 12 ? 'am' : 'pm')
+
+/**
+ * Calculates the duration of block in minutes
+ * @param block A timeblock
+ * @returns Duration in minutes
+ */
+export const getDurationMinutes = (block: ITimeBlockBase) => {
+    const hoursDiff = block.endTime.hours - block.startTime.hours
+    let minutesDiff = 60 - block.startTime.minutes
+    minutesDiff += block.endTime.minutes
+    return hoursDiff * 60 + minutesDiff
+}
+
+type addDurationToTimeProps = (
+    block: IBlockTime,
+    day: dayIdTypes,
+    durationMinutes: number
+) => { newEndTime: IBlockTime | null; newDay: dayIdTypes }
+/**
+ * Calculates and addes duration to the block time and returns a new time and day
+ * @param block Timeblock to which the duration have to be added
+ * @param day The day at which the time is represented
+ * @param durationMinutes The amount of minutes to add to the block
+ * @returns An object with added block time and a new day ID if time exceed a threshold
+ */
+export const addDurationToTime: addDurationToTimeProps = (block, day, durationMinutes) => {
+    let { hours, minutes } = block
+    minutes += durationMinutes
+    hours += Math.floor(minutes / 60) - 1
+    minutes = minutes - Math.floor(minutes / 60) * 60
+    if (hours >= 23) {
+        return {
+            newEndTime: null,
+            newDay: ((day + 1) % 7) as dayIdTypes
+        }
+    }
+    return {
+        newEndTime: { hours, minutes },
+        newDay: day
+    }
+}

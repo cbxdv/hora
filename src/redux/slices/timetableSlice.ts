@@ -10,8 +10,10 @@ import {
     dayIdTypes
 } from '../../@types/TimeBlockInterfaces'
 import {
+    ITimetableFormCacheUpdatePayload,
     ITimetableInitPayload,
     ITimetableNotifyUpdatePayload,
+    ITimetableSubjectsUpdatePayload,
     ITimetableToggleNotifyPayload,
     IUpdateDaysPayload
 } from '../../@types/TimetableInterfaces'
@@ -90,6 +92,12 @@ const timetableSlice = createSlice({
         },
         updateDuplicateBlock(state, action: ITimeBlockPayload) {
             state.statuses.blockToBeDuplicated = action.payload
+        },
+        updateTTFormCache(state, action: ITimetableFormCacheUpdatePayload) {
+            state.formCache = action.payload
+        },
+        updateTTSubjects(state, action: ITimetableSubjectsUpdatePayload) {
+            state.formCache.subjects = action.payload
         }
     }
 })
@@ -108,7 +116,9 @@ export const {
     toggleDaysToShow,
     toggleTTNotification,
     updateTTNotifyBefore,
-    updateDuplicateBlock
+    updateDuplicateBlock,
+    updateTTFormCache,
+    updateTTSubjects
 } = timetableSlice.actions
 
 export const selectAllBlocks = (state: IState) => state.timetable.blocks
@@ -120,3 +130,4 @@ export const selectTimetableSettings = (state: IState) => state.timetable.settin
 export const selectDuplicateBlock = (state: IState) => state.timetable.statuses.blockToBeDuplicated
 export const selectBlockByCurrentDay = (state: IState) =>
     state.timetable.blocks[new Date().getDay() as dayIdTypes] as ITimeBlock[]
+export const selectFormCache = (state: IState) => state.timetable.formCache

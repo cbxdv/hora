@@ -1,7 +1,7 @@
 import { IAppSettings, themeTypes } from './AppInterfaces'
 import { INotifObject } from './ServiceInterfaces'
 import { IBlocks, ITimeBlock } from './TimeBlockInterfaces'
-import { ITimetableSettings } from './TimetableInterfaces'
+import { ITimetableFormCache, ITimetableSettings } from './TimetableInterfaces'
 
 export interface IAppState {
     statuses: {
@@ -30,6 +30,7 @@ export interface ITimetableState {
         selectedBlock: ITimeBlock | null
         blockToBeDuplicated: ITimeBlock | null
     }
+    formCache: ITimetableFormCache
 }
 
 export interface IState {

@@ -170,3 +170,9 @@ export const ButtonContainer = styled.div`
         width: 100%;
     }
 `
+
+export const SubjectContainer = styled.div`
+    width: 90%;
+    position: relative;
+    margin: auto;
+`

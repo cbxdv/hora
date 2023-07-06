@@ -59,12 +59,11 @@ const ValueDropdown: React.FC<ValueDropdownProps> = ({ selected, items, selectHa
     )
 }
 
+export type ValueDropdownItemType = { name: string; value: number }
+
 type ValueDropdownProps = {
-    selected: number
-    items: {
-        name: string
-        value: number
-    }[]
+    selected: number | null
+    items: ValueDropdownItemType[]
     selectHandler: (value: number) => void
     closeHandler: () => void
 }

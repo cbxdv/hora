@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import TextButton from '../TextButton'
-import { ITimeBlockBase, dayIdTypes } from '../../@types/TimeBlockInterfaces'
+import { IBlockTime, ITimeBlockBase, dayIdTypes } from '../../@types/TimeBlockInterfaces'
 import Modal from '../Modal'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import SubjectIcon from '../../assets/icons/Subject.svg'
@@ -12,10 +12,11 @@ import {
     blockUpdated,
     hideBlockForm,
     selectDuplicateBlock,
+    selectFormCache,
     selectSelectedBlock
 } from '../../redux/slices/timetableSlice'
 import { convertDayIdToName, getAmPm, hours12To24, hours24To12 } from '../../utilities/blockTimeUtils'
-import ValueDropdown from '../ValueDropdown'
+import ValueDropdown, { ValueDropdownItemType } from '../ValueDropdown'
 import ColorSelector from '../ColorSelector'
 import TimeSelector from '../TimeSelector'
 import * as s from './styles'
@@ -25,15 +26,21 @@ const BlockForm = () => {
 
     const oldBlock = useAppSelector(selectSelectedBlock)
     const duplicateBlock = useAppSelector(selectDuplicateBlock)
+    const formCache = useAppSelector(selectFormCache)
+    const subjects = formCache.subjects
+    const subjectList: ValueDropdownItemType[] = subjects.map((subject, index) => ({
+        name: subject.title,
+        value: index
+    }))
 
     const [title, setTitle] = useState<string>('')
     const [day, setDay] = useState<dayIdTypes>(1)
-    const [color, setColor] = useState<string>('#FFD6A5')
+    const [color, setColor] = useState<string>('#FFADAD')
     const [description, setDescription] = useState<string>('')
-    const [startHours, setStartHours] = useState<number>(1)
+    const [startHours, setStartHours] = useState<number>(8)
     const [startMinutes, setStartMinutes] = useState<number>(0)
     const [startAmpm, setStartAmpm] = useState<'am' | 'pm'>('am')
-    const [endHours, setEndHours] = useState<number>(1)
+    const [endHours, setEndHours] = useState<number>(9)
     const [endMinutes, setEndMinutes] = useState<number>(0)
     const [endAmpm, setEndAmpm] = useState<'am' | 'pm'>('am')
 
@@ -41,6 +48,10 @@ const BlockForm = () => {
     const [isColorDDVisible, setIsColorDDVisible] = useState<boolean>(false)
     const [isStartTimeDDVisible, setIsStartTimeDDVisible] = useState<boolean>(false)
     const [isEndTimeDDVisible, setIsEndTimeDDVisible] = useState<boolean>(false)
+
+    const [filteredSubjects, setFilteredSubjects] = useState<ValueDropdownItemType[]>([])
+    const [isTitleDDVisible, setIsSubjectDDVisible] = useState<boolean>(false)
+    const [selectedSubjectIndex, setSelectedSubjectIndex] = useState<number | null>(null)
 
     const checkIsInvalid = () => {
         if (title.length === 0) {
@@ -117,6 +128,18 @@ const BlockForm = () => {
         }
     }
 
+    const setBlockTimeInState = (time: IBlockTime, type: 'start' | 'end') => {
+        if (type === 'start') {
+            setStartHours(hours24To12(time.hours))
+            setStartMinutes(time.minutes)
+            setStartAmpm(getAmPm(time.hours))
+        } else if (type === 'end') {
+            setEndHours(hours24To12(time.hours))
+            setEndMinutes(time.minutes)
+            setEndAmpm(getAmPm(time.hours))
+        }
+    }
+
     useEffect(() => {
         const blockToUse = oldBlock || duplicateBlock
         if (blockToUse) {
@@ -124,14 +147,33 @@ const BlockForm = () => {
             setDay(blockToUse.day)
             setColor(blockToUse.color)
             setDescription(blockToUse.description)
-            setStartHours(hours24To12(blockToUse.startTime.hours))
-            setStartMinutes(blockToUse.startTime.minutes)
-            setStartAmpm(getAmPm(blockToUse.startTime.hours))
-            setEndHours(hours24To12(blockToUse.endTime.hours))
-            setEndMinutes(blockToUse.endTime.minutes)
-            setEndAmpm(getAmPm(blockToUse.endTime.hours))
+            setBlockTimeInState(blockToUse.startTime, 'start')
+            setBlockTimeInState(blockToUse.endTime, 'end')
+        } else {
+            if (formCache.day) setDay(formCache.day)
+            if (formCache.startTime) setBlockTimeInState(formCache.startTime, 'start')
+            if (formCache.endTime) setBlockTimeInState(formCache.endTime, 'end')
         }
+
+        // Initially use all subjects
+        setFilteredSubjects(subjectList)
     }, [])
+
+    // Filter subjects whenever there the title updates
+    useEffect(() => {
+        if (title.length !== 0) {
+            setIsSubjectDDVisible(true)
+        } else {
+            setIsSubjectDDVisible(false)
+        }
+        setFilteredSubjects(subjectList.filter((s) => s.name.toLowerCase().includes(title.toLowerCase())))
+        if (selectedSubjectIndex !== null) {
+            const selSub = subjects[selectedSubjectIndex]
+            if (title !== selSub.title) {
+                setSelectedSubjectIndex(null)
+            }
+        }
+    }, [title])
 
     const dayDropItems = [
         { name: 'Monday', value: 1 },
@@ -143,20 +185,47 @@ const BlockForm = () => {
         { name: 'Sunday', value: 0 }
     ]
 
+    const substituteSubject = (id: number) => {
+        // Retrieving the subject using id
+        const newlySelectedSubject = subjects[id]
+
+        // Setting the selected subject index
+        setSelectedSubjectIndex(id)
+
+        // Setting the selected subjects attributes in the form
+        setTitle(newlySelectedSubject.title)
+        setDescription(newlySelectedSubject.description)
+        setColor(newlySelectedSubject.color)
+    }
+
     return (
         <Modal closeHandler={() => dispatch(hideBlockForm())}>
             <s.BlockFormContainer>
-                <s.TitleContainer>
-                    <s.TitleIconContainer>
-                        <SubjectIcon />
-                    </s.TitleIconContainer>
-                    <s.TitleInput
-                        value={title}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
-                        autoFocus
-                    />
-                    {title.length === 0 && <s.TitlePlaceholder>Enter a title</s.TitlePlaceholder>}
-                </s.TitleContainer>
+                <div>
+                    <s.TitleContainer>
+                        <s.TitleIconContainer onClick={() => setIsSubjectDDVisible(true)}>
+                            <SubjectIcon />
+                        </s.TitleIconContainer>
+                        <s.TitleInput
+                            value={title}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                            autoFocus
+                        />
+                        {title.length === 0 && <s.TitlePlaceholder>Enter a title</s.TitlePlaceholder>}
+                    </s.TitleContainer>
+                    <s.SubjectContainer>
+                        <AnimatePresence>
+                            {isTitleDDVisible && (
+                                <ValueDropdown
+                                    selected={selectedSubjectIndex}
+                                    items={filteredSubjects}
+                                    selectHandler={(value: number) => substituteSubject(value)}
+                                    closeHandler={() => setIsSubjectDDVisible(false)}
+                                />
+                            )}
+                        </AnimatePresence>
+                    </s.SubjectContainer>
+                </div>
                 <s.BodySectionContainer>
                     {/* Day input */}
                     <s.InputContainer>
