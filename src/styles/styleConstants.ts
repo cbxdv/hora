@@ -5,7 +5,7 @@ export const lightThemeColors = {
     sec: '#83888F',
     shade1: '#F2F3F7',
     shade2: '#FEFEFE',
-    hover: '#E8E9ED',
+    selected: '#E8E9ED',
     contextBackground: 'rgba(254, 254, 254, 0.5)'
 }
 
@@ -16,7 +16,7 @@ export const darkThemeColors = {
     sec: '#707070',
     shade1: '#25262D',
     shade2: '#464A53',
-    hover: '#393A41',
+    selected: '#393A41',
     contextBackground: 'rgba(70, 74, 83, 0.8);'
 }
 

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { convertDayIdToName } from '../../utilities/blockTimeUtils'
-import { dayIdTypes } from '../../@types/TimeBlockInterfaces'
+import { DayID } from '../../@types/TimeBlockInterfaces'
 import * as s from './styles'
 
 const CurrentTimeViewer = () => {
     const [currentTime, setCurrentTime] = useState<string>(new Date().toLocaleTimeString().toString())
     const [currentDate, setCurrentDate] = useState<string>(new Date().toLocaleDateString().toString())
-    const [currentDay, setCurrentDay] = useState<string>(convertDayIdToName(new Date().getDay() as dayIdTypes))
+    const [currentDay, setCurrentDay] = useState<string>(DayID[new Date().getDay()])
 
     let timer: NodeJS.Timer
 
@@ -23,7 +22,7 @@ const CurrentTimeViewer = () => {
     useEffect(() => {
         if (currentDate !== new Date().toLocaleDateString()) {
             setCurrentDate(new Date().toLocaleDateString())
-            setCurrentDay(convertDayIdToName(new Date().getDay() as dayIdTypes))
+            setCurrentDay(DayID[new Date().getDay()])
         }
     })
 

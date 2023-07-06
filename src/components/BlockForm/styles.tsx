@@ -96,27 +96,6 @@ export const InputValueArrowContainer = styled.button<{ $isVisible: boolean }>`
     }
 `
 
-export const DropdownItem = styled.div<{ $selected: boolean }>`
-    width: 100%;
-    height: 30px;
-    ${flexCenter({ justifyContent: 'space-between' })};
-    padding: 0 10px;
-    font-size: 12px;
-    border-radius: 8px;
-    background-color: ${(props) => (props.$selected ? `${props.theme.hover}` : `transparent`)};
-
-    &:hover {
-        background-color: ${(props) => props.theme.hover};
-    }
-
-    & > svg {
-        height: 16px;
-        width: 16px;
-        stroke: ${(props) => props.theme.text};
-        stroke-width: 3px;
-    }
-`
-
 export const ColorIndicator = styled.div<{ $color: string }>`
     height: 15px;
     width: 15px;

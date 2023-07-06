@@ -2,7 +2,7 @@ import { useAppSelector } from '../../redux/store'
 import LogoText from '../../assets/logo/text.svg'
 import LogoIcon from '../../assets/logo/logo.svg'
 import { selectVersion } from '../../redux/slices/appSlice'
-import OctaCat from '../../assets/icons/Octocat.png'
+import Octocat from '../../assets/icons/Octocat.png'
 import * as s from './styles'
 
 const AboutSettings = () => {
@@ -20,7 +20,7 @@ const AboutSettings = () => {
                 </s.LogoContainer>
                 <s.AboutText>Version: {version}</s.AboutText>
                 <s.AboutLink onClick={api.openRepoLink}>
-                    <img src={OctaCat} />
+                    <img src={Octocat} />
                     GitHub
                 </s.AboutLink>
             </s.AboutContainer>

@@ -9,7 +9,7 @@ const CurrentBlockViewer = () => {
 
     const blocks = useAppSelector(selectBlockByCurrentDay)
 
-    const getReminingTimeString = (block: ITimeBlock) => {
+    const getRemainingTimeString = (block: ITimeBlock) => {
         if (block === null) {
             return
         }
@@ -82,7 +82,7 @@ const CurrentBlockViewer = () => {
         currentBlock && (
             <s.CBlockContainer>
                 <s.Heading>{currentBlock.title || ''}</s.Heading>
-                <s.SubText>{getReminingTimeString(currentBlock)} remaining</s.SubText>
+                <s.SubText>{getRemainingTimeString(currentBlock)} remaining</s.SubText>
             </s.CBlockContainer>
         )
     )

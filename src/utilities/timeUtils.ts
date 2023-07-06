@@ -1,17 +1,17 @@
-import { IBlockTime, ITimeBlockBase, dayIdTypes } from '../@types/TimeBlockInterfaces'
+import { ITime, ITimeBlockBase, DayID } from '../@types/TimeBlockInterfaces'
 
 /**
  * Get a 12-hour based time string
  * @param time Block time object to be converted
  * @returns String in the format `hour`:`minutes`:`am` / `pm`
  */
-export const blockTimeTo12HourStr = (time: IBlockTime) => {
+export const timeObjectTo12HourStr = (time: ITime) => {
     // Extracting the information
     let { hours } = time
     const { minutes } = time
 
     // Storing a.m. and p.m.
-    const ampm = `${hours >= 12 ? `p.m` : `a.m`}`
+    const timeAmPm = `${hours >= 12 ? `p.m` : `a.m`}`
 
     // Changing hours to 12 hours format
     if (hours > 12) hours -= 12
@@ -20,31 +20,7 @@ export const blockTimeTo12HourStr = (time: IBlockTime) => {
     const hoursStr = hours24To12(hours).toString().padStart(2, '0')
     const minutesStr = minutes.toString().padStart(2, '0')
 
-    return `${hoursStr}:${minutesStr} ${ampm}`
-}
-
-/**
- * Gets a day string corresponding to the given ID
- * @param dayId The ID of the day from 0 to 6 starting from Sunday
- * @returns Captalized string of the day in the week - `Sunday`, `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday`
- */
-export const convertDayIdToName = (dayId: dayIdTypes) => {
-    switch (dayId) {
-        case 1:
-            return 'Monday'
-        case 2:
-            return 'Tuesday'
-        case 3:
-            return 'Wednesday'
-        case 4:
-            return 'Thursday'
-        case 5:
-            return 'Friday'
-        case 6:
-            return 'Saturday'
-        case 0:
-            return 'Sunday'
-    }
+    return `${hoursStr}:${minutesStr} ${timeAmPm}`
 }
 
 /**
@@ -65,11 +41,11 @@ export const hours24To12 = (hours: number) => {
 /**
  * Converts a 12-hour clock hour component to 24-hour clock hour component
  * @param hours Hour number represented in 12-hour clock
- * @param ampm String that is `am` or `pm` in the clock
+ * @param timeAmPm String that is `am` or `pm` in the clock
  * @returns Hour number based on the 24-hour clock
  */
-export const hours12To24 = (hours: number, ampm: 'am' | 'pm') => {
-    if (ampm === 'am') {
+export const hours12To24 = (hours: number, timeAmPm: 'am' | 'pm') => {
+    if (timeAmPm === 'am') {
         if (hours === 12) {
             return 0
         }
@@ -91,7 +67,7 @@ export const getAmPm = (hours: number) => (hours < 12 ? 'am' : 'pm')
 
 /**
  * Calculates the duration of block in minutes
- * @param block A timeblock
+ * @param block A TimeBlock
  * @returns Duration in minutes
  */
 export const getDurationMinutes = (block: ITimeBlockBase) => {
@@ -102,13 +78,13 @@ export const getDurationMinutes = (block: ITimeBlockBase) => {
 }
 
 type addDurationToTimeProps = (
-    block: IBlockTime,
-    day: dayIdTypes,
+    block: ITime,
+    day: DayID,
     durationMinutes: number
-) => { newEndTime: IBlockTime | null; newDay: dayIdTypes }
+) => { newEndTime: ITime | null; newDay: DayID }
 /**
- * Calculates and addes duration to the block time and returns a new time and day
- * @param block Timeblock to which the duration have to be added
+ * Calculates and adds duration to the block time and returns a new time and day
+ * @param block TimeBlock to which the duration have to be added
  * @param day The day at which the time is represented
  * @param durationMinutes The amount of minutes to add to the block
  * @returns An object with added block time and a new day ID if time exceed a threshold
@@ -121,7 +97,7 @@ export const addDurationToTime: addDurationToTimeProps = (block, day, durationMi
     if (hours >= 23) {
         return {
             newEndTime: null,
-            newDay: ((day + 1) % 7) as dayIdTypes
+            newDay: ((day + 1) % 7) as DayID
         }
     }
     return {

@@ -34,7 +34,7 @@ type transferToFromType = (objA: any, objB: any) => any
  * in object A with values in object B and defaults values to object A if not found in B
  * @param objA Object that acts as a parent
  * @param objB Object that acts as a child
- * @returns A transfered object
+ * @returns A transferred object
  */
 export const transferToFrom: transferToFromType = (objA, objB) => {
     // If B is undefined or null, return A

@@ -25,7 +25,7 @@ export const SidebarItem = styled(motion.li).attrs(({ theme }) => ({
     height: 25px;
     width: 120px;
     margin: 5px 0;
-    background-color: ${(props) => (props.$selected ? props.theme.hover : `transparent`)};
+    background-color: ${(props) => (props.$selected ? props.theme.selected : `transparent`)};
     border: 0.1px solid transparent;
     font-size: 12px;
     border-radius: 8px;

@@ -1,28 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import TextButton from '../TextButton'
-import { IBlockTime, ITimeBlockBase, dayIdTypes } from '../../@types/TimeBlockInterfaces'
+import { DayID } from '../../@types/TimeBlockInterfaces'
 import Modal from '../Modal'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import SubjectIcon from '../../assets/icons/Subject.svg'
 import ArrowDownIcon from '../../assets/icons/ArrowDown.svg'
 import {
-    blockAdded,
-    blockDeleted,
-    blockUpdated,
     hideBlockForm,
     selectDuplicateBlock,
     selectFormCache,
     selectSelectedBlock
 } from '../../redux/slices/timetableSlice'
-import { convertDayIdToName, getAmPm, hours12To24, hours24To12 } from '../../utilities/blockTimeUtils'
 import ValueDropdown, { ValueDropdownItemType } from '../ValueDropdown'
 import ColorSelector from '../ColorSelector'
 import TimeSelector from '../TimeSelector'
+import blockFormReducer, { createBlockFormIS, blockFormActions as fa } from './reducer'
+import { createHandler, editHandler, dangerButtonHandler } from './utils'
 import * as s from './styles'
 
 const BlockForm = () => {
-    const dispatch = useAppDispatch()
+    const appDispatch = useAppDispatch()
 
     const oldBlock = useAppSelector(selectSelectedBlock)
     const duplicateBlock = useAppSelector(selectDuplicateBlock)
@@ -33,147 +31,31 @@ const BlockForm = () => {
         value: index
     }))
 
-    const [title, setTitle] = useState<string>('')
-    const [day, setDay] = useState<dayIdTypes>(1)
-    const [color, setColor] = useState<string>('#FFADAD')
-    const [description, setDescription] = useState<string>('')
-    const [startHours, setStartHours] = useState<number>(8)
-    const [startMinutes, setStartMinutes] = useState<number>(0)
-    const [startAmpm, setStartAmpm] = useState<'am' | 'pm'>('am')
-    const [endHours, setEndHours] = useState<number>(9)
-    const [endMinutes, setEndMinutes] = useState<number>(0)
-    const [endAmpm, setEndAmpm] = useState<'am' | 'pm'>('am')
+    const [state, formDispatch] = useReducer(
+        blockFormReducer,
+        { oldBlock, duplicateBlock, formCache },
+        createBlockFormIS
+    )
 
-    const [isDayDDVisible, setIsDayDDVisible] = useState<boolean>(false)
-    const [isColorDDVisible, setIsColorDDVisible] = useState<boolean>(false)
-    const [isStartTimeDDVisible, setIsStartTimeDDVisible] = useState<boolean>(false)
-    const [isEndTimeDDVisible, setIsEndTimeDDVisible] = useState<boolean>(false)
-
-    const [filteredSubjects, setFilteredSubjects] = useState<ValueDropdownItemType[]>([])
-    const [isTitleDDVisible, setIsSubjectDDVisible] = useState<boolean>(false)
-    const [selectedSubjectIndex, setSelectedSubjectIndex] = useState<number | null>(null)
-
-    const checkIsInvalid = () => {
-        if (title.length === 0) {
-            return true
-        }
-        if (startAmpm === 'pm' && endAmpm === 'am') {
-            return true
-        }
-        if (startHours > endHours) {
-            if (startAmpm === 'pm' && endAmpm === 'am') {
-                return true
-            }
-        }
-        if (startHours === endHours && endMinutes - startMinutes < 15) {
-            return true
-        }
-        return false
-    }
-
-    const createHandler = () => {
-        if (checkIsInvalid()) {
-            return
-        }
-        const newBlock: ITimeBlockBase = {
-            title: title.trim(),
-            day,
-            color,
-            description: description.trim(),
-            startTime: {
-                hours: hours12To24(startHours, startAmpm),
-                minutes: startMinutes
-            },
-            endTime: {
-                hours: hours12To24(endHours, endAmpm),
-                minutes: endMinutes
-            }
-        }
-        dispatch(blockAdded(newBlock))
-    }
-
-    const editHandler = () => {
-        if (title.length === 0) {
-            return
-        }
-        if (oldBlock == null) {
-            return
-        }
-        const newBlock = {
-            ...oldBlock,
-            title: title.trim(),
-            day,
-            color,
-            description: description.trim(),
-            startTime: {
-                hours: hours12To24(startHours, startAmpm),
-                minutes: startMinutes
-            },
-            endTime: {
-                hours: hours12To24(endHours, endAmpm),
-                minutes: endMinutes
-            }
-        }
-        const data = { oldBlock, newBlock }
-        dispatch(blockUpdated(data))
-    }
-
-    const submitHandler = () => (oldBlock ? editHandler() : createHandler())
-
-    const dangerButtonHandler = () => {
-        if (oldBlock) {
-            dispatch(blockDeleted({ day: oldBlock.day, id: oldBlock.id }))
-        } else {
-            dispatch(hideBlockForm())
-        }
-    }
-
-    const setBlockTimeInState = (time: IBlockTime, type: 'start' | 'end') => {
-        if (type === 'start') {
-            setStartHours(hours24To12(time.hours))
-            setStartMinutes(time.minutes)
-            setStartAmpm(getAmPm(time.hours))
-        } else if (type === 'end') {
-            setEndHours(hours24To12(time.hours))
-            setEndMinutes(time.minutes)
-            setEndAmpm(getAmPm(time.hours))
-        }
-    }
-
-    useEffect(() => {
-        const blockToUse = oldBlock || duplicateBlock
-        if (blockToUse) {
-            setTitle(blockToUse.title)
-            setDay(blockToUse.day)
-            setColor(blockToUse.color)
-            setDescription(blockToUse.description)
-            setBlockTimeInState(blockToUse.startTime, 'start')
-            setBlockTimeInState(blockToUse.endTime, 'end')
-        } else {
-            if (formCache.day) setDay(formCache.day)
-            if (formCache.startTime) setBlockTimeInState(formCache.startTime, 'start')
-            if (formCache.endTime) setBlockTimeInState(formCache.endTime, 'end')
-        }
-
-        // Initially use all subjects
-        setFilteredSubjects(subjectList)
-    }, [])
+    const submitHandler = () =>
+        oldBlock ? editHandler(state, oldBlock, appDispatch) : createHandler(state, appDispatch)
 
     // Filter subjects whenever there the title updates
     useEffect(() => {
-        if (title.length !== 0) {
-            setIsSubjectDDVisible(true)
+        if (state.title.length !== 0) {
+            formDispatch(fa.showSubjectDD())
         } else {
-            setIsSubjectDDVisible(false)
+            formDispatch(fa.hideSubjectDD())
         }
-        setFilteredSubjects(subjectList.filter((s) => s.name.toLowerCase().includes(title.toLowerCase())))
-        if (selectedSubjectIndex !== null) {
-            const selSub = subjects[selectedSubjectIndex]
-            if (title !== selSub.title) {
-                setSelectedSubjectIndex(null)
+        const filtered = subjectList.filter((s) => s.name.toLowerCase().includes(state.title.toLowerCase()))
+        formDispatch(fa.setFilteredSub(filtered))
+        if (state.selectedSubjectIndex !== null) {
+            const selSub = subjects[state.selectedSubjectIndex]
+            if (state.title !== selSub.title) {
+                formDispatch(fa.setSelSubIndex(null))
             }
         }
-    }, [title])
+    }, [state.title])
 
     const dayDropItems = [
         { name: 'Monday', value: 1 },
@@ -185,42 +67,38 @@ const BlockForm = () => {
         { name: 'Sunday', value: 0 }
     ]
 
-    const substituteSubject = (id: number) => {
-        // Retrieving the subject using id
-        const newlySelectedSubject = subjects[id]
-
-        // Setting the selected subject index
-        setSelectedSubjectIndex(id)
-
-        // Setting the selected subjects attributes in the form
-        setTitle(newlySelectedSubject.title)
-        setDescription(newlySelectedSubject.description)
-        setColor(newlySelectedSubject.color)
-    }
-
     return (
-        <Modal closeHandler={() => dispatch(hideBlockForm())}>
+        <Modal closeHandler={() => appDispatch(hideBlockForm())}>
             <s.BlockFormContainer>
                 <div>
                     <s.TitleContainer>
-                        <s.TitleIconContainer onClick={() => setIsSubjectDDVisible(true)}>
+                        <s.TitleIconContainer onClick={() => formDispatch(fa.toggleSubjectDD())}>
                             <SubjectIcon />
                         </s.TitleIconContainer>
                         <s.TitleInput
-                            value={title}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
-                            autoFocus
+                            value={state.title}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                formDispatch(fa.setTitle(e.target.value))
+                            }
+                            autoFocus={!(oldBlock || duplicateBlock)}
                         />
-                        {title.length === 0 && <s.TitlePlaceholder>Enter a title</s.TitlePlaceholder>}
+                        {state.title.length === 0 && <s.TitlePlaceholder>Enter a title</s.TitlePlaceholder>}
                     </s.TitleContainer>
                     <s.SubjectContainer>
                         <AnimatePresence>
-                            {isTitleDDVisible && (
+                            {state.isSubjectDDVisible && (
                                 <ValueDropdown
-                                    selected={selectedSubjectIndex}
-                                    items={filteredSubjects}
-                                    selectHandler={(value: number) => substituteSubject(value)}
-                                    closeHandler={() => setIsSubjectDDVisible(false)}
+                                    selected={state.selectedSubjectIndex}
+                                    items={state.filteredSubjects}
+                                    selectHandler={(idx: number) =>
+                                        formDispatch(
+                                            fa.substituteSubject({
+                                                index: idx,
+                                                subject: subjects[idx]
+                                            })
+                                        )
+                                    }
+                                    closeHandler={() => formDispatch(fa.hideSubjectDD())}
                                 />
                             )}
                         </AnimatePresence>
@@ -231,20 +109,20 @@ const BlockForm = () => {
                     <s.InputContainer>
                         <s.InputName>Day</s.InputName>
                         <s.InputValue>
-                            {convertDayIdToName(day)}
+                            {DayID[state.day]}
                             <s.InputValueArrowContainer
-                                $isVisible={isDayDDVisible}
-                                onClick={() => setIsDayDDVisible(!isDayDDVisible)}
+                                $isVisible={state.isDayDDVisible}
+                                onClick={() => formDispatch(fa.toggleDayDD())}
                             >
                                 <ArrowDownIcon />
                             </s.InputValueArrowContainer>
                             <AnimatePresence>
-                                {isDayDDVisible && (
+                                {state.isDayDDVisible && (
                                     <ValueDropdown
-                                        selected={day}
+                                        selected={state.day}
                                         items={dayDropItems}
-                                        selectHandler={(value: number) => setDay(value as dayIdTypes)}
-                                        closeHandler={() => setIsDayDDVisible(false)}
+                                        selectHandler={(value: number) => formDispatch(fa.setDay(value))}
+                                        closeHandler={() => formDispatch(fa.hideDayDD())}
                                     />
                                 )}
                             </AnimatePresence>
@@ -256,25 +134,25 @@ const BlockForm = () => {
                         <s.InputName>Start Time</s.InputName>
                         <s.InputValue>
                             <span style={{ letterSpacing: '0.5px' }}>
-                                {startHours.toString().padStart(2, '0')}:{startMinutes.toString().padStart(2, '0')}{' '}
-                                {startAmpm}
+                                {state.startHours.toString().padStart(2, '0')}:
+                                {state.startMinutes.toString().padStart(2, '0')} {state.startAmPm}
                             </span>
                             <s.InputValueArrowContainer
-                                $isVisible={isStartTimeDDVisible}
-                                onClick={() => setIsStartTimeDDVisible(!isStartTimeDDVisible)}
+                                $isVisible={state.isStartTimeDDVisible}
+                                onClick={() => formDispatch(fa.toggleStartDD())}
                             >
                                 <ArrowDownIcon />
                             </s.InputValueArrowContainer>
                             <AnimatePresence>
-                                {isStartTimeDDVisible && (
+                                {state.isStartTimeDDVisible && (
                                     <TimeSelector
-                                        hours={startHours}
-                                        setHours={setStartHours}
-                                        minutes={startMinutes}
-                                        setMinutes={setStartMinutes}
-                                        ampm={startAmpm}
-                                        setAmpm={setStartAmpm}
-                                        closeHandler={() => setIsStartTimeDDVisible(false)}
+                                        hours={state.startHours}
+                                        setHours={(hours: number) => formDispatch(fa.setStartHours(hours))}
+                                        minutes={state.startMinutes}
+                                        setMinutes={(minutes: number) => formDispatch(fa.setStartMinutes(minutes))}
+                                        timeAmPm={state.startAmPm}
+                                        setAmPm={(amPm: 'am' | 'pm') => formDispatch(fa.setStartAmPm(amPm))}
+                                        closeHandler={() => formDispatch(fa.hideStartDD())}
                                     />
                                 )}
                             </AnimatePresence>
@@ -284,24 +162,27 @@ const BlockForm = () => {
                     {/* End time input */}
                     <s.InputContainer>
                         <s.InputName>End Time</s.InputName>
-                        <s.InputValue onClick={() => setIsEndTimeDDVisible(true)}>
+                        <s.InputValue>
                             <span style={{ letterSpacing: '0.5px' }}>
-                                {endHours.toString().padStart(2, '0')}:{endMinutes.toString().padStart(2, '0')}{' '}
-                                {endAmpm}
+                                {state.endHours.toString().padStart(2, '0')}:
+                                {state.endMinutes.toString().padStart(2, '0')} {state.endAmPm}
                             </span>
-                            <s.InputValueArrowContainer $isVisible={isEndTimeDDVisible}>
+                            <s.InputValueArrowContainer
+                                $isVisible={state.isEndTimeDDVisible}
+                                onClick={() => formDispatch(fa.toggleEndDD())}
+                            >
                                 <ArrowDownIcon />
                             </s.InputValueArrowContainer>
                             <AnimatePresence>
-                                {isEndTimeDDVisible && (
+                                {state.isEndTimeDDVisible && (
                                     <TimeSelector
-                                        hours={endHours}
-                                        setHours={setEndHours}
-                                        minutes={endMinutes}
-                                        setMinutes={setEndMinutes}
-                                        ampm={endAmpm}
-                                        setAmpm={setEndAmpm}
-                                        closeHandler={() => setIsEndTimeDDVisible(false)}
+                                        hours={state.endHours}
+                                        setHours={(hours: number) => formDispatch(fa.setEndHours(hours))}
+                                        minutes={state.endMinutes}
+                                        setMinutes={(minutes: number) => formDispatch(fa.setEndMinutes(minutes))}
+                                        timeAmPm={state.endAmPm}
+                                        setAmPm={(amPm: 'am' | 'pm') => formDispatch(fa.setEndAmPm(amPm))}
+                                        closeHandler={() => formDispatch(fa.hideEndDD())}
                                     />
                                 )}
                             </AnimatePresence>
@@ -319,21 +200,23 @@ const BlockForm = () => {
                                     alignItems: 'center'
                                 }}
                             >
-                                <s.ColorIndicator $color={color} />
-                                <div style={{ height: '100%', fontSize: '12px' }}>{color}</div>
+                                <s.ColorIndicator $color={state.color} />
+                                <div style={{ height: '100%', fontSize: '12px' }}>{state.color}</div>
                             </div>
                             <s.InputValueArrowContainer
-                                $isVisible={isColorDDVisible}
-                                onClick={() => setIsColorDDVisible(!isColorDDVisible)}
+                                $isVisible={state.isColorDDVisible}
+                                onClick={() => formDispatch(fa.toggleColorDD())}
                             >
                                 <ArrowDownIcon />
                             </s.InputValueArrowContainer>
                             <AnimatePresence>
-                                {isColorDDVisible && (
+                                {state.isColorDDVisible && (
                                     <ColorSelector
-                                        selected={color}
-                                        changeHandler={(selectedColor: string) => setColor(selectedColor)}
-                                        closeHandler={() => setIsColorDDVisible(false)}
+                                        selected={state.color}
+                                        changeHandler={(selectedColor: string) =>
+                                            formDispatch(fa.setColor(selectedColor))
+                                        }
+                                        closeHandler={() => formDispatch(fa.hideColorDD())}
                                     />
                                 )}
                             </AnimatePresence>
@@ -344,17 +227,23 @@ const BlockForm = () => {
                 {/* Block description input */}
                 <s.DescriptionContainer>
                     <s.DescriptionInput
-                        value={description}
-                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                        value={state.description}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                            formDispatch(fa.setDescription(e.target.value))
+                        }
                     />
-                    {description.length === 0 && (
+                    {state.description.length === 0 && (
                         <s.DescriptionPlaceholder>Enter a description</s.DescriptionPlaceholder>
                     )}
                 </s.DescriptionContainer>
 
                 <s.ActionsContainer>
                     <s.ButtonContainer>
-                        <TextButton text={oldBlock ? 'Delete' : 'Discard'} onClick={dangerButtonHandler} danger />
+                        <TextButton
+                            text={oldBlock ? 'Delete' : 'Discard'}
+                            onClick={() => dangerButtonHandler(oldBlock, appDispatch)}
+                            danger
+                        />
                     </s.ButtonContainer>
                     <s.ButtonContainer>
                         <TextButton text={oldBlock ? `Edit` : `Create`} onClick={submitHandler} />

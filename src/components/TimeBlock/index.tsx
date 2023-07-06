@@ -1,7 +1,7 @@
 import { useState, MouseEvent } from 'react'
 import { ITimeBlock } from '../../@types/TimeBlockInterfaces'
 import ContextMenu from '../ContextMenu'
-import { blockTimeTo12HourStr } from '../../utilities/blockTimeUtils'
+import { timeObjectTo12HourStr } from '../../utilities/timeUtils'
 import { useAppDispatch } from '../../redux/store'
 import { AnimatePresence } from 'framer-motion'
 import {
@@ -18,7 +18,7 @@ import * as s from './styles'
 const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
     const dispatch = useAppDispatch()
 
-    const [isContextMenuVisible, setIsContextMennuVisible] = useState<boolean>(false)
+    const [isContextMenuVisible, setIsContextMenuVisible] = useState<boolean>(false)
     const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
     const getBlockHeight = () => {
@@ -31,8 +31,8 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
     }
 
     const getBlockSubText = () => {
-        const startTime = blockTimeTo12HourStr(timeBlock.startTime)
-        const endTime = blockTimeTo12HourStr(timeBlock.endTime)
+        const startTime = timeObjectTo12HourStr(timeBlock.startTime)
+        const endTime = timeObjectTo12HourStr(timeBlock.endTime)
         return `${startTime} - ${endTime}`
     }
 
@@ -50,7 +50,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
             x,
             y
         })
-        setIsContextMennuVisible(true)
+        setIsContextMenuVisible(true)
     }
 
     return (
@@ -64,7 +64,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                                 name: 'Edit',
                                 icon: EditIcon,
                                 action: () => {
-                                    setIsContextMennuVisible(false)
+                                    setIsContextMenuVisible(false)
                                     dispatch(updateSelectedBlock(timeBlock))
                                     dispatch(showBlockForm())
                                 }
@@ -74,7 +74,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                                 name: 'Duplicate',
                                 icon: DuplicateIcon,
                                 action: () => {
-                                    setIsContextMennuVisible(false)
+                                    setIsContextMenuVisible(false)
                                     dispatch(updateDuplicateBlock(timeBlock))
                                     dispatch(showBlockForm())
                                 }
@@ -84,14 +84,14 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                                 name: 'Delete',
                                 icon: TrashIcon,
                                 action: () => {
-                                    setIsContextMennuVisible(false)
+                                    setIsContextMenuVisible(false)
                                     dispatch(blockDeleted({ day: timeBlock.day, id: timeBlock.id }))
                                 },
                                 danger: true
                             }
                         ]}
                         position={mousePos}
-                        closeHandler={() => setIsContextMennuVisible(false)}
+                        closeHandler={() => setIsContextMenuVisible(false)}
                     />
                 )}
             </AnimatePresence>

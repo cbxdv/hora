@@ -1,13 +1,13 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { IBlockTime } from './TimeBlockInterfaces'
+import { ITime } from './TimeBlockInterfaces'
 
-export type IServiceDataPayload = PayloadAction<INotifObject[]>
+export type IServiceDataPayload = PayloadAction<INotifyObject[]>
 
-export interface INotifObject {
+export interface INotifyObject {
     readonly id: string
     title: string
     body: string
-    time: IBlockTime
+    time: ITime
 }
 
 export type notifyPropertiesType = {

@@ -1,11 +1,11 @@
 import { ITimetableFormCache, ITimetableSubject } from '../@types/TimetableInterfaces'
-import { IBlockTime, IBlocks, ITimeBlock, ITimeBlockBase, dayIdTypes } from '../@types/TimeBlockInterfaces'
-import { addDurationToTime, getDurationMinutes } from './blockTimeUtils'
+import { ITime, IBlocks, ITimeBlock, ITimeBlockBase, DayID } from '../@types/TimeBlockInterfaces'
+import { addDurationToTime, getDurationMinutes } from './timeUtils'
 
 /**
  * A week of day IDs
  */
-export const dayIds: dayIdTypes[] = [1, 2, 3, 4, 5, 6, 0]
+export const dayIds: DayID[] = [1, 2, 3, 4, 5, 6, 0]
 
 type estimateNextBlockType = (block: ITimeBlockBase) => ITimetableFormCache
 /**
@@ -20,7 +20,7 @@ export const estimateNextBlock: estimateNextBlockType = (block) => {
     const duration = getDurationMinutes(block)
 
     // Sets the end time of the new block as the start
-    const startTime: IBlockTime = block.endTime
+    const startTime: ITime = block.endTime
 
     // Add duration and calculates time and day
     const { newEndTime, newDay } = addDurationToTime(startTime, block.day, duration)

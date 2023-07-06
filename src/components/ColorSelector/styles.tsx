@@ -27,7 +27,7 @@ export const ColorButtonContainer = styled(motion.div).attrs(({ theme }) => ({
     cursor: pointer;
     height: 22px;
     width: 22px;
-    border: solid ${(props) => (props.$selected ? `2px ${props.theme.hover}` : ` 0.1px transparent`)};
+    border: solid ${(props) => (props.$selected ? `2px ${props.theme.selected}` : ` 0.1px transparent`)};
     margin: 5px;
     border-radius: 4px;
     float: left;

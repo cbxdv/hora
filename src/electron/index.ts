@@ -12,14 +12,14 @@ if (require('electron-squirrel-startup')) {
     app.quit()
 }
 
-// Requests and makes sure that only one instance is availabe
+// Requests and makes sure that only one instance is available
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
     // If already a process is running, then quit
     app.quit()
 } else {
     app.on('second-instance', () => {
-        // Focussing the initiallly created instance window
+        // Focussing the initially created instance window
         showWindow()
     })
 }

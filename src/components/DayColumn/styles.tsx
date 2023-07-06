@@ -9,7 +9,7 @@ export const DayColumnContainer = styled.div<{ $dayId: number }>`
     margin-left: 2.5px;
     margin-right: 2.5px;
     ${(props) => (props.$dayId == 1 ? `margin-left: 0` : ``)}
-    ${(props) => (props.$dayId == 7 ? `margin-right: 0` : ``)}
+    ${(props) => (props.$dayId == 0 ? `margin-right: 0` : ``)}
 `
 
 export const BlocksContainer = styled.div`

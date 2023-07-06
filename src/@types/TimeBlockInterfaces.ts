@@ -1,20 +1,28 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 
-export interface IBlockTime {
+export interface ITime {
     hours: number
     minutes: number
     seconds?: number
 }
 
-export type dayIdTypes = 1 | 2 | 3 | 4 | 5 | 6 | 0
+export enum DayID {
+    Sunday = 0,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday
+}
 
 export interface ITimeBlockBase {
     title: string
-    startTime: IBlockTime
-    endTime: IBlockTime
+    startTime: ITime
+    endTime: ITime
     color: string
     description: string
-    day: dayIdTypes
+    day: DayID
 }
 
 export interface ITimeBlock extends ITimeBlockBase {
@@ -22,7 +30,7 @@ export interface ITimeBlock extends ITimeBlockBase {
 }
 
 export type IBlocks = {
-    [key in dayIdTypes]: ITimeBlock[]
+    [key in DayID]: ITimeBlock[]
 }
 
 export type ITimeBlockPayload = PayloadAction<ITimeBlock>
@@ -30,7 +38,7 @@ export type ITimeBlockPayload = PayloadAction<ITimeBlock>
 export type ITimeBlockAddPayload = PayloadAction<ITimeBlockBase>
 
 export type ITimeBlockDeletePayload = PayloadAction<{
-    day: dayIdTypes
+    day: DayID
     readonly id: string
 }>
 

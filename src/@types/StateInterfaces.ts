@@ -1,5 +1,5 @@
 import { IAppSettings, themeTypes } from './AppInterfaces'
-import { INotifObject } from './ServiceInterfaces'
+import { INotifyObject } from './ServiceInterfaces'
 import { IBlocks, ITimeBlock } from './TimeBlockInterfaces'
 import { ITimetableFormCache, ITimetableSettings } from './TimetableInterfaces'
 
@@ -18,7 +18,7 @@ export interface IAppState {
 
 export interface IServiceState {
     serviceData: {
-        notifications: INotifObject[]
+        notifications: INotifyObject[]
     }
 }
 

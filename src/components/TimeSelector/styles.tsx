@@ -37,7 +37,7 @@ export const DropdownItem = styled(motion.div).attrs(({ theme }) => ({
     padding: 0 10px;
     font-size: 12px;
     border-radius: 8px;
-    background-color: ${(props) => (props.$selected ? `${props.theme.hover}` : `transparent`)};
+    background-color: ${(props) => (props.$selected ? `${props.theme.selected}` : `transparent`)};
     cursor: pointer;
     border: 0.1px solid transparent;
     margin: 5px 0;

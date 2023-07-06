@@ -5,10 +5,10 @@ import { getPixelsToScrollInList } from '../../utilities/styleUtils'
 const TimeSelector: React.FC<TimeInputProps> = ({
     hours,
     minutes,
-    ampm,
+    timeAmPm,
     setHours,
     setMinutes,
-    setAmpm,
+    setAmPm,
     closeHandler
 }) => {
     const selectorRef = useRef<HTMLDivElement>(null)
@@ -54,9 +54,9 @@ const TimeSelector: React.FC<TimeInputProps> = ({
     }, [])
 
     const generateHours = () => {
-        const divs = []
+        const hoursOptions = []
         for (let i = 1; i <= 12; i++) {
-            divs.push(
+            hoursOptions.push(
                 <s.DropdownItem
                     onClick={() => setHours(i)}
                     $selected={i === hours}
@@ -68,13 +68,13 @@ const TimeSelector: React.FC<TimeInputProps> = ({
                 </s.DropdownItem>
             )
         }
-        return divs
+        return hoursOptions
     }
 
     const generateMinutes = () => {
-        const divs = []
+        const minuteOptions = []
         for (let i = 0; i < 60; i++) {
-            divs.push(
+            minuteOptions.push(
                 <s.DropdownItem
                     onClick={() => setMinutes(i)}
                     $selected={i === minutes}
@@ -86,7 +86,7 @@ const TimeSelector: React.FC<TimeInputProps> = ({
                 </s.DropdownItem>
             )
         }
-        return divs
+        return minuteOptions
     }
 
     return (
@@ -97,9 +97,9 @@ const TimeSelector: React.FC<TimeInputProps> = ({
                 {['AM', 'PM'].map((m) => (
                     <s.DropdownItem
                         onClick={() => {
-                            setAmpm(m.toLowerCase() as 'am' | 'pm')
+                            setAmPm(m.toLowerCase() as 'am' | 'pm')
                         }}
-                        $selected={m.toLowerCase() === ampm}
+                        $selected={m.toLowerCase() === timeAmPm}
                         key={m}
                         style={{ justifyContent: 'center' }}
                     >
@@ -116,8 +116,8 @@ type TimeInputProps = {
     setHours: (newHours: number) => void
     minutes: number
     setMinutes: (newMinutes: number) => void
-    ampm: 'am' | 'pm'
-    setAmpm: (newAmpm: 'am' | 'pm') => void
+    timeAmPm: 'am' | 'pm'
+    setAmPm: (newAmPm: 'am' | 'pm') => void
     closeHandler: () => void
 }
 

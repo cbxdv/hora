@@ -8,8 +8,7 @@ import {
     toggleTTNotification,
     updateTTNotifyBefore
 } from '../../redux/slices/timetableSlice'
-import { convertDayIdToName } from '../../utilities/blockTimeUtils'
-import { dayIdTypes } from '../../@types/TimeBlockInterfaces'
+import { DayID } from '../../@types/TimeBlockInterfaces'
 import TextButton from '../TextButton'
 import * as s from './styles'
 
@@ -17,16 +16,16 @@ const TimetableSettings = () => {
     const dispatch = useAppDispatch()
 
     const settings = useAppSelector(selectTimetableSettings)
-    const dayIds: dayIdTypes[] = [1, 2, 3, 4, 5, 6, 0]
+    const dayIds: DayID[] = [1, 2, 3, 4, 5, 6, 0]
 
     return (
         <s.SettingsComponentItem>
             <s.SettingsSection>
                 <s.SectionHeading>Days to Show</s.SectionHeading>
                 <s.SectionBodyGrid>
-                    {dayIds.map((dayId: dayIdTypes) => (
+                    {dayIds.map((dayId) => (
                         <s.CheckSettingContainer key={`${dayId}-dayToShow`}>
-                            <s.CheckSettingName>{convertDayIdToName(dayId)}</s.CheckSettingName>
+                            <s.CheckSettingName>{DayID[dayId]}</s.CheckSettingName>
                             <SettingsCheckBox
                                 value={settings.daysToShow[dayId]}
                                 setValue={() => dispatch(toggleDaysToShow(dayId))}

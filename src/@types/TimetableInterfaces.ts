@@ -1,11 +1,11 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { IBlockTime, IBlocks, dayIdTypes } from './TimeBlockInterfaces'
+import { ITime, IBlocks, DayID } from './TimeBlockInterfaces'
 
-export type IUpdateDaysPayload = PayloadAction<dayIdTypes>
+export type IUpdateDaysPayload = PayloadAction<DayID>
 
 export interface ITimetableSettings {
     daysToShow: {
-        [key in dayIdTypes]: boolean
+        [key in DayID]: boolean
     }
     notifyStart: boolean
     notifyStartBefore: number
@@ -25,9 +25,9 @@ export interface ITimetableSubject {
 }
 
 export type ITimetableFormCache = {
-    startTime: IBlockTime | null
-    endTime: IBlockTime | null
-    day: dayIdTypes | null
+    startTime: ITime | null
+    endTime: ITime | null
+    day: DayID | null
     subjects: ITimetableSubject[]
 }
 

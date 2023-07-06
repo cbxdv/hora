@@ -7,7 +7,7 @@ import {
     ITimeBlockDeletePayload,
     ITimeBlockPayload,
     ITimeBlockUpdatePayload,
-    dayIdTypes
+    DayID
 } from '../../@types/TimeBlockInterfaces'
 import {
     ITimetableFormCacheUpdatePayload,
@@ -124,10 +124,10 @@ export const {
 export const selectAllBlocks = (state: IState) => state.timetable.blocks
 export const selectIsBlockFormVisible = (state: IState) => state.timetable.statuses.isBlockFormVisible
 export const selectSelectedBlock = (state: IState) => state.timetable.statuses.selectedBlock
-export const selectBlocksByDayId = (state: IState, dayId: dayIdTypes) => state.timetable.blocks[dayId]
+export const selectBlocksByDayId = (state: IState, day: DayID) => state.timetable.blocks[day]
 export const selectDaysToShow = (state: IState) => state.timetable.settings.daysToShow
 export const selectTimetableSettings = (state: IState) => state.timetable.settings
 export const selectDuplicateBlock = (state: IState) => state.timetable.statuses.blockToBeDuplicated
 export const selectBlockByCurrentDay = (state: IState) =>
-    state.timetable.blocks[new Date().getDay() as dayIdTypes] as ITimeBlock[]
+    state.timetable.blocks[new Date().getDay() as DayID] as ITimeBlock[]
 export const selectFormCache = (state: IState) => state.timetable.formCache

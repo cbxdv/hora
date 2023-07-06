@@ -2,7 +2,7 @@ import { Menu, Tray, app, nativeImage, nativeTheme } from 'electron'
 import { showWindow } from './electronWindow'
 import { logoOutlineBlack, logoOutlineWhite } from './electronImageURL'
 
-let tray: Tray = null
+let tray: Tray | null = null
 
 export const createTray = () => {
     // Getting an image according to the OS theme

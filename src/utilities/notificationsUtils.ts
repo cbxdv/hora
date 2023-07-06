@@ -1,4 +1,4 @@
-import { INotifObject, notifyPropertiesType } from '../@types/ServiceInterfaces'
+import { INotifyObject, notifyPropertiesType } from '../@types/ServiceInterfaces'
 import { ITimeBlock } from '../@types/TimeBlockInterfaces'
 
 // Variable holding the timer of the notification service
@@ -8,7 +8,7 @@ let timer: NodeJS.Timer | null = null
  * Handles the notification service
  * @param blocks List of NotifyObject
  */
-const notificationService = (blocks: INotifObject[]) => {
+const notificationService = (blocks: INotifyObject[]) => {
     return setInterval(() => {
         const now = new Date()
 
@@ -46,25 +46,25 @@ export const stopNS = () => {
 /**
  * Starts the notification service
  */
-export const startNS = (blocks: INotifObject[]) => {
+export const startNS = (blocks: INotifyObject[]) => {
     stopNS()
     timer = notificationService(blocks)
 }
 
-type generateNotifyType = (blocks: ITimeBlock[], notifyProperties: notifyPropertiesType) => INotifObject[]
+type generateNotifyType = (blocks: ITimeBlock[], notifyProperties: notifyPropertiesType) => INotifyObject[]
 
 /**
- * Generates NotifObjects for the given blocks corresponding to the given properties
- * @param blocks Time blocks for which the NotifObjects have to be generated
+ * Generates NotifyObjects for the given blocks corresponding to the given properties
+ * @param blocks Time blocks for which the NotifyObjects have to be generated
  * @param notifyProperties Properties of the objects to generated, which include `notifyStart`, `notifyStartBefore`, `notifyEnd`, `notifyEndBefore`
- * @returns  a list of NotifObjects
+ * @returns  a list of NotifyObjects
  */
-export const generateNotifObjects: generateNotifyType = (
+export const generateNotifyObjects: generateNotifyType = (
     blocks: ITimeBlock[],
     notifyProperties: notifyPropertiesType
 ) => {
     const { notifyStart, notifyStartBefore, notifyEnd, notifyEndBefore } = notifyProperties
-    const objects: INotifObject[] = []
+    const objects: INotifyObject[] = []
 
     // Iterating through the blocks and generating notifyObjects
     blocks.forEach((block) => {

@@ -13,13 +13,13 @@ const appData: IAppSettings = appIS.settings
 type normTTDataType = (data: any) => ITimetableDiskData
 export const normalizeTimetableData: normTTDataType = (data) => {
     const normalizedData = normalizeObject(data)
-    const transferedData: ITimetableDiskData = transferToFrom(timetableData, normalizedData)
-    return transferedData
+    const transferredData: ITimetableDiskData = transferToFrom(timetableData, normalizedData)
+    return transferredData
 }
 
 type normAppDataType = (data: any) => IAppSettings
 export const normalizeAppData: normAppDataType = (data) => {
     const normalizedData = normalizeObject(data)
-    const transferedData: IAppSettings = transferToFrom(appData, normalizedData)
-    return transferedData
+    const transferredData: IAppSettings = transferToFrom(appData, normalizedData)
+    return transferredData
 }
