@@ -13,9 +13,6 @@ export const HeaderContainer = styled.div`
     height: 90px;
     width: 100%;
     padding: 10px 60px;
-    position: fixed;
-    top: 0;
-    z-index: 1;
 `
 
 export const DetailsContainer = styled.div`

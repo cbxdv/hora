@@ -20,7 +20,7 @@ export const ValueDropdownContainer = styled(motion.div).attrs(() => ({
     padding: 0 5px;
     z-index: 1;
     max-height: 150px;
-    overflow: scroll;
+    overflow: auto;
     box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
 `
 export const DropdownItem = styled(motion.div).attrs(({ theme }) => ({

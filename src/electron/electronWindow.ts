@@ -1,4 +1,4 @@
-import { BrowserWindow, app, nativeImage } from 'electron'
+import { BrowserWindow, Menu, app, nativeImage } from 'electron'
 
 import isDev from 'electron-is-dev'
 import Store from 'electron-store'
@@ -17,7 +17,7 @@ export const createWindow = async () => {
 
     // Create the browser window serving main content
     const mainWindow = new BrowserWindow({
-        height: 700,
+        height: 750,
         width: 1200,
         minHeight: 600,
         minWidth: 750,
@@ -47,6 +47,24 @@ export const createWindow = async () => {
 
     // Show main window only if it is ready
     mainWindow.on(`ready-to-show`, () => startUpWindow(mainWindow))
+
+    // Adding menu for the electron window
+    const menu = Menu.buildFromTemplate([
+        {
+            label: `hora`,
+            submenu: [
+                { role: `close` },
+                {
+                    label: `Exit`,
+                    click() {
+                        app.exit()
+                    }
+                }
+            ]
+        }
+    ])
+
+    Menu.setApplicationMenu(menu)
 
     // When the close button is pressed
     mainWindow.on(`close`, (e) => {

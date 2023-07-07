@@ -23,7 +23,7 @@ export const TimeInputContainer = styled(motion.div).attrs(() => ({
 `
 
 export const TimeInputComponent = styled.div`
-    overflow: scroll;
+    overflow: auto;
     color: ${(props) => props.theme.text};
     height: 100%;
 `

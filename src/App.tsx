@@ -105,6 +105,10 @@ const AppMain = styled(motion.div).attrs(() => ({
 }))`
     background: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 `
 
 export default App

@@ -39,7 +39,7 @@ export const SettingsMain = styled.div`
     margin-left: 20px;
     width: 100%;
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
 `
 
 export const SettingsSectionContainer = styled.div`

@@ -1,9 +1,8 @@
 import { styled } from 'styled-components'
 
-import { flexCenter } from '@styles/styleDefinitions'
-
 export const Timeline = styled.div`
     margin-right: 10px;
+    height: 2200px;
 `
 
 export const TimelineStarter = styled.div`
@@ -11,21 +10,21 @@ export const TimelineStarter = styled.div`
     width: 40px;
     background-color: ${(props) => props.theme.background};
     position: sticky;
-    top: 90px;
+    top: 0;
     z-index: 1;
 `
 
 export const TimelineContainer = styled.div`
-    ${flexCenter({ alignItems: `center`, justifyContent: `space-between`, flexDirection: `column` })}
     width: 40px;
     height: 2160px;
     font-size: 12px;
+    position: relative;
+`
 
-    p {
-        transform: translateY(-50%);
-    }
-
-    & p:first-of-type {
-        transform: none;
-    }
+export const TimeLineElement = styled.div<{ $nth: number }>`
+    position: absolute;
+    top: ${(props) => props.$nth * 90}px;
+    transform: translateY(-50%);
+    transform: ${(props) => (props.$nth === 0 ? `none` : ``)};
+    transform: ${(props) => (props.$nth === 24 ? `translateY(-100%)` : ``)};
 `

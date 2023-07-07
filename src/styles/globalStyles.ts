@@ -26,12 +26,8 @@ const GlobalStyles = createGlobalStyle`
     }
 
     #root {
-        position: absolute;
-        top: 0;
-        left: 0;
         height: 100vh;
         width: 100vw;
-        overflow: scroll;
     }
 `
 

@@ -15,7 +15,11 @@ const Timeline = () => {
                 text = `${i - 12} p.m.`
             }
 
-            components.push(<p key={`time-${i}`}>{text}</p>)
+            components.push(
+                <s.TimeLineElement $nth={i} key={`time-${i}`}>
+                    {text}
+                </s.TimeLineElement>
+            )
         }
         return components
     }

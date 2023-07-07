@@ -1,18 +1,26 @@
 import { styled } from 'styled-components'
 
-import { flexCenter } from '@styles/styleDefinitions'
-
 export const WeekViewerContainer = styled.div`
     display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    padding: 0 10px 20px 10px;
-    margin-top: 90px;
+    height: 100%;
+    overflow: hidden;
+    padding: 0 10px 10px 10px;
+`
+
+export const WeekViewerContents = styled.div`
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    display: flex;
 `
 
 export const TimelineContainer = styled.div``
 
 export const DaysContainer = styled.div`
-    ${flexCenter()};
+    display: flex;
     width: 100%;
     height: 100%;
 `
