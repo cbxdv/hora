@@ -1,5 +1,6 @@
 import { styled } from 'styled-components'
-import { flexCenter } from '../../styles/styleDefinitions'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const WeekViewerContainer = styled.div`
     display: flex;

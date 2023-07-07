@@ -1,23 +1,23 @@
-import React, { useEffect, useReducer } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import TextButton from '../TextButton'
-import { DayID } from '../../@types/TimeBlockInterfaces'
-import Modal from '../Modal'
-import { useAppDispatch, useAppSelector } from '../../redux/store'
-import SubjectIcon from '../../assets/icons/Subject.svg'
-import ArrowDownIcon from '../../assets/icons/ArrowDown.svg'
-import {
-    hideBlockForm,
-    selectDuplicateBlock,
-    selectFormCache,
-    selectSelectedBlock
-} from '../../redux/slices/timetableSlice'
-import ValueDropdown, { ValueDropdownItemType } from '../ValueDropdown'
-import ColorSelector from '../ColorSelector'
-import TimeSelector from '../TimeSelector'
+import { ChangeEvent, useEffect, useReducer } from 'react'
+
+import { DayID } from '@appTypes/TimeBlockInterfaces'
+
+import ArrowDownIcon from '@assets/icons/ArrowDown.svg'
+import SubjectIcon from '@assets/icons/Subject.svg'
+
+import ColorSelector from '@components/ColorSelector'
+import Modal from '@components/Modal'
+import TextButton from '@components/TextButton'
+import TimeSelector from '@components/TimeSelector'
+import ValueDropdown, { ValueDropdownItemType } from '@components/ValueDropdown'
+
+import { hideBlockForm, selectDuplicateBlock, selectFormCache, selectSelectedBlock } from '@redux/slices/timetableSlice'
+import { useAppDispatch, useAppSelector } from '@redux/store'
+
 import blockFormReducer, { createBlockFormIS, blockFormActions as fa } from './reducer'
-import { createHandler, editHandler, dangerButtonHandler } from './utils'
 import * as s from './styles'
+import { createHandler, dangerButtonHandler, editHandler } from './utils'
 
 const BlockForm = () => {
     const appDispatch = useAppDispatch()
@@ -58,13 +58,13 @@ const BlockForm = () => {
     }, [state.title])
 
     const dayDropItems = [
-        { name: 'Monday', value: 1 },
-        { name: 'Tuesday', value: 2 },
-        { name: 'Wednesday', value: 3 },
-        { name: 'Thursday', value: 4 },
-        { name: 'Friday', value: 5 },
-        { name: 'Saturday', value: 6 },
-        { name: 'Sunday', value: 0 }
+        { name: `Monday`, value: 1 },
+        { name: `Tuesday`, value: 2 },
+        { name: `Wednesday`, value: 3 },
+        { name: `Thursday`, value: 4 },
+        { name: `Friday`, value: 5 },
+        { name: `Saturday`, value: 6 },
+        { name: `Sunday`, value: 0 }
     ]
 
     return (
@@ -77,9 +77,7 @@ const BlockForm = () => {
                         </s.TitleIconContainer>
                         <s.TitleInput
                             value={state.title}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                formDispatch(fa.setTitle(e.target.value))
-                            }
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => formDispatch(fa.setTitle(e.target.value))}
                             autoFocus={!(oldBlock || duplicateBlock)}
                         />
                         {state.title.length === 0 && <s.TitlePlaceholder>Enter a title</s.TitlePlaceholder>}
@@ -133,9 +131,9 @@ const BlockForm = () => {
                     <s.InputContainer>
                         <s.InputName>Start Time</s.InputName>
                         <s.InputValue>
-                            <span style={{ letterSpacing: '0.5px' }}>
-                                {state.startHours.toString().padStart(2, '0')}:
-                                {state.startMinutes.toString().padStart(2, '0')} {state.startAmPm}
+                            <span style={{ letterSpacing: `0.5px` }}>
+                                {state.startHours.toString().padStart(2, `0`)}:
+                                {state.startMinutes.toString().padStart(2, `0`)} {state.startAmPm}
                             </span>
                             <s.InputValueArrowContainer
                                 $isVisible={state.isStartTimeDDVisible}
@@ -151,7 +149,7 @@ const BlockForm = () => {
                                         minutes={state.startMinutes}
                                         setMinutes={(minutes: number) => formDispatch(fa.setStartMinutes(minutes))}
                                         timeAmPm={state.startAmPm}
-                                        setAmPm={(amPm: 'am' | 'pm') => formDispatch(fa.setStartAmPm(amPm))}
+                                        setAmPm={(amPm: `am` | `pm`) => formDispatch(fa.setStartAmPm(amPm))}
                                         closeHandler={() => formDispatch(fa.hideStartDD())}
                                     />
                                 )}
@@ -163,9 +161,9 @@ const BlockForm = () => {
                     <s.InputContainer>
                         <s.InputName>End Time</s.InputName>
                         <s.InputValue>
-                            <span style={{ letterSpacing: '0.5px' }}>
-                                {state.endHours.toString().padStart(2, '0')}:
-                                {state.endMinutes.toString().padStart(2, '0')} {state.endAmPm}
+                            <span style={{ letterSpacing: `0.5px` }}>
+                                {state.endHours.toString().padStart(2, `0`)}:
+                                {state.endMinutes.toString().padStart(2, `0`)} {state.endAmPm}
                             </span>
                             <s.InputValueArrowContainer
                                 $isVisible={state.isEndTimeDDVisible}
@@ -181,7 +179,7 @@ const BlockForm = () => {
                                         minutes={state.endMinutes}
                                         setMinutes={(minutes: number) => formDispatch(fa.setEndMinutes(minutes))}
                                         timeAmPm={state.endAmPm}
-                                        setAmPm={(amPm: 'am' | 'pm') => formDispatch(fa.setEndAmPm(amPm))}
+                                        setAmPm={(amPm: `am` | `pm`) => formDispatch(fa.setEndAmPm(amPm))}
                                         closeHandler={() => formDispatch(fa.hideEndDD())}
                                     />
                                 )}
@@ -195,13 +193,13 @@ const BlockForm = () => {
                         <s.InputValue>
                             <div
                                 style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
+                                    display: `flex`,
+                                    justifyContent: `center`,
+                                    alignItems: `center`
                                 }}
                             >
                                 <s.ColorIndicator $color={state.color} />
-                                <div style={{ height: '100%', fontSize: '12px' }}>{state.color}</div>
+                                <div style={{ height: `100%`, fontSize: `12px` }}>{state.color}</div>
                             </div>
                             <s.InputValueArrowContainer
                                 $isVisible={state.isColorDDVisible}
@@ -228,7 +226,7 @@ const BlockForm = () => {
                 <s.DescriptionContainer>
                     <s.DescriptionInput
                         value={state.description}
-                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                             formDispatch(fa.setDescription(e.target.value))
                         }
                     />
@@ -240,7 +238,7 @@ const BlockForm = () => {
                 <s.ActionsContainer>
                     <s.ButtonContainer>
                         <TextButton
-                            text={oldBlock ? 'Delete' : 'Discard'}
+                            text={oldBlock ? `Delete` : `Discard`}
                             onClick={() => dangerButtonHandler(oldBlock, appDispatch)}
                             danger
                         />

@@ -1,8 +1,10 @@
 import { isAnyOf } from '@reduxjs/toolkit'
-import { listenerMiddleware } from '../listeners'
-import { appInitialized, selectAppNotifications, toggleNotifications } from '../slices/appSlice'
-import { selectNotificationData, updateServiceData } from '../slices/serviceSlice'
-import { startNS, stopNS } from '../../utilities/notificationsUtils'
+
+import { listenerMiddleware } from '@redux/listeners'
+import { appInitialized, selectAppNotifications, toggleNotifications } from '@redux/slices/appSlice'
+import { selectNotificationData, updateServiceData } from '@redux/slices/serviceSlice'
+
+import { startNS, stopNS } from '@utils/notificationsUtils'
 
 // Listener for notifications service
 listenerMiddleware.startListening({

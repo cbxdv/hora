@@ -1,5 +1,7 @@
-import React, { useRef, useEffect } from 'react'
-import { varietyColors } from '../../styles/styleConstants'
+import { useRef, useEffect } from 'react'
+
+import { varietyColors } from '@styles/styleConstants'
+
 import * as s from './styles'
 
 const ColorSelector: React.FC<ColorSelectorProps> = ({ selected, changeHandler, closeHandler }) => {
@@ -14,17 +16,17 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ selected, changeHandler, 
 
     const keyBindHandler = (event: KeyboardEvent) => {
         event.stopPropagation()
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             closeHandler()
         }
     }
 
     useEffect(() => {
-        document.addEventListener('click', handleClickOutside, true)
-        document.addEventListener('keydown', keyBindHandler, true)
+        document.addEventListener(`click`, handleClickOutside, true)
+        document.addEventListener(`keydown`, keyBindHandler, true)
         return () => {
-            document.removeEventListener('click', handleClickOutside, true)
-            document.removeEventListener('keydown', keyBindHandler, true)
+            document.removeEventListener(`click`, handleClickOutside, true)
+            document.removeEventListener(`keydown`, keyBindHandler, true)
         }
     }, [])
     return (

@@ -1,8 +1,10 @@
-import { useAppSelector } from '../../redux/store'
-import LogoText from '../../assets/logo/text.svg'
-import LogoIcon from '../../assets/logo/logo.svg'
-import { selectVersion } from '../../redux/slices/appSlice'
-import Octocat from '../../assets/icons/Octocat.png'
+import Octocat from '@assets/icons/Octocat.png'
+import LogoIcon from '@assets/logo/logo.svg'
+import LogoText from '@assets/logo/text.svg'
+
+import { selectVersion } from '@redux/slices/appSlice'
+import { useAppSelector } from '@redux/store'
+
 import * as s from './styles'
 
 const AboutSettings = () => {

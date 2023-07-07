@@ -1,9 +1,13 @@
-import TimeBlock from '../TimeBlock'
 import { AnimatePresence } from 'framer-motion'
-import { useAppSelector } from '../../redux/store'
-import { selectBlocksByDayId } from '../../redux/slices/timetableSlice'
-import { DayID } from '../../@types/TimeBlockInterfaces'
-import CurrentTimeLine from '../CurrentTimeLine'
+
+import { DayID } from '@appTypes/TimeBlockInterfaces'
+
+import CurrentTimeLine from '@components/CurrentTimeLine'
+import TimeBlock from '@components/TimeBlock'
+
+import { selectBlocksByDayId } from '@redux/slices/timetableSlice'
+import { useAppSelector } from '@redux/store'
+
 import * as s from './styles'
 
 const DayColumn: React.FC<DayColumnProps> = ({ dayId }) => {

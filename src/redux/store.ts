@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
-import appReducer from './slices/appSlice'
-import timetableReducer from './slices/timetableSlice'
-import serviceReducer from './slices/serviceSlice'
-import listenerMiddleware from './listeners'
+import listenerMiddleware from '@redux/listeners'
+import appReducer from '@redux/slices/appSlice'
+import serviceReducer from '@redux/slices/serviceSlice'
+import timetableReducer from '@redux/slices/timetableSlice'
 
 const store = configureStore({
     reducer: {

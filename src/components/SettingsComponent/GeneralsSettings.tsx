@@ -1,13 +1,15 @@
-import ThemeSelector from '../ThemeSelector'
-import SettingsCheckBox from './SettingsCheckbox'
-import { useAppDispatch, useAppSelector } from '../../redux/store'
+import ThemeSelector from '@components/ThemeSelector'
+
 import {
     selectAppSettings,
     toggleMinimizeOnClose,
     toggleNotifications,
     toggleOpenAtStartup,
     toggleOpenMinimized
-} from '../../redux/slices/appSlice'
+} from '@redux/slices/appSlice'
+import { useAppDispatch, useAppSelector } from '@redux/store'
+
+import SettingsCheckBox from './SettingsCheckbox'
 import * as s from './styles'
 
 const GeneralSettings = () => {

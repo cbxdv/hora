@@ -1,10 +1,11 @@
-import { styled } from 'styled-components'
 import { motion } from 'framer-motion'
-import { flexCenter } from '../../styles/styleDefinitions'
+import { styled } from 'styled-components'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const ValueDropdownContainer = styled(motion.div).attrs(() => ({
     initial: { height: 0 },
-    animate: { height: 'unset' },
+    animate: { height: `unset` },
     exit: { height: 0 },
     transition: { duration: 0.2 }
 }))`
@@ -20,14 +21,14 @@ export const ValueDropdownContainer = styled(motion.div).attrs(() => ({
     z-index: 1;
     max-height: 150px;
     overflow: scroll;
-    box-shadow: ${({ theme }) => (theme.name === 'light' ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
+    box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
 `
 export const DropdownItem = styled(motion.div).attrs(({ theme }) => ({
-    whileHover: { borderColor: `${theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}` }
+    whileHover: { borderColor: `${theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}` }
 }))<{ $selected: boolean }>`
     width: 100%;
     height: 30px;
-    ${flexCenter({ justifyContent: 'space-between' })};
+    ${flexCenter({ justifyContent: `space-between` })};
     padding: 0 10px;
     font-size: 12px;
     border-radius: 8px;

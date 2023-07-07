@@ -1,4 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit'
+
 import { ITime } from './TimeBlockInterfaces'
 
 export type IServiceDataPayload = PayloadAction<INotifyObject[]>

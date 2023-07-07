@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { IState } from '../../@types/StateInterfaces'
-import { IAppInitPayload, IAppThemeChangePayload } from '../../@types/AppInterfaces'
-import { appIS } from '../initialStates'
+
+import { IAppInitPayload, IAppThemeChangePayload } from '@appTypes/AppInterfaces'
+import { IState } from '@appTypes/StateInterfaces'
+
+import { appIS } from '@redux/initialStates'
 
 const appSlice = createSlice({
-    name: 'app',
+    name: `app`,
     initialState: appIS,
     reducers: {
         appStarted(state) {
@@ -24,19 +26,19 @@ const appSlice = createSlice({
         },
         changeTheme(state, action: IAppThemeChangePayload) {
             state.settings.theme = action.payload
-            if (action.payload === 'system') {
+            if (action.payload === `system`) {
                 state.statuses.showingTheme = state.statuses.osTheme
             } else {
                 state.statuses.showingTheme = action.payload
             }
         },
         toggleTheme(state) {
-            if (state.settings.theme === 'light') {
-                state.settings.theme = 'dark'
-                state.statuses.showingTheme = 'dark'
-            } else if (state.settings.theme === 'dark') {
-                state.settings.theme = 'light'
-                state.statuses.showingTheme = 'light'
+            if (state.settings.theme === `light`) {
+                state.settings.theme = `dark`
+                state.statuses.showingTheme = `dark`
+            } else if (state.settings.theme === `dark`) {
+                state.settings.theme = `light`
+                state.statuses.showingTheme = `light`
             }
         },
         toggleMinimizeOnClose(state) {

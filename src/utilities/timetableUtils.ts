@@ -1,6 +1,6 @@
-import { ITimetableFormCache, ITimetableSubject } from '../@types/TimetableInterfaces'
-import { ITime, IBlocks, ITimeBlock, ITimeBlockBase, DayID } from '../@types/TimeBlockInterfaces'
-import { addDurationToTime, getDurationMinutes } from './timeUtils'
+import { DayID, IBlocks, ITime, ITimeBlock, ITimeBlockBase } from '@appTypes/TimeBlockInterfaces'
+import { ITimetableFormCache, ITimetableSubject } from '@appTypes/TimetableInterfaces'
+import { addDurationToTime, getDurationMinutes } from '@utils/timeUtils'
 
 /**
  * A week of day IDs

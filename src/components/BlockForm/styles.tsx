@@ -1,12 +1,13 @@
 import { styled } from 'styled-components'
-import { flexCenter, subtleBorder } from '../../styles/styleDefinitions'
+
+import { flexCenter, subtleBorder } from '@styles/styleDefinitions'
 
 export const BlockFormContainer = styled.div`
     height: 100%;
 `
 
 export const TitleContainer = styled.div`
-    ${flexCenter({ justifyContent: 'flex-start' })};
+    ${flexCenter({ justifyContent: `flex-start` })};
     width: 100%;
     position: relative;
 `
@@ -54,7 +55,7 @@ export const BodySectionContainer = styled.div`
 `
 
 export const InputContainer = styled.div`
-    ${flexCenter({ justifyContent: 'space-between' })};
+    ${flexCenter({ justifyContent: `space-between` })};
     width: 330px;
     padding: 20px;
 `
@@ -71,7 +72,7 @@ export const InputValue = styled.div`
     width: 140px;
     height: 30px;
     border-radius: 8px;
-    ${flexCenter({ justifyContent: 'space-between' })};
+    ${flexCenter({ justifyContent: `space-between` })};
     font-size: 13px;
     padding: 5px 10px;
     position: relative;
@@ -137,7 +138,7 @@ export const DescriptionPlaceholder = styled.div`
 
 export const ActionsContainer = styled.div`
     width: 100%;
-    ${flexCenter({ justifyContent: 'space-between' })};
+    ${flexCenter({ justifyContent: `space-between` })};
     align-content: stretch;
 `
 

@@ -1,4 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit'
+
 import { ITime, IBlocks, DayID } from './TimeBlockInterfaces'
 
 export type IUpdateDaysPayload = PayloadAction<DayID>
@@ -33,7 +34,7 @@ export type ITimetableFormCache = {
 
 export type ITimetableInitPayload = PayloadAction<ITimetableDiskData>
 
-export type timetableNotifyTypes = 'start' | 'end'
+export type timetableNotifyTypes = `start` | `end`
 
 export type ITimetableToggleNotifyPayload = PayloadAction<timetableNotifyTypes>
 

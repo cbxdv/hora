@@ -1,24 +1,27 @@
-import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import Modal from '../Modal'
-import { useAppDispatch } from '../../redux/store'
-import { hideSettings } from '../../redux/slices/appSlice'
-import TimetableSettings from './TimetableSettings'
-import GeneralSettings from './GeneralsSettings'
+import { useState } from 'react'
+
+import Modal from '@components/Modal'
+
+import { hideSettings } from '@redux/slices/appSlice'
+import { useAppDispatch } from '@redux/store'
+
 import AboutSettings from './AboutSettings'
+import GeneralSettings from './GeneralsSettings'
 import * as s from './styles'
+import TimetableSettings from './TimetableSettings'
 
 const SettingsComponent = () => {
     const dispatch = useAppDispatch()
-    const [currentTab, setCurrentTab] = useState<'general' | 'timetable' | 'about'>('general')
+    const [currentTab, setCurrentTab] = useState<`general` | `timetable` | `about`>(`general`)
 
     const getCurrentTab = () => {
         switch (currentTab) {
-            case 'general':
+            case `general`:
                 return <GeneralSettings />
-            case 'timetable':
+            case `timetable`:
                 return <TimetableSettings />
-            case 'about':
+            case `about`:
                 return <AboutSettings />
         }
     }
@@ -28,16 +31,16 @@ const SettingsComponent = () => {
             <s.SettingsContainer>
                 <s.SettingsSidebar>
                     <ul>
-                        <s.SidebarItem onClick={() => setCurrentTab('general')} $selected={currentTab === 'general'}>
+                        <s.SidebarItem onClick={() => setCurrentTab(`general`)} $selected={currentTab === `general`}>
                             General
                         </s.SidebarItem>
                         <s.SidebarItem
-                            onClick={() => setCurrentTab('timetable')}
-                            $selected={currentTab === 'timetable'}
+                            onClick={() => setCurrentTab(`timetable`)}
+                            $selected={currentTab === `timetable`}
                         >
                             Timetable
                         </s.SidebarItem>
-                        <s.SidebarItem onClick={() => setCurrentTab('about')} $selected={currentTab === 'about'}>
+                        <s.SidebarItem onClick={() => setCurrentTab(`about`)} $selected={currentTab === `about`}>
                             About
                         </s.SidebarItem>
                     </ul>

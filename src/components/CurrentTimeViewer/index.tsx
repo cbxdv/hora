@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { DayID } from '../../@types/TimeBlockInterfaces'
+
+import { DayID } from '@appTypes/TimeBlockInterfaces'
+
 import * as s from './styles'
 
 const CurrentTimeViewer = () => {

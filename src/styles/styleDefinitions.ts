@@ -14,13 +14,13 @@ interface FlexCenterInterface {
 export function flexCenter(options: FlexCenterInterface = {}) {
     let { alignItems, justifyContent, flexDirection } = options
     if (!alignItems) {
-        alignItems = 'center'
+        alignItems = `center`
     }
     if (!justifyContent) {
-        justifyContent = 'center'
+        justifyContent = `center`
     }
     if (!flexDirection) {
-        flexDirection = 'row'
+        flexDirection = `row`
     }
     return css`
         display: flex;
@@ -34,7 +34,7 @@ export function flexCenter(options: FlexCenterInterface = {}) {
  * Provides a border for the subtle & easy border for the element
  */
 export const subtleBorder = css`
-    border: 0.1px solid ${({ theme }) => (theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.05)`)};
+    border: 0.1px solid ${({ theme }) => (theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.05)`)};
 `
 
 export const buttonStyles = (danger?: boolean) => css`

@@ -1,8 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ITimetableFormCache, ITimetableSubject } from '../../@types/TimetableInterfaces'
-import { ITimeBlock, DayID } from '../../@types/TimeBlockInterfaces'
-import { ValueDropdownItemType } from '../ValueDropdown'
-import { getAmPm, hours24To12 } from '../../utilities/timeUtils'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+
+import { DayID, ITimeBlock } from '@appTypes/TimeBlockInterfaces'
+import { ITimetableFormCache, ITimetableSubject } from '@appTypes/TimetableInterfaces'
+
+import { ValueDropdownItemType } from '@components/ValueDropdown'
+
+import { getAmPm, hours24To12 } from '@utils/timeUtils'
 
 export interface IBlockFormState {
     title: string
@@ -11,10 +14,10 @@ export interface IBlockFormState {
     description: string
     startHours: number
     startMinutes: number
-    startAmPm: 'am' | 'pm'
+    startAmPm: `am` | `pm`
     endHours: number
     endMinutes: number
-    endAmPm: 'am' | 'pm'
+    endAmPm: `am` | `pm`
     isSubjectDDVisible: boolean
     isDayDDVisible: boolean
     isColorDDVisible: boolean
@@ -25,16 +28,16 @@ export interface IBlockFormState {
 }
 
 export const blockFormIS: IBlockFormState = {
-    title: '',
+    title: ``,
     day: 1,
-    color: '#FFADAD',
-    description: '',
+    color: `#FFADAD`,
+    description: ``,
     startHours: 8,
     startMinutes: 0,
-    startAmPm: 'am',
+    startAmPm: `am`,
     endHours: 9,
     endMinutes: 0,
-    endAmPm: 'am',
+    endAmPm: `am`,
     isSubjectDDVisible: false,
     isDayDDVisible: false,
     isColorDDVisible: false,
@@ -75,7 +78,9 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
         endMinutes = blockToUse.endTime.minutes
         endAmPm = getAmPm(blockToUse.endTime.hours)
     } else {
-        if (formCache?.day) day = formCache.day
+        if (formCache?.day) {
+            day = formCache.day
+        }
         if (formCache?.startTime) {
             startHours = hours24To12(formCache.startTime.hours)
             startMinutes = formCache.startTime.minutes
@@ -112,7 +117,7 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
 }
 
 const blockFormSlice = createSlice({
-    name: 'blockForm',
+    name: `blockForm`,
     initialState: blockFormIS,
     reducers: {
         setTitle(state, action: PayloadAction<string>) {
@@ -133,7 +138,7 @@ const blockFormSlice = createSlice({
         setStartMinutes(state, action: PayloadAction<number>) {
             state.startMinutes = action.payload
         },
-        setStartAmPm(state, action: PayloadAction<'am' | 'pm'>) {
+        setStartAmPm(state, action: PayloadAction<`am` | `pm`>) {
             state.startAmPm = action.payload
         },
         setEndHours(state, action: PayloadAction<number>) {
@@ -142,7 +147,7 @@ const blockFormSlice = createSlice({
         setEndMinutes(state, action: PayloadAction<number>) {
             state.endMinutes = action.payload
         },
-        setEndAmPm(state, action: PayloadAction<'am' | 'pm'>) {
+        setEndAmPm(state, action: PayloadAction<`am` | `pm`>) {
             state.endAmPm = action.payload
         },
         setFilteredSub(state, action: PayloadAction<ValueDropdownItemType[]>) {

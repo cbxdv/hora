@@ -1,19 +1,22 @@
-import { AppDispatch } from '../../redux/store'
-import { ITimeBlock, ITimeBlockBase } from '../../@types/TimeBlockInterfaces'
+import { ITimeBlock, ITimeBlockBase } from '@appTypes/TimeBlockInterfaces'
+
+import { blockAdded, blockDeleted, blockUpdated, hideBlockForm } from '@redux/slices/timetableSlice'
+import { AppDispatch } from '@redux/store'
+
+import { hours12To24 } from '@utils/timeUtils'
+
 import { IBlockFormState } from './reducer'
-import { hours12To24 } from '../../utilities/timeUtils'
-import { blockAdded, blockDeleted, blockUpdated, hideBlockForm } from '../../redux/slices/timetableSlice'
 
 export const checkIsInvalid = (state: IBlockFormState) => {
     const { title, startAmPm, endAmPm, startHours, startMinutes, endHours, endMinutes } = state
     if (title.length === 0) {
         return true
     }
-    if (startAmPm === 'pm' && endAmPm === 'am') {
+    if (startAmPm === `pm` && endAmPm === `am`) {
         return true
     }
     if (startHours > endHours) {
-        if (startAmPm === 'pm' && endAmPm === 'am') {
+        if (startAmPm === `pm` && endAmPm === `am`) {
             return true
         }
     }

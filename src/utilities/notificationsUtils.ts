@@ -1,5 +1,5 @@
-import { INotifyObject, notifyPropertiesType } from '../@types/ServiceInterfaces'
-import { ITimeBlock } from '../@types/TimeBlockInterfaces'
+import { INotifyObject, notifyPropertiesType } from '@appTypes/ServiceInterfaces'
+import { ITimeBlock } from '@appTypes/TimeBlockInterfaces'
 
 // Variable holding the timer of the notification service
 let timer: NodeJS.Timer | null = null

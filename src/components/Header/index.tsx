@@ -1,11 +1,14 @@
-import CurrentTimeViewer from '../CurrentTimeViewer'
-import CurrentBlockViewer from '../CurrentBlockViewer'
-import NewBlockButton from '../NewBlockButton'
-import IconButton from '../IconButton'
-import Logo from '../../assets/logo/logo.svg'
-import SettingsIcon from '../../assets/icons/Settings.svg'
-import { useAppDispatch } from '../../redux/store'
-import { showSettings } from '../../redux/slices/appSlice'
+import SettingsIcon from '@assets/icons/Settings.svg'
+import Logo from '@assets/logo/logo.svg'
+
+import CurrentBlockViewer from '@components/CurrentBlockViewer'
+import CurrentTimeViewer from '@components/CurrentTimeViewer'
+import IconButton from '@components/IconButton'
+import NewBlockButton from '@components/NewBlockButton'
+
+import { showSettings } from '@redux/slices/appSlice'
+import { useAppDispatch } from '@redux/store'
+
 import * as s from './styles'
 
 const Header = () => {

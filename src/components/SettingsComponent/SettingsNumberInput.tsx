@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react'
+
 import * as s from './styles'
 
 const SettingsNumberInput: React.FC<SettingsNumberInputProps> = ({ value, setValue }) => {

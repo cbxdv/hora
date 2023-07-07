@@ -1,6 +1,8 @@
 import { BrowserWindow, app, nativeImage } from 'electron'
+
 import isDev from 'electron-is-dev'
 import Store from 'electron-store'
+
 import { appStoreTypes } from './electronConstants'
 import { appIS } from '../redux/initialStates'
 
@@ -11,7 +13,7 @@ const store = new Store()
 
 export const createWindow = async () => {
     // Icon for application
-    const image = nativeImage.createFromPath('build/icon.png')
+    const image = nativeImage.createFromPath(`build/icon.png`)
 
     // Create the browser window serving main content
     const mainWindow = new BrowserWindow({
@@ -21,7 +23,7 @@ export const createWindow = async () => {
         minWidth: 750,
         autoHideMenuBar: true,
         center: true,
-        title: 'hora',
+        title: `hora`,
         show: false,
         icon: image,
         webPreferences: {
@@ -44,10 +46,10 @@ export const createWindow = async () => {
     mainWindow.setMenuBarVisibility(false)
 
     // Show main window only if it is ready
-    mainWindow.on('ready-to-show', () => startUpWindow(mainWindow))
+    mainWindow.on(`ready-to-show`, () => startUpWindow(mainWindow))
 
     // When the close button is pressed
-    mainWindow.on('close', (e) => {
+    mainWindow.on(`close`, (e) => {
         e.preventDefault()
         closeWindow()
     })
@@ -59,7 +61,7 @@ const closeWindow = async () => {
     const mainWindow = BrowserWindow.getAllWindows()[0]
 
     // Hide dock icon in macOS
-    if (process.platform === 'darwin') {
+    if (process.platform === `darwin`) {
         app.dock.hide()
     }
 
@@ -81,7 +83,7 @@ const startUpWindow = async (mainWindow: BrowserWindow) => {
     // If open minimized then return from the function
     if (openMinimized) {
         // If in macOS, hide the dock icon
-        if (process.platform === 'darwin') {
+        if (process.platform === `darwin`) {
             app.dock.hide()
         }
         return
@@ -101,7 +103,7 @@ export const registerLogin = () => {
     if (loginItem === false) {
         app.setLoginItemSettings({
             openAtLogin: true,
-            name: 'hora'
+            name: `hora`
         })
     }
 }

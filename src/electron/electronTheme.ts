@@ -1,5 +1,7 @@
 import { BrowserWindow } from 'electron'
+
 import Store from 'electron-store'
+
 import { appStoreTypes } from './electronConstants'
 import { createWindow } from './electronWindow'
 import { appIS } from '../redux/initialStates'
@@ -24,7 +26,7 @@ export const nativeThemeHandler = async () => {
     const modeFromDisk = await store.get(appStoreTypes.theme, appIS.settings.theme)
 
     // If theme in configs is not `system`, then releasing
-    if (modeFromDisk !== 'system') {
+    if (modeFromDisk !== `system`) {
         setTimeout(() => {
             isThemeUpdating = false
         }, 1000)

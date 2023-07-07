@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+
 import * as s from './styles'
 
 const CurrentTimeLine = () => {
@@ -15,14 +16,14 @@ const CurrentTimeLine = () => {
     const scrollTo = () => {
         if (timeLineRef.current) {
             timeLineRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
+                behavior: `smooth`,
+                block: `center`
             })
         }
     }
 
     const keyBindHandler = (event: KeyboardEvent) => {
-        if (event.key === 'f' || event.key === 'F') {
+        if (event.key === `f` || event.key === `F`) {
             scrollTo()
         }
     }
@@ -35,11 +36,11 @@ const CurrentTimeLine = () => {
         setTimeout(() => scrollTo(), 500)
 
         // Add key bindings while mounting
-        window.addEventListener('keydown', keyBindHandler)
+        window.addEventListener(`keydown`, keyBindHandler)
 
         return () => {
             // Removing key bindings while unmounting
-            window.removeEventListener('keydown', keyBindHandler)
+            window.removeEventListener(`keydown`, keyBindHandler)
         }
     }, [])
 

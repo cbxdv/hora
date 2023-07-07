@@ -1,21 +1,23 @@
-import { ITimetableDiskData, ITimetableSubject } from '../../@types/TimetableInterfaces'
-import { IAppSettings, themeTypes } from '../../@types/AppInterfaces'
-import { appInitialized, appStarted } from '../slices/appSlice'
-import { listenerMiddleware } from '../listeners'
-import { normalizeAppData, normalizeTimetableData } from '../../utilities/storeUtils'
-import { DayID } from '../../@types/TimeBlockInterfaces'
-import { INotifyObject, notifyPropertiesType } from '../../@types/ServiceInterfaces'
-import { generateNotifyObjects } from '../../utilities/notificationsUtils'
-import { timetableInitialize, updateTTSubjects } from '../slices/timetableSlice'
-import { initializeServiceData } from '../slices/serviceSlice'
-import { generateSubjects } from '../../utilities/timetableUtils'
+import { IAppSettings, themeTypes } from '@appTypes/AppInterfaces'
+import { INotifyObject, notifyPropertiesType } from '@appTypes/ServiceInterfaces'
+import { DayID } from '@appTypes/TimeBlockInterfaces'
+import { ITimetableDiskData, ITimetableSubject } from '@appTypes/TimetableInterfaces'
+
+import { listenerMiddleware } from '@redux/listeners'
+import { appInitialized, appStarted } from '@redux/slices/appSlice'
+import { initializeServiceData } from '@redux/slices/serviceSlice'
+import { timetableInitialize, updateTTSubjects } from '@redux/slices/timetableSlice'
+
+import { generateNotifyObjects } from '@utils/notificationsUtils'
+import { normalizeAppData, normalizeTimetableData } from '@utils/storeUtils'
+import { generateSubjects } from '@utils/timetableUtils'
 
 // Listener to initialize app with data
 listenerMiddleware.startListening({
     actionCreator: appStarted,
     effect: async (_, listenerApi) => {
-        let osTheme: themeTypes = 'dark'
-        let showingTheme: themeTypes = 'dark'
+        let osTheme: themeTypes = `dark`
+        let showingTheme: themeTypes = `dark`
         let appSettings: IAppSettings
         let timetableData: ITimetableDiskData
 
@@ -24,14 +26,14 @@ listenerMiddleware.startListening({
             appSettings = await api.fetchAppSettingsFromDisk()
             osTheme = await api.getOSTheme()
         } catch {
-            console.error('Error fetching data')
+            console.error(`Error fetching data`)
             return
         }
 
         timetableData = normalizeTimetableData(timetableData)
         appSettings = normalizeAppData(appSettings)
 
-        if (appSettings.theme === 'system') {
+        if (appSettings.theme === `system`) {
             showingTheme = osTheme
         }
 

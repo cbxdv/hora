@@ -1,5 +1,7 @@
 import { Notification, app, ipcMain, nativeTheme, shell } from 'electron'
+
 import Store from 'electron-store'
+
 import { appStoreTypes, ipcHandlerTypes, timetableStoreTypes } from './electronConstants'
 import { registerLogin, removeLogin } from './electronWindow'
 
@@ -11,14 +13,14 @@ ipcMain.handle(ipcHandlerTypes.getAppVersion, () => {
 
 ipcMain.handle(ipcHandlerTypes.sendNotification, (_, data: { title: string; body: string }) => {
     new Notification({
-        title: data.title || '',
-        body: data.body || ''
+        title: data.title || ``,
+        body: data.body || ``
     }).show()
 })
 
 ipcMain.handle(ipcHandlerTypes.getOSTheme, () => {
     const isDark = nativeTheme.shouldUseDarkColors
-    const theme = isDark ? 'dark' : 'light'
+    const theme = isDark ? `dark` : `light`
     return theme
 })
 
@@ -49,5 +51,5 @@ ipcMain.handle(ipcHandlerTypes.enableAutoLogin, () => registerLogin())
 ipcMain.handle(ipcHandlerTypes.disableAutoLogin, () => removeLogin())
 
 ipcMain.handle(ipcHandlerTypes.openRepoLink, () => {
-    shell.openExternal('https://github.com/cbxdv/hora')
+    shell.openExternal(`https://github.com/cbxdv/hora`)
 })

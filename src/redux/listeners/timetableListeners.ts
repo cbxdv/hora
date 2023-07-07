@@ -1,5 +1,10 @@
 import { isAnyOf } from '@reduxjs/toolkit'
-import { listenerMiddleware } from '../listeners'
+
+import { notifyPropertiesType } from '@appTypes/ServiceInterfaces'
+import { ITimetableFormCache } from '@appTypes/TimetableInterfaces'
+
+import { listenerMiddleware } from '@redux/listeners'
+import { updateServiceData } from '@redux/slices/serviceSlice'
 import {
     blockAdded,
     blockDeleted,
@@ -13,12 +18,10 @@ import {
     updateTTFormCache,
     updateTTNotifyBefore,
     updateTTSubjects
-} from '../slices/timetableSlice'
-import { notifyPropertiesType } from '../../@types/ServiceInterfaces'
-import { generateNotifyObjects } from '../../utilities/notificationsUtils'
-import { updateServiceData } from '../slices/serviceSlice'
-import { estimateNextBlock, updateSubjects } from '../../utilities/timetableUtils'
-import { ITimetableFormCache } from '../../@types/TimetableInterfaces'
+} from '@redux/slices/timetableSlice'
+
+import { generateNotifyObjects } from '@utils/notificationsUtils'
+import { estimateNextBlock, updateSubjects } from '@utils/timetableUtils'
 
 // Listener for timetable
 listenerMiddleware.startListening({

@@ -1,5 +1,7 @@
 import { useRef, useEffect } from 'react'
-import CheckIcon from '../../assets/icons/Check.svg'
+
+import CheckIcon from '@assets/icons/Check.svg'
+
 import * as s from './styles'
 
 const ValueDropdown: React.FC<ValueDropdownProps> = ({ selected, items, selectHandler, closeHandler }) => {
@@ -15,25 +17,25 @@ const ValueDropdown: React.FC<ValueDropdownProps> = ({ selected, items, selectHa
 
     const keyBindHandler = (event: KeyboardEvent) => {
         event.stopPropagation()
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             closeHandler()
         }
     }
 
     useEffect(() => {
-        document.addEventListener('click', handleClickOutside, true)
-        document.addEventListener('keydown', keyBindHandler, true)
+        document.addEventListener(`click`, handleClickOutside, true)
+        document.addEventListener(`keydown`, keyBindHandler, true)
 
         // Brings selected item into the view
         setTimeout(() => {
             if (selectedItemRef && selectedItemRef.current) {
-                selectedItemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                selectedItemRef.current.scrollIntoView({ behavior: `smooth`, block: `center` })
             }
         }, 100)
 
         return () => {
-            document.removeEventListener('click', handleClickOutside, true)
-            document.removeEventListener('keydown', keyBindHandler, true)
+            document.removeEventListener(`click`, handleClickOutside, true)
+            document.removeEventListener(`keydown`, keyBindHandler, true)
         }
     }, [])
 

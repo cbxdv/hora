@@ -1,30 +1,32 @@
-import React, { useEffect, ReactNode } from 'react'
-import ReactDOM from 'react-dom'
-import CrossIcon from '../../assets/icons/Cross.svg'
+import { useEffect, ReactNode, MouseEvent } from 'react'
+import { createPortal } from 'react-dom'
+
+import CrossIcon from '@assets/icons/Cross.svg'
+
 import * as s from './styles'
 
 const Modal: React.FC<ModalProps> = ({ title, children, closeHandler, height, width }) => {
     const keyBindHandler = (event: KeyboardEvent) => {
         event.stopPropagation()
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             closeHandler()
         }
     }
 
     useEffect(() => {
-        window.addEventListener('keydown', keyBindHandler)
+        window.addEventListener(`keydown`, keyBindHandler)
         return () => {
-            window.removeEventListener('keydown', keyBindHandler)
+            window.removeEventListener(`keydown`, keyBindHandler)
         }
     })
 
-    return ReactDOM.createPortal(
+    return createPortal(
         <s.ModalContainer>
             <s.ModalDrop onClick={closeHandler}>
                 <s.ModalBody
                     $height={height}
                     $width={width}
-                    onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+                    onClick={(e: MouseEvent<HTMLDivElement>) => e.stopPropagation()}
                 >
                     <s.ModalHeader $hasTitle={title}>
                         {title ? <s.ModalHeading>Settings</s.ModalHeading> : <></>}
@@ -36,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({ title, children, closeHandler, height, wi
                 </s.ModalBody>
             </s.ModalDrop>
         </s.ModalContainer>,
-        document.getElementById('modal') as Element
+        document.getElementById(`modal`) as Element
     )
 }
 
@@ -49,8 +51,8 @@ type ModalProps = {
 }
 
 Modal.defaultProps = {
-    height: 'unset',
-    width: 'unset'
+    height: `unset`,
+    width: `unset`
 }
 
 export default Modal

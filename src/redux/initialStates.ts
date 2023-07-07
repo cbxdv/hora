@@ -1,21 +1,21 @@
-import { IAppState, IServiceState, ITimetableState } from '../@types/StateInterfaces'
+import { IAppState, IServiceState, ITimetableState } from '@appTypes/StateInterfaces'
 
 export const appIS: IAppState = {
     statuses: {
         isLoading: true,
         isSettingsVisible: false,
-        showingTheme: 'dark',
-        osTheme: 'dark'
+        showingTheme: `dark`,
+        osTheme: `dark`
     },
     settings: {
-        theme: 'system',
+        theme: `system`,
         notifications: true,
         minimizeOnClose: true,
         openAtStartup: false,
         openMinimized: false
     },
     appInfo: {
-        version: '2.0.0'
+        version: `2.0.0`
     }
 }
 

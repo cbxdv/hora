@@ -4,7 +4,7 @@ const Timeline = () => {
     const generateTimeStrings = () => {
         const components = []
         for (let i = 0; i <= 24; i++) {
-            let text = ''
+            let text = ``
             if (i === 0) {
                 text = `12 a.m.`
             } else if (i < 12) {

@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import { flexCenter } from '../../styles/styleDefinitions'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const LogoContainer = styled.div`
     height: 40px;
@@ -7,7 +8,7 @@ export const LogoContainer = styled.div`
 `
 
 export const HeaderContainer = styled.div`
-    ${flexCenter({ justifyContent: 'space-between' })};
+    ${flexCenter({ justifyContent: `space-between` })};
     background-color: ${(props) => props.theme.background};
     height: 90px;
     width: 100%;
@@ -18,10 +19,10 @@ export const HeaderContainer = styled.div`
 `
 
 export const DetailsContainer = styled.div`
-    ${flexCenter({ justifyContent: 'space-between' })};
+    ${flexCenter({ justifyContent: `space-between` })};
 `
 
 export const ActionsContainer = styled.div`
-    ${flexCenter({ justifyContent: 'space-between' })};
+    ${flexCenter({ justifyContent: `space-between` })};
     width: 175px;
 `

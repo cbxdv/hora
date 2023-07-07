@@ -1,5 +1,6 @@
 import { styled } from 'styled-components'
-import { flexCenter } from '../../styles/styleDefinitions'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const DayColumnContainer = styled.div<{ $dayId: number }>`
     width: 100%;
@@ -13,7 +14,7 @@ export const DayColumnContainer = styled.div<{ $dayId: number }>`
 `
 
 export const BlocksContainer = styled.div`
-    ${flexCenter({ flexDirection: 'column' })}
+    ${flexCenter({ flexDirection: `column` })}
     background-color: ${({ theme }) => theme.shade1};
     height: 2160px;
     border-radius: 8px;
@@ -24,7 +25,7 @@ export const DayIndicator = styled.div<{ $today: boolean }>`
     ${flexCenter()};
     height: 40px;
     background-color: ${(props) => props.theme.background};
-    color: ${(props) => (props.$today ? '#FD2513' : 'default')};
+    color: ${(props) => (props.$today ? `#FD2513` : `default`)};
     position: sticky;
     top: 90px;
     z-index: 1;

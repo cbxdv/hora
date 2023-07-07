@@ -1,14 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 import { nanoid } from 'nanoid'
-import { IState } from '../../@types/StateInterfaces'
+
+import { IState } from '@appTypes/StateInterfaces'
 import {
+    DayID,
     ITimeBlock,
     ITimeBlockAddPayload,
     ITimeBlockDeletePayload,
     ITimeBlockPayload,
-    ITimeBlockUpdatePayload,
-    DayID
-} from '../../@types/TimeBlockInterfaces'
+    ITimeBlockUpdatePayload
+} from '@appTypes/TimeBlockInterfaces'
 import {
     ITimetableFormCacheUpdatePayload,
     ITimetableInitPayload,
@@ -16,11 +18,11 @@ import {
     ITimetableSubjectsUpdatePayload,
     ITimetableToggleNotifyPayload,
     IUpdateDaysPayload
-} from '../../@types/TimetableInterfaces'
-import { timetableIS } from '../initialStates'
+} from '@appTypes/TimetableInterfaces'
+import { timetableIS } from '@redux/initialStates'
 
 const timetableSlice = createSlice({
-    name: 'timetable',
+    name: `timetable`,
     initialState: timetableIS,
     reducers: {
         timetableInitialize(state, action: ITimetableInitPayload) {
@@ -76,17 +78,17 @@ const timetableSlice = createSlice({
         },
         toggleTTNotification(state, action: ITimetableToggleNotifyPayload) {
             const type = action.payload
-            if (type === 'start') {
+            if (type === `start`) {
                 state.settings.notifyStart = !state.settings.notifyStart
-            } else if (type === 'end') {
+            } else if (type === `end`) {
                 state.settings.notifyEnd = !state.settings.notifyEnd
             }
         },
         updateTTNotifyBefore(state, action: ITimetableNotifyUpdatePayload) {
             const { type, value } = action.payload
-            if (type === 'start') {
+            if (type === `start`) {
                 state.settings.notifyStartBefore = value
-            } else if (type === 'end') {
+            } else if (type === `end`) {
                 state.settings.notifyEndBefore = value
             }
         },

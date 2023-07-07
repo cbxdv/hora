@@ -1,6 +1,8 @@
-import BlockAddIcon from '../../assets/icons/BoxAdd.svg'
-import { useAppDispatch } from '../../redux/store'
-import { showBlockForm } from '../../redux/slices/timetableSlice'
+import BlockAddIcon from '@assets/icons/BoxAdd.svg'
+
+import { showBlockForm } from '@redux/slices/timetableSlice'
+import { useAppDispatch } from '@redux/store'
+
 import * as s from './styles'
 
 const NewBlockButton = () => {

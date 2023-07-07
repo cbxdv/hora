@@ -1,5 +1,7 @@
 import { isAnyOf } from '@reduxjs/toolkit'
-import { listenerMiddleware } from '../listeners'
+
+import { listenerMiddleware } from '@redux/listeners'
+
 import {
     changeTheme,
     selectAppSettings,

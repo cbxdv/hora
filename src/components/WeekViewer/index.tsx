@@ -1,7 +1,9 @@
-import { useAppSelector } from '../../redux/store'
-import DayColumn from '../DayColumn'
-import Timeline from '../Timeline'
-import { selectDaysToShow } from '../../redux/slices/timetableSlice'
+import DayColumn from '@components/DayColumn'
+import Timeline from '@components/Timeline'
+
+import { selectDaysToShow } from '@redux/slices/timetableSlice'
+import { useAppSelector } from '@redux/store'
+
 import * as s from './styles'
 
 const WeekViewer = () => {

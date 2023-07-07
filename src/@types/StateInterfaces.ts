@@ -1,7 +1,7 @@
-import { IAppSettings, themeTypes } from './AppInterfaces'
-import { INotifyObject } from './ServiceInterfaces'
-import { IBlocks, ITimeBlock } from './TimeBlockInterfaces'
-import { ITimetableFormCache, ITimetableSettings } from './TimetableInterfaces'
+import { IAppSettings, themeTypes } from '@appTypes/AppInterfaces'
+import { INotifyObject } from '@appTypes/ServiceInterfaces'
+import { IBlocks, ITimeBlock } from '@appTypes/TimeBlockInterfaces'
+import { ITimetableFormCache, ITimetableSettings } from '@appTypes/TimetableInterfaces'
 
 export interface IAppState {
     statuses: {

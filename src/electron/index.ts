@@ -1,14 +1,14 @@
 import { app, BrowserWindow, nativeTheme } from 'electron'
 
-import { createWindow, showWindow } from './electronWindow'
-import { createTray, updateTrayIcon } from './electronTray'
 import { nativeThemeHandler } from './electronTheme'
+import { createTray, updateTrayIcon } from './electronTray'
+import { createWindow, showWindow } from './electronWindow'
 
 // Disables electron security warnings
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+process.env[`ELECTRON_DISABLE_SECURITY_WARNINGS`] = `true`
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
+if (require(`electron-squirrel-startup`)) {
     app.quit()
 }
 
@@ -18,7 +18,7 @@ if (!gotTheLock) {
     // If already a process is running, then quit
     app.quit()
 } else {
-    app.on('second-instance', () => {
+    app.on(`second-instance`, () => {
         // Focussing the initially created instance window
         showWindow()
     })
@@ -32,7 +32,7 @@ app.whenReady().then(() => {
 
 // When no windows are available and still the app is running
 // create a new window
-app.on('activate', () => {
+app.on(`activate`, () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
     } else {
@@ -41,7 +41,7 @@ app.on('activate', () => {
 })
 
 // Handles updating the theme when the theme of OS changes
-nativeTheme.on('updated', () => {
+nativeTheme.on(`updated`, () => {
     nativeThemeHandler()
     updateTrayIcon()
 })

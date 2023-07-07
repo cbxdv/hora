@@ -16,7 +16,12 @@
         "resolveJsonModule": true,
         "jsx": "react-jsx",
         "paths": {
-            "*": ["node_modules/*"]
+            "@components/*": ["src/components/*/index.tsx"],
+            "@appTypes/*": ["src/@types/*"],
+            "@redux/*": ["src/redux/*"],
+            "@assets/*": ["src/assets/*"],
+            "@utils/*": ["src/utilities/*"],
+            "@styles/*": ["src/styles/*"]
         }
     },
     "include": ["src/**/*"]

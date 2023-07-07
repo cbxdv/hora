@@ -1,15 +1,19 @@
-import { useAppSelector, useAppDispatch } from '../../redux/store'
-import SettingsCheckBox from './SettingsCheckbox'
-import SettingsNumberInput from './SettingsNumberInput'
+import { DayID } from '@appTypes/TimeBlockInterfaces'
+
+import TextButton from '@components/TextButton'
+
 import {
     blocksCleared,
     selectTimetableSettings,
     toggleDaysToShow,
     toggleTTNotification,
     updateTTNotifyBefore
-} from '../../redux/slices/timetableSlice'
-import { DayID } from '../../@types/TimeBlockInterfaces'
-import TextButton from '../TextButton'
+} from '@redux/slices/timetableSlice'
+import { useAppSelector, useAppDispatch } from '@redux/store'
+
+import SettingsCheckBox from './SettingsCheckbox'
+import SettingsNumberInput from './SettingsNumberInput'
+
 import * as s from './styles'
 
 const TimetableSettings = () => {
@@ -41,34 +45,36 @@ const TimetableSettings = () => {
                         <s.CheckSettingName>Notify at start</s.CheckSettingName>
                         <SettingsCheckBox
                             value={settings.notifyStart}
-                            setValue={() => dispatch(toggleTTNotification('start'))}
+                            setValue={() => dispatch(toggleTTNotification(`start`))}
                         />
                     </s.CheckSettingContainer>
                     <s.CheckSettingContainer>
-                        Notify before{' '}
+                        Notify before{` `}
                         <SettingsNumberInput
                             value={settings.notifyStartBefore}
                             setValue={(value) => {
-                                dispatch(updateTTNotifyBefore({ type: 'start', value }))
+                                dispatch(updateTTNotifyBefore({ type: `start`, value }))
                             }}
-                        />{' '}
+                        />
+                        {` `}
                         mins
                     </s.CheckSettingContainer>
                     <s.CheckSettingContainer>
                         <s.CheckSettingName>Notify at end</s.CheckSettingName>
                         <SettingsCheckBox
                             value={settings.notifyEnd}
-                            setValue={() => dispatch(toggleTTNotification('end'))}
+                            setValue={() => dispatch(toggleTTNotification(`end`))}
                         />
                     </s.CheckSettingContainer>
                     <s.CheckSettingContainer>
-                        Notify before{' '}
+                        Notify before{` `}
                         <SettingsNumberInput
                             value={settings.notifyEndBefore}
                             setValue={(value) => {
-                                dispatch(updateTTNotifyBefore({ type: 'end', value }))
+                                dispatch(updateTTNotifyBefore({ type: `end`, value }))
                             }}
-                        />{' '}
+                        />
+                        {` `}
                         mins
                     </s.CheckSettingContainer>
                 </s.SectionBodyGrid>

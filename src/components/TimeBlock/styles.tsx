@@ -1,6 +1,7 @@
-import { styled } from 'styled-components'
 import { motion } from 'framer-motion'
-import { flexCenter } from '../../styles/styleDefinitions'
+import { styled } from 'styled-components'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 interface TimeBlockContainerProps {
     readonly $blockHeight: number
@@ -23,7 +24,7 @@ export const TimeBlockContainer = styled(motion.div).attrs(() => ({
     color: #29272c;
     position: absolute;
     top: ${({ $positionalPad }) => $positionalPad}px;
-    box-shadow: ${({ theme }) => (theme.name === 'light' ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
+    box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
 `
 
 export const StylingLineContainer = styled.div`
@@ -45,7 +46,7 @@ export const StylingLine = styled.div`
 export const BlockDetailsContainer = styled.div`
     height: 100%;
     width: 100%;
-    ${flexCenter({ flexDirection: 'column', alignItems: 'flex-start' })};
+    ${flexCenter({ flexDirection: `column`, alignItems: `flex-start` })};
     overflow: hidden;
 `
 

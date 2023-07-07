@@ -1,8 +1,9 @@
 import { styled } from 'styled-components'
-import { flexCenter } from '../../styles/styleDefinitions'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const TimeContainer = styled.div`
-    ${flexCenter({ flexDirection: 'column' })};
+    ${flexCenter({ flexDirection: `column` })};
     background-color: ${({ theme }) => theme.shade1};
     border-radius: 8px;
     height: 60px;

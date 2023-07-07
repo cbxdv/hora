@@ -11,7 +11,7 @@ export const normalizeObject: normalizeObjectType = (obj: any) => {
 
     // If it is not an object, then it can be any of the other primitive types
     // So, it is returned
-    if (typeof obj != 'object') {
+    if (typeof obj != `object`) {
         return obj
     }
 
@@ -51,7 +51,7 @@ export const transferToFrom: transferToFromType = (objA, objB) => {
     // Iterating through A and changing with B values
     resE = aE.map(([key, val]) => {
         const bVal = objB[key]
-        if (typeof val === 'object' || val === Object(val)) {
+        if (typeof val === `object` || val === Object(val)) {
             // If its an object, then it can be JS-Object or Array
             // If having length method, then it may be an array.
             if (bVal?.length != null) {

@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useAppSelector } from '../../redux/store'
-import { ITimeBlock } from '../../@types/TimeBlockInterfaces'
-import { selectBlockByCurrentDay } from '../../redux/slices/timetableSlice'
+
+import { ITimeBlock } from '@appTypes/TimeBlockInterfaces'
+
+import { selectBlockByCurrentDay } from '@redux/slices/timetableSlice'
+import { useAppSelector } from '@redux/store'
+
 import * as s from './styles'
 
 const CurrentBlockViewer = () => {
@@ -81,7 +84,7 @@ const CurrentBlockViewer = () => {
     return (
         currentBlock && (
             <s.CBlockContainer>
-                <s.Heading>{currentBlock.title || ''}</s.Heading>
+                <s.Heading>{currentBlock.title || ``}</s.Heading>
                 <s.SubText>{getRemainingTimeString(currentBlock)} remaining</s.SubText>
             </s.CBlockContainer>
         )

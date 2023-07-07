@@ -1,6 +1,7 @@
-import { styled } from 'styled-components'
 import { motion } from 'framer-motion'
-import { flexCenter } from '../../styles/styleDefinitions'
+import { styled } from 'styled-components'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const ContextMenuContainer = styled(motion.div).attrs(() => ({
     initial: { opacity: 0 },
@@ -11,7 +12,7 @@ export const ContextMenuContainer = styled(motion.div).attrs(() => ({
     min-width: 120px;
     position: fixed;
     background: ${(props) => props.theme.contextBackground};
-    box-shadow: ${({ theme }) => (theme.name === 'light' ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
+    box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
     backdrop-filter: blur(4px);
     border-radius: 8px;
     padding: 5px;
@@ -22,11 +23,11 @@ export const ContextMenuContainer = styled(motion.div).attrs(() => ({
 
 export const MenuItem = styled(motion.div).attrs(({ theme }) => ({
     whileHover: {
-        borderColor: `${theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}`
+        borderColor: `${theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}`
     },
-    whileTap: { filter: 'invert(15%)', scale: 0.98 }
+    whileTap: { filter: `invert(15%)`, scale: 0.98 }
 }))<{ $danger?: boolean }>`
-    ${flexCenter({ justifyContent: 'flex-start' })};
+    ${flexCenter({ justifyContent: `flex-start` })};
     width: 100%;
     padding: 5px 10px;
     background: transparent;

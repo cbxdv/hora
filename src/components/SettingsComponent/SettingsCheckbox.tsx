@@ -1,4 +1,5 @@
-import CheckIcon from '../../assets/icons/Check.svg'
+import CheckIcon from '@assets/icons/Check.svg'
+
 import * as s from './styles'
 
 const SettingsCheckBox: React.FC<SettingsCheckBoxProps> = ({ value, setValue }) => {

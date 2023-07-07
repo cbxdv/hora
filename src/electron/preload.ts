@@ -1,8 +1,10 @@
 import { ipcRenderer, contextBridge } from 'electron'
-import { IBlocks } from '../@types/TimeBlockInterfaces'
+
+import { themeTypes, IAppSettings } from '@appTypes/AppInterfaces'
+import { IBlocks } from '@appTypes/TimeBlockInterfaces'
+import { ITimetableDiskData, ITimetableSettings } from '@appTypes/TimetableInterfaces'
+
 import { ipcHandlerTypes as ipc } from './electronConstants'
-import { themeTypes, IAppSettings } from '../@types/AppInterfaces'
-import { ITimetableDiskData, ITimetableSettings } from '../@types/TimetableInterfaces'
 
 export const api = {
     // General
@@ -27,4 +29,4 @@ export const api = {
     saveTTSettingsToDisk: (data: ITimetableSettings) => ipcRenderer.invoke(ipc.saveTTSettingsToDisk, data)
 }
 
-contextBridge.exposeInMainWorld('api', api)
+contextBridge.exposeInMainWorld(`api`, api)

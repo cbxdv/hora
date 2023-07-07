@@ -1,8 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 
-export type themeTypes = 'light' | 'dark'
+export type themeTypes = `light` | `dark`
 
-export type appThemeTypes = themeTypes | 'system'
+export type appThemeTypes = themeTypes | `system`
 
 export type IAppInitPayload = PayloadAction<{
     osTheme: themeTypes

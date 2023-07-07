@@ -1,6 +1,7 @@
-import { styled } from 'styled-components'
 import { motion } from 'framer-motion'
-import { flexCenter } from '../../styles/styleDefinitions'
+import { styled } from 'styled-components'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const SettingsContainer = styled.div`
     width: 100%;
@@ -19,7 +20,7 @@ export const SettingsSidebar = styled.div`
 
 export const SidebarItem = styled(motion.li).attrs(({ theme }) => ({
     whileHover: {
-        borderColor: `${theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}`
+        borderColor: `${theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}`
     }
 }))<{ $selected?: boolean }>`
     height: 25px;
@@ -29,7 +30,7 @@ export const SidebarItem = styled(motion.li).attrs(({ theme }) => ({
     border: 0.1px solid transparent;
     font-size: 12px;
     border-radius: 8px;
-    ${flexCenter({ justifyContent: 'flex-start' })};
+    ${flexCenter({ justifyContent: `flex-start` })};
     padding: 10px;
     cursor: pointer;
 `
@@ -73,8 +74,8 @@ export const CheckSettingName = styled.div`
 export const CheckBoxContainer = styled.div`
     height: 20px;
     width: 20px;
-    background: ${({ theme }) => (theme.name === 'dark' ? theme.shade1 : ``)};
-    border: 0.5px solid ${({ theme }) => (theme.name === 'light' ? `rgba(0, 0, 0, 0.1)` : ``)};
+    background: ${({ theme }) => (theme.name === `dark` ? theme.shade1 : ``)};
+    border: 0.5px solid ${({ theme }) => (theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : ``)};
     border-radius: 4px;
     ${flexCenter()};
     cursor: pointer;
@@ -109,7 +110,7 @@ export const LogoContainer = styled.div`
 `
 
 export const AboutContainer = styled.div`
-    ${flexCenter({ flexDirection: 'column' })};
+    ${flexCenter({ flexDirection: `column` })};
     font-size: 12px;
     margin: 0 20px 20px 20px;
     height: 50%;

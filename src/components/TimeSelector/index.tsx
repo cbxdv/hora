@@ -1,6 +1,8 @@
 import { useRef, useEffect } from 'react'
+
+import { getPixelsToScrollInList } from '@utils/styleUtils'
+
 import * as s from './styles'
-import { getPixelsToScrollInList } from '../../utilities/styleUtils'
 
 const TimeSelector: React.FC<TimeInputProps> = ({
     hours,
@@ -26,30 +28,30 @@ const TimeSelector: React.FC<TimeInputProps> = ({
 
     const keyBindHandler = (event: KeyboardEvent) => {
         event.stopPropagation()
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             closeHandler()
         }
     }
 
     useEffect(() => {
-        document.addEventListener('click', handleClickOutside, true)
-        document.addEventListener('keydown', keyBindHandler, true)
+        document.addEventListener(`click`, handleClickOutside, true)
+        document.addEventListener(`keydown`, keyBindHandler, true)
 
         // Brings selected items into the view
         setTimeout(() => {
             if (hoursRef?.current && hoursSelectedRef?.current) {
                 const position = getPixelsToScrollInList(hoursRef, hoursSelectedRef)
-                hoursRef.current.scrollTo({ top: position, behavior: 'smooth' })
+                hoursRef.current.scrollTo({ top: position, behavior: `smooth` })
             }
             if (minsRef?.current && minsSelectedRef?.current) {
                 const position = getPixelsToScrollInList(minsRef, minsSelectedRef)
-                minsRef.current.scrollTo({ top: position, behavior: 'smooth' })
+                minsRef.current.scrollTo({ top: position, behavior: `smooth` })
             }
         }, 100)
 
         return () => {
-            document.removeEventListener('click', handleClickOutside, true)
-            document.removeEventListener('keydown', keyBindHandler, true)
+            document.removeEventListener(`click`, handleClickOutside, true)
+            document.removeEventListener(`keydown`, keyBindHandler, true)
         }
     }, [])
 
@@ -62,9 +64,9 @@ const TimeSelector: React.FC<TimeInputProps> = ({
                     $selected={i === hours}
                     ref={i === hours ? hoursSelectedRef : null}
                     key={i}
-                    style={{ justifyContent: 'center' }}
+                    style={{ justifyContent: `center` }}
                 >
-                    {i.toString().padStart(2, '0')}
+                    {i.toString().padStart(2, `0`)}
                 </s.DropdownItem>
             )
         }
@@ -80,9 +82,9 @@ const TimeSelector: React.FC<TimeInputProps> = ({
                     $selected={i === minutes}
                     ref={i === minutes ? minsSelectedRef : null}
                     key={i}
-                    style={{ justifyContent: 'center' }}
+                    style={{ justifyContent: `center` }}
                 >
-                    {i.toString().padStart(2, '0')}
+                    {i.toString().padStart(2, `0`)}
                 </s.DropdownItem>
             )
         }
@@ -94,14 +96,14 @@ const TimeSelector: React.FC<TimeInputProps> = ({
             <s.TimeInputComponent ref={hoursRef}>{generateHours()}</s.TimeInputComponent>
             <s.TimeInputComponent ref={minsRef}>{generateMinutes()}</s.TimeInputComponent>
             <s.TimeInputComponent>
-                {['AM', 'PM'].map((m) => (
+                {[`AM`, `PM`].map((m) => (
                     <s.DropdownItem
                         onClick={() => {
-                            setAmPm(m.toLowerCase() as 'am' | 'pm')
+                            setAmPm(m.toLowerCase() as `am` | `pm`)
                         }}
                         $selected={m.toLowerCase() === timeAmPm}
                         key={m}
-                        style={{ justifyContent: 'center' }}
+                        style={{ justifyContent: `center` }}
                     >
                         {m}
                     </s.DropdownItem>
@@ -116,8 +118,8 @@ type TimeInputProps = {
     setHours: (newHours: number) => void
     minutes: number
     setMinutes: (newMinutes: number) => void
-    timeAmPm: 'am' | 'pm'
-    setAmPm: (newAmPm: 'am' | 'pm') => void
+    timeAmPm: `am` | `pm`
+    setAmPm: (newAmPm: `am` | `pm`) => void
     closeHandler: () => void
 }
 

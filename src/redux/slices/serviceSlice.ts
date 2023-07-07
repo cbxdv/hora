@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { IState } from '../../@types/StateInterfaces'
-import { IServiceDataPayload } from '../../@types/ServiceInterfaces'
-import { serviceIS } from '../initialStates'
+
+import { IServiceDataPayload } from '@appTypes/ServiceInterfaces'
+import { IState } from '@appTypes/StateInterfaces'
+
+import { serviceIS } from '@redux/initialStates'
 
 const serviceSlice = createSlice({
-    name: 'service',
+    name: `service`,
     initialState: serviceIS,
     reducers: {
         initializeServiceData(state, action: IServiceDataPayload) {

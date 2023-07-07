@@ -1,4 +1,4 @@
-import { ITime, ITimeBlockBase, DayID } from '../@types/TimeBlockInterfaces'
+import { DayID, ITime, ITimeBlockBase } from '@appTypes/TimeBlockInterfaces'
 
 /**
  * Get a 12-hour based time string
@@ -14,11 +14,13 @@ export const timeObjectTo12HourStr = (time: ITime) => {
     const timeAmPm = `${hours >= 12 ? `p.m` : `a.m`}`
 
     // Changing hours to 12 hours format
-    if (hours > 12) hours -= 12
+    if (hours > 12) {
+        hours -= 12
+    }
 
     // Padding with 0 to achieve a 2 char output
-    const hoursStr = hours24To12(hours).toString().padStart(2, '0')
-    const minutesStr = minutes.toString().padStart(2, '0')
+    const hoursStr = hours24To12(hours).toString().padStart(2, `0`)
+    const minutesStr = minutes.toString().padStart(2, `0`)
 
     return `${hoursStr}:${minutesStr} ${timeAmPm}`
 }
@@ -44,8 +46,8 @@ export const hours24To12 = (hours: number) => {
  * @param timeAmPm String that is `am` or `pm` in the clock
  * @returns Hour number based on the 24-hour clock
  */
-export const hours12To24 = (hours: number, timeAmPm: 'am' | 'pm') => {
-    if (timeAmPm === 'am') {
+export const hours12To24 = (hours: number, timeAmPm: `am` | `pm`) => {
+    if (timeAmPm === `am`) {
         if (hours === 12) {
             return 0
         }
@@ -63,7 +65,7 @@ export const hours12To24 = (hours: number, timeAmPm: 'am' | 'pm') => {
  * @param hours Hour number represented in 24-hour clock
  * @returns String representing `am` or `pm`
  */
-export const getAmPm = (hours: number) => (hours < 12 ? 'am' : 'pm')
+export const getAmPm = (hours: number) => (hours < 12 ? `am` : `pm`)
 
 /**
  * Calculates the duration of block in minutes

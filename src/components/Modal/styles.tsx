@@ -1,6 +1,7 @@
-import { styled } from 'styled-components'
 import { motion } from 'framer-motion'
-import { flexCenter } from '../../styles/styleDefinitions'
+import { styled } from 'styled-components'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const ModalContainer = styled.div``
 
@@ -15,7 +16,7 @@ export const ModalDrop = styled(motion.div).attrs(() => ({
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: ${(props) => (props.theme.name === 'dark' ? `rgba(255, 255, 255, 0.05)` : `rgba(0, 0, 0, 0.5)`)};
+    background-color: ${(props) => (props.theme.name === `dark` ? `rgba(255, 255, 255, 0.05)` : `rgba(0, 0, 0, 0.5)`)};
     backdrop-filter: blur(5px);
     display: flex;
     align-items: center;

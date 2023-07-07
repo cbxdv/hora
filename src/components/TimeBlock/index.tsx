@@ -1,18 +1,19 @@
-import { useState, MouseEvent } from 'react'
-import { ITimeBlock } from '../../@types/TimeBlockInterfaces'
-import ContextMenu from '../ContextMenu'
-import { timeObjectTo12HourStr } from '../../utilities/timeUtils'
-import { useAppDispatch } from '../../redux/store'
 import { AnimatePresence } from 'framer-motion'
-import {
-    blockDeleted,
-    showBlockForm,
-    updateDuplicateBlock,
-    updateSelectedBlock
-} from '../../redux/slices/timetableSlice'
-import EditIcon from '../../assets/icons/Edit.svg'
-import DuplicateIcon from '../../assets/icons/Copy.svg'
-import TrashIcon from '../../assets/icons/Trash.svg'
+import { useState, MouseEvent } from 'react'
+
+import { ITimeBlock } from '@appTypes/TimeBlockInterfaces'
+
+import DuplicateIcon from '@assets/icons/Copy.svg'
+import EditIcon from '@assets/icons/Edit.svg'
+import TrashIcon from '@assets/icons/Trash.svg'
+
+import ContextMenu from '@components/ContextMenu'
+
+import { blockDeleted, showBlockForm, updateDuplicateBlock, updateSelectedBlock } from '@redux/slices/timetableSlice'
+import { useAppDispatch } from '@redux/store'
+
+import { timeObjectTo12HourStr } from '@utils/timeUtils'
+
 import * as s from './styles'
 
 const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
@@ -60,8 +61,8 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                     <ContextMenu
                         menuItems={[
                             {
-                                id: 'edit',
-                                name: 'Edit',
+                                id: `edit`,
+                                name: `Edit`,
                                 icon: EditIcon,
                                 action: () => {
                                     setIsContextMenuVisible(false)
@@ -70,8 +71,8 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                                 }
                             },
                             {
-                                id: 'duplicate',
-                                name: 'Duplicate',
+                                id: `duplicate`,
+                                name: `Duplicate`,
                                 icon: DuplicateIcon,
                                 action: () => {
                                     setIsContextMenuVisible(false)
@@ -80,8 +81,8 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                                 }
                             },
                             {
-                                id: 'delete',
-                                name: 'Delete',
+                                id: `delete`,
+                                name: `Delete`,
                                 icon: TrashIcon,
                                 action: () => {
                                     setIsContextMenuVisible(false)
@@ -99,7 +100,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                 $blockHeight={getBlockHeight()}
                 $blockColor={timeBlock.color}
                 $positionalPad={getTopPositionalPadding()}
-                onAuxClick={(event: React.MouseEvent<HTMLDivElement>) => contextMenuHandler(event)}
+                onAuxClick={(event: MouseEvent<HTMLDivElement>) => contextMenuHandler(event)}
             >
                 <s.StylingLineContainer>
                     <s.StylingLine />

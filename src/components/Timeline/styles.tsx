@@ -1,5 +1,6 @@
 import { styled } from 'styled-components'
-import { flexCenter } from '../../styles/styleDefinitions'
+
+import { flexCenter } from '@styles/styleDefinitions'
 
 export const Timeline = styled.div`
     margin-right: 10px;
@@ -15,7 +16,7 @@ export const TimelineStarter = styled.div`
 `
 
 export const TimelineContainer = styled.div`
-    ${flexCenter({ alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column' })}
+    ${flexCenter({ alignItems: `center`, justifyContent: `space-between`, flexDirection: `column` })}
     width: 40px;
     height: 2160px;
     font-size: 12px;

@@ -1,6 +1,7 @@
-import { appIS, timetableIS } from '../redux/initialStates'
-import { IAppSettings } from '../@types/AppInterfaces'
-import { ITimetableDiskData } from '../@types/TimetableInterfaces'
+import { IAppSettings } from '@appTypes/AppInterfaces'
+import { ITimetableDiskData } from '@appTypes/TimetableInterfaces'
+import { appIS, timetableIS } from '@redux/initialStates'
+
 import { normalizeObject, transferToFrom } from './objectUtils'
 
 const timetableData: ITimetableDiskData = {

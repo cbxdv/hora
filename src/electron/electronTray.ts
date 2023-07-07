@@ -1,6 +1,7 @@
 import { Menu, Tray, app, nativeImage, nativeTheme } from 'electron'
-import { showWindow } from './electronWindow'
+
 import { logoOutlineBlack, logoOutlineWhite } from './electronImageURL'
+import { showWindow } from './electronWindow'
 
 let tray: Tray | null = null
 
@@ -12,18 +13,18 @@ export const createTray = () => {
     tray = new Tray(image)
 
     // Setting the tooltip to show the app name
-    tray.setToolTip('hora')
+    tray.setToolTip(`hora`)
 
     // A small menu for the context menu
     const trayMenu = Menu.buildFromTemplate([
         {
-            label: 'Show',
+            label: `Show`,
             click() {
                 showWindow()
             }
         },
         {
-            label: 'Exit',
+            label: `Exit`,
             click() {
                 app.exit()
             }
@@ -34,8 +35,8 @@ export const createTray = () => {
     tray.setContextMenu(trayMenu)
 
     // In case of Windows, clicking the icon once, can open the app
-    if (process.platform === 'win32') {
-        tray.on('click', () => {
+    if (process.platform === `win32`) {
+        tray.on(`click`, () => {
             showWindow()
         })
     }

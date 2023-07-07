@@ -1,14 +1,13 @@
+import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { ThemeProvider, styled } from 'styled-components'
-import { AnimatePresence, motion } from 'framer-motion'
-import GlobalStyles from './styles/globalStyles'
-import { lightThemeColors, darkThemeColors } from './styles/styleConstants'
-import WeekViewer from './components/WeekViewer'
-import Header from './components/Header'
-import BlockForm from './components/BlockForm'
-import SettingsComponent from './components/SettingsComponent'
-import { showBlockForm, selectIsBlockFormVisible } from './redux/slices/timetableSlice'
-import { useAppDispatch, useAppSelector } from './redux/store'
+
+import BlockForm from '@components/BlockForm'
+import Header from '@components/Header'
+import Loader from '@components/Loader'
+import SettingsComponent from '@components/SettingsComponent'
+import WeekViewer from '@components/WeekViewer'
+
 import {
     appStarted,
     selectIsLoading,
@@ -16,10 +15,15 @@ import {
     selectShowingTheme,
     showSettings,
     toggleTheme
-} from './redux/slices/appSlice'
-import './styles/fonts.css'
-import { stopNS } from './utilities/notificationsUtils'
-import Loader from './components/Loader'
+} from '@redux/slices/appSlice'
+import { showBlockForm, selectIsBlockFormVisible } from '@redux/slices/timetableSlice'
+import { useAppDispatch, useAppSelector } from '@redux/store'
+
+import GlobalStyles from '@styles/globalStyles'
+import { lightThemeColors, darkThemeColors } from '@styles/styleConstants'
+import '@styles/fonts.css'
+
+import { stopNS } from '@utils/notificationsUtils'
 
 const App = () => {
     const dispatch = useAppDispatch()
@@ -39,7 +43,7 @@ const App = () => {
             {isLoading ? (
                 <Loader />
             ) : (
-                <ThemeProvider theme={theme === 'light' ? lightThemeColors : darkThemeColors}>
+                <ThemeProvider theme={theme === `light` ? lightThemeColors : darkThemeColors}>
                     <GlobalStyles />
                     <ModalsContainer />
                     <AppMain>
@@ -66,22 +70,22 @@ const ModalsContainer = () => {
             return
         }
         switch (event.key.toLowerCase()) {
-            case 'a':
+            case `a`:
                 dispatch(showBlockForm())
                 break
-            case 'i':
+            case `i`:
                 dispatch(showSettings())
                 break
-            case 'l':
+            case `l`:
                 dispatch(toggleTheme())
                 break
         }
     }
 
     useEffect(() => {
-        window.addEventListener('keydown', keyBindHandler)
+        window.addEventListener(`keydown`, keyBindHandler)
         return () => {
-            window.removeEventListener('keydown', keyBindHandler)
+            window.removeEventListener(`keydown`, keyBindHandler)
         }
     }, [isBlockFormVisible, isSettingsVisible])
 
