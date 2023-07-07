@@ -12,7 +12,7 @@ export const ColorSelectorContainer = styled(motion.div).attrs(() => ({
     position: absolute;
     top: 110%;
     border-radius: 8px;
-    background-color: ${(props) => props.theme.background};
+    background-color: ${props => props.theme.background};
     left: 0;
     box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
     z-index: 1;
@@ -28,14 +28,14 @@ export const ColorButtonContainer = styled(motion.div).attrs(({ theme }) => ({
     cursor: pointer;
     height: 22px;
     width: 22px;
-    border: solid ${(props) => (props.$selected ? `2px ${props.theme.selected}` : ` 0.1px transparent`)};
+    border: solid ${props => (props.$selected ? `2px ${props.theme.selected}` : ` 0.1px transparent`)};
     margin: 5px;
     border-radius: 4px;
     float: left;
 `
 
 export const ColorButton = styled.div<{ $color: string }>`
-    background: ${(props) => props.$color};
+    background: ${props => props.$color};
     height: 14px;
     width: 14px;
     border-radius: 4px;

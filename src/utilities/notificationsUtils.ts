@@ -17,7 +17,7 @@ const notificationService = (blocks: INotifyObject[]) => {
             location.reload()
         }
 
-        blocks.forEach((block) => {
+        blocks.forEach(block => {
             let shouldNotify = true
             shouldNotify = shouldNotify && block.time.hours === now.getHours()
             shouldNotify = shouldNotify && block.time.minutes === now.getMinutes()
@@ -67,7 +67,7 @@ export const generateNotifyObjects: generateNotifyType = (
     const objects: INotifyObject[] = []
 
     // Iterating through the blocks and generating notifyObjects
-    blocks.forEach((block) => {
+    blocks.forEach(block => {
         // Start notifications
         if (notifyStart) {
             const time = { ...block.startTime }

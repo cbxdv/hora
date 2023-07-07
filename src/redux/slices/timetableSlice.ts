@@ -42,7 +42,7 @@ const timetableSlice = createSlice({
         },
         blockDeleted(state, action: ITimeBlockDeletePayload) {
             const { day, id } = action.payload
-            state.blocks[day] = state.blocks[day].filter((block) => block.id !== id)
+            state.blocks[day] = state.blocks[day].filter(block => block.id !== id)
             // CLosing the form
             state.statuses.isBlockFormVisible = false
             state.statuses.selectedBlock = null
@@ -51,7 +51,7 @@ const timetableSlice = createSlice({
             const id = action.payload.oldBlock.id
             const { oldBlock, newBlock } = action.payload
             // Deleting old block
-            state.blocks[oldBlock.day] = state.blocks[oldBlock.day].filter((block) => block.id !== id)
+            state.blocks[oldBlock.day] = state.blocks[oldBlock.day].filter(block => block.id !== id)
             // Adding new block
             state.blocks[newBlock.day].push(newBlock)
             // Closing the form

@@ -15,7 +15,7 @@ type estimateNextBlockType = (block: ITimeBlockBase) => ITimetableFormCache
  * @param block The block that is used to estimate and generate a form cache
  * @returns A form cache
  */
-export const estimateNextBlock: estimateNextBlockType = (block) => {
+export const estimateNextBlock: estimateNextBlockType = block => {
     // Getting the duration of the given block
     const duration = getDurationMinutes(block)
 
@@ -40,15 +40,15 @@ type generateSubjectsType = (blocks: IBlocks) => ITimetableSubject[]
  * @param blocks The week object with block that is used to generate subjects
  * @returns A list of subjects from the provided blocks
  */
-export const generateSubjects: generateSubjectsType = (blocks) => {
+export const generateSubjects: generateSubjectsType = blocks => {
     const subjects: ITimetableSubject[] = []
 
     // A map/object to store all subjects so that no duplicates exists
     const tempSubjects: { [key: string]: ITimetableSubject } = {}
 
     // Iterating through each day and generating subjects
-    dayIds.forEach((dayId) => {
-        blocks[dayId].forEach((block) => {
+    dayIds.forEach(dayId => {
+        blocks[dayId].forEach(block => {
             // Title in lowercase is used as a id for the subject in the map
             const title = block.title.toLowerCase()
 
@@ -64,7 +64,7 @@ export const generateSubjects: generateSubjectsType = (blocks) => {
     })
 
     // Converting the subjects map to an array
-    Object.values(tempSubjects).forEach((subject) => subjects.push(subject))
+    Object.values(tempSubjects).forEach(subject => subjects.push(subject))
 
     return subjects
 }
@@ -84,7 +84,7 @@ export const updateSubjects: updateSubjectsType = (subjects, block) => {
     const newSubjects: ITimetableSubject[] = []
 
     // Iterating through the subjects array
-    subjects.forEach((subject) => {
+    subjects.forEach(subject => {
         // If the subject title matches with the block title, then it is updated
         if (subject.title.toLowerCase() === block.title.toLowerCase()) {
             wasUpdated = true

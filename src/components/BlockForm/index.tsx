@@ -47,7 +47,7 @@ const BlockForm = () => {
         } else {
             formDispatch(fa.hideSubjectDD())
         }
-        const filtered = subjectList.filter((s) => s.name.toLowerCase().includes(state.title.toLowerCase()))
+        const filtered = subjectList.filter(s => s.name.toLowerCase().includes(state.title.toLowerCase()))
         formDispatch(fa.setFilteredSub(filtered))
         if (state.selectedSubjectIndex !== null) {
             const selSub = subjects[state.selectedSubjectIndex]

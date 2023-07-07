@@ -67,7 +67,7 @@ export const createWindow = async () => {
     Menu.setApplicationMenu(menu)
 
     // When the close button is pressed
-    mainWindow.on(`close`, (e) => {
+    mainWindow.on(`close`, e => {
         e.preventDefault()
         closeWindow()
     })

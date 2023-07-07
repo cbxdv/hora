@@ -41,7 +41,7 @@ const ValueDropdown: React.FC<ValueDropdownProps> = ({ selected, items, selectHa
 
     return (
         <s.ValueDropdownContainer ref={dropdownRef}>
-            {items.map((item) => (
+            {items.map(item => (
                 <s.DropdownItem
                     key={item.value}
                     $selected={selected === item.value}

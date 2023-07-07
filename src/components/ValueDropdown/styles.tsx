@@ -14,8 +14,8 @@ export const ValueDropdownContainer = styled(motion.div).attrs(() => ({
     left: 0;
     top: 110%;
     border-radius: 8px;
-    background-color: ${(props) => props.theme.background};
-    color: ${(props) => props.theme.text};
+    background-color: ${props => props.theme.background};
+    color: ${props => props.theme.text};
     font-size: 13px;
     padding: 0 5px;
     z-index: 1;
@@ -32,7 +32,7 @@ export const DropdownItem = styled(motion.div).attrs(({ theme }) => ({
     padding: 0 10px;
     font-size: 12px;
     border-radius: 8px;
-    background-color: ${(props) => (props.$selected ? `${props.theme.selected}` : `transparent`)};
+    background-color: ${props => (props.$selected ? `${props.theme.selected}` : `transparent`)};
     cursor: pointer;
     border: 0.1px solid transparent;
     margin: 5px 0;
@@ -40,7 +40,7 @@ export const DropdownItem = styled(motion.div).attrs(({ theme }) => ({
     & > svg {
         height: 16px;
         width: 16px;
-        stroke: ${(props) => props.theme.text};
+        stroke: ${props => props.theme.text};
         stroke-width: 3px;
     }
 `

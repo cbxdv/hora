@@ -32,7 +32,7 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ selected, changeHandler, 
     return (
         <s.ColorSelectorContainer ref={ref}>
             <div>
-                {Object.keys(varietyColors).map((c) => (
+                {Object.keys(varietyColors).map(c => (
                     <s.ColorButtonContainer
                         $selected={selected === varietyColors[c]}
                         onClick={() => {

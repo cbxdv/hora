@@ -12,7 +12,7 @@ const store = configureStore({
         service: serviceReducer,
         timetable: timetableReducer
     },
-    middleware: (getDefaultMiddleWare) => getDefaultMiddleWare().concat(listenerMiddleware)
+    middleware: getDefaultMiddleWare => getDefaultMiddleWare().concat(listenerMiddleware)
 })
 
 export default store

@@ -11,13 +11,13 @@ import { useAppSelector } from '@redux/store'
 import * as s from './styles'
 
 const DayColumn: React.FC<DayColumnProps> = ({ dayId }) => {
-    const blocks = useAppSelector((state) => selectBlocksByDayId(state, dayId))
+    const blocks = useAppSelector(state => selectBlocksByDayId(state, dayId))
     return (
         <s.DayColumnContainer $dayId={dayId}>
             <s.DayIndicator $today={dayId === new Date().getDay()}>{DayID[dayId]}</s.DayIndicator>
             <s.BlocksContainer>
                 <AnimatePresence>
-                    {blocks.map((block) => (
+                    {blocks.map(block => (
                         <TimeBlock key={block.id} timeBlock={block} />
                     ))}
                 </AnimatePresence>

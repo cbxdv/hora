@@ -15,7 +15,7 @@ const GlobalStyles = createGlobalStyle`
 
     body {
         font-family: Outfit;
-        color: ${(props) => props.theme.text};
+        color: ${props => props.theme.text};
         font-size: 14px;
         user-select: none;
         scroll-behavior: smooth;

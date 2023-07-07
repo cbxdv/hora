@@ -27,7 +27,7 @@ const TimetableSettings = () => {
             <s.SettingsSection>
                 <s.SectionHeading>Days to Show</s.SectionHeading>
                 <s.SectionBodyGrid>
-                    {dayIds.map((dayId) => (
+                    {dayIds.map(dayId => (
                         <s.CheckSettingContainer key={`${dayId}-dayToShow`}>
                             <s.CheckSettingName>{DayID[dayId]}</s.CheckSettingName>
                             <SettingsCheckBox
@@ -52,7 +52,7 @@ const TimetableSettings = () => {
                         Notify before{` `}
                         <SettingsNumberInput
                             value={settings.notifyStartBefore}
-                            setValue={(value) => {
+                            setValue={value => {
                                 dispatch(updateTTNotifyBefore({ type: `start`, value }))
                             }}
                         />
@@ -70,7 +70,7 @@ const TimetableSettings = () => {
                         Notify before{` `}
                         <SettingsNumberInput
                             value={settings.notifyEndBefore}
-                            setValue={(value) => {
+                            setValue={value => {
                                 dispatch(updateTTNotifyBefore({ type: `end`, value }))
                             }}
                         />

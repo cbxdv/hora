@@ -96,7 +96,7 @@ const TimeSelector: React.FC<TimeInputProps> = ({
             <s.TimeInputComponent ref={hoursRef}>{generateHours()}</s.TimeInputComponent>
             <s.TimeInputComponent ref={minsRef}>{generateMinutes()}</s.TimeInputComponent>
             <s.TimeInputComponent>
-                {[`AM`, `PM`].map((m) => (
+                {[`AM`, `PM`].map(m => (
                     <s.DropdownItem
                         onClick={() => {
                             setAmPm(m.toLowerCase() as `am` | `pm`)

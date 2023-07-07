@@ -16,7 +16,7 @@ export const ModalDrop = styled(motion.div).attrs(() => ({
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: ${(props) => (props.theme.name === `dark` ? `rgba(255, 255, 255, 0.05)` : `rgba(0, 0, 0, 0.5)`)};
+    background-color: ${props => (props.theme.name === `dark` ? `rgba(255, 255, 255, 0.05)` : `rgba(0, 0, 0, 0.5)`)};
     backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
@@ -25,9 +25,9 @@ export const ModalDrop = styled(motion.div).attrs(() => ({
 `
 
 export const ModalBody = styled.div<{ $height?: string; $width?: string }>`
-    height: ${(props) => (props.$height != null ? `${props.$height}` : `unset`)};
+    height: ${props => (props.$height != null ? `${props.$height}` : `unset`)};
     max-height: 90%;
-    width: ${(props) => (props.$width != null ? `${props.$width}` : `unset`)};
+    width: ${props => (props.$width != null ? `${props.$width}` : `unset`)};
     max-width: 90%;
     padding: 30px;
     margin: auto;
@@ -41,12 +41,12 @@ export const ModalBody = styled.div<{ $height?: string; $width?: string }>`
 export const ModalHeader = styled.div<{ $hasTitle?: string }>`
     width: 100%;
     ${flexCenter()};
-    justify-content: ${(props) => (props.$hasTitle ? `space-between` : `flex-end`)};
+    justify-content: ${props => (props.$hasTitle ? `space-between` : `flex-end`)};
 `
 
 export const ModalHeading = styled.h1`
     font-size: 20px;
-    color: ${(props) => props.theme.text};
+    color: ${props => props.theme.text};
 `
 
 export const CloseButton = styled.div`
@@ -56,7 +56,7 @@ export const CloseButton = styled.div`
         width: 20px;
         height: 20px;
         fill: none;
-        stroke: ${(props) => props.theme.text};
+        stroke: ${props => props.theme.text};
         stroke-width: 2px;
     }
 `

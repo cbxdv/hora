@@ -56,7 +56,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ menuItems, position, closeHan
 
     return createPortal(
         <s.ContextMenuContainer $x={x} $y={y} ref={ref}>
-            {menuItems.map((item) => (
+            {menuItems.map(item => (
                 <s.MenuItem key={item.id} onClick={item.action} $danger={item.danger}>
                     <s.MenuItemIcon $danger={item.danger}>{<item.icon />}</s.MenuItemIcon>
                     <span>{item.name}</span>

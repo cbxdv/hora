@@ -16,7 +16,7 @@ export const TitleIconContainer = styled.div`
     ${flexCenter()};
     width: 30px;
     height: 30px;
-    background-color: ${(props) => props.theme.shade1};
+    background-color: ${props => props.theme.shade1};
     border-radius: 8px;
 
     & > svg {
@@ -87,7 +87,7 @@ export const InputValueArrowContainer = styled.button<{ $isVisible: boolean }>`
     position: relative;
 
     & > svg {
-        transform: ${(props) => (props.$isVisible ? `rotate(180deg) translateY(-2px)` : `translateY(1px)`)};
+        transform: ${props => (props.$isVisible ? `rotate(180deg) translateY(-2px)` : `translateY(1px)`)};
         pointer-events: none;
         height: 14px;
         width: 14px;
@@ -101,7 +101,7 @@ export const ColorIndicator = styled.div<{ $color: string }>`
     height: 15px;
     width: 15px;
     border-radius: 4px;
-    background: ${(props) => props.$color};
+    background: ${props => props.$color};
     margin-right: 10px;
 `
 

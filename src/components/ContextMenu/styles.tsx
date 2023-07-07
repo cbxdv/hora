@@ -11,14 +11,14 @@ export const ContextMenuContainer = styled(motion.div).attrs(() => ({
 }))<{ $x: number; $y: number }>`
     min-width: 120px;
     position: fixed;
-    background: ${(props) => props.theme.contextBackground};
+    background: ${props => props.theme.contextBackground};
     box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
     backdrop-filter: blur(4px);
     border-radius: 8px;
     padding: 5px;
     padding-bottom: 0;
-    top: ${(props) => props.$y}px;
-    left: ${(props) => props.$x}px;
+    top: ${props => props.$y}px;
+    left: ${props => props.$x}px;
 `
 
 export const MenuItem = styled(motion.div).attrs(({ theme }) => ({
@@ -32,7 +32,7 @@ export const MenuItem = styled(motion.div).attrs(({ theme }) => ({
     padding: 5px 10px;
     background: transparent;
     border-radius: 8px;
-    color: ${(props) => (props.$danger ? `#C76162` : props.theme.text)};
+    color: ${props => (props.$danger ? `#C76162` : props.theme.text)};
     font-size: 14px;
     margin-bottom: 5px;
     border: 0.1px solid transparent;

@@ -9,7 +9,7 @@ export const LogoContainer = styled.div`
 
 export const HeaderContainer = styled.div`
     ${flexCenter({ justifyContent: `space-between` })};
-    background-color: ${(props) => props.theme.background};
+    background-color: ${props => props.theme.background};
     height: 90px;
     width: 100%;
     padding: 10px 60px;
