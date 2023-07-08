@@ -42,6 +42,14 @@ export const transferToFrom: transferToFromType = (objA, objB) => {
         return objA
     }
 
+    // If A is null or undefined, return null
+    if (objA == null) {
+        if (objB != null) {
+            return objB
+        }
+        return null
+    }
+
     // Convert A to entries, useful for iterating
     const aE = Object.entries(objA)
 

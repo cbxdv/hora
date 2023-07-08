@@ -1,22 +1,34 @@
 import { AnimatePresence } from 'framer-motion'
 import { useState, MouseEvent } from 'react'
 
-import { ITimeBlock } from '@appTypes/TimeBlockInterfaces'
+import { DayID, ITimeBlock } from '@appTypes/TimeBlockInterfaces'
 
+import CancelIcon from '@assets/icons/Cancel.svg'
 import DuplicateIcon from '@assets/icons/Copy.svg'
 import EditIcon from '@assets/icons/Edit.svg'
 import TrashIcon from '@assets/icons/Trash.svg'
 
 import ContextMenu from '@components/ContextMenu'
 
-import { blockDeleted, showBlockForm, updateDuplicateBlock, updateSelectedBlock } from '@redux/slices/timetableSlice'
-import { useAppDispatch } from '@redux/store'
+import {
+    addBlockCancellation,
+    blockDeleted,
+    deleteBlockCancellation,
+    selectCanceledBlocks,
+    selectSubDayCancellation,
+    showBlockForm,
+    updateDuplicateBlock,
+    updateSelectedBlock,
+    updateSubDayToOpenBlockForm
+} from '@redux/slices/timetableSlice'
+import { useAppDispatch, useAppSelector } from '@redux/store'
 
+import { checkIsBlockCanceled } from '@utils/timetableUtils'
 import { timeObjectTo12HourStr } from '@utils/timeUtils'
 
 import * as s from './styles'
 
-const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
+const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock, daySub }) => {
     const dispatch = useAppDispatch()
 
     const [isContextMenuVisible, setIsContextMenuVisible] = useState<boolean>(false)
@@ -45,6 +57,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
     }
 
     const contextMenuHandler = (event: MouseEvent) => {
+        event.stopPropagation()
         const x = event.clientX
         const y = event.clientY
         setMousePos({
@@ -52,6 +65,15 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
             y
         })
         setIsContextMenuVisible(true)
+    }
+
+    let isCanceled = false
+    if (daySub != null) {
+        const canceledBlocks = useAppSelector(state => selectSubDayCancellation(state, daySub))
+        isCanceled = checkIsBlockCanceled(timeBlock, canceledBlocks)
+    } else {
+        const canceledBlocks = useAppSelector(selectCanceledBlocks)
+        isCanceled = checkIsBlockCanceled(timeBlock, canceledBlocks)
     }
 
     return (
@@ -62,17 +84,20 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                         menuItems={[
                             {
                                 id: `edit`,
-                                name: `Edit`,
+                                label: `Edit`,
                                 icon: EditIcon,
                                 action: () => {
                                     setIsContextMenuVisible(false)
+                                    if (daySub != null) {
+                                        dispatch(updateSubDayToOpenBlockForm(daySub))
+                                    }
                                     dispatch(updateSelectedBlock(timeBlock))
                                     dispatch(showBlockForm())
                                 }
                             },
                             {
                                 id: `duplicate`,
-                                name: `Duplicate`,
+                                label: `Duplicate`,
                                 icon: DuplicateIcon,
                                 action: () => {
                                     setIsContextMenuVisible(false)
@@ -81,12 +106,25 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                                 }
                             },
                             {
+                                id: `cancel`,
+                                label: isCanceled ? `Restore` : `Cancel`,
+                                icon: CancelIcon,
+                                action: () => {
+                                    setIsContextMenuVisible(false)
+                                    if (isCanceled) {
+                                        dispatch(deleteBlockCancellation({ blockId: timeBlock.id, subDay: daySub }))
+                                    } else {
+                                        dispatch(addBlockCancellation({ blockId: timeBlock.id, subDay: daySub }))
+                                    }
+                                }
+                            },
+                            {
                                 id: `delete`,
-                                name: `Delete`,
+                                label: `Delete`,
                                 icon: TrashIcon,
                                 action: () => {
                                     setIsContextMenuVisible(false)
-                                    dispatch(blockDeleted({ day: timeBlock.day, id: timeBlock.id }))
+                                    dispatch(blockDeleted({ day: timeBlock.day, id: timeBlock.id, daySub }))
                                 },
                                 danger: true
                             }
@@ -100,6 +138,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
                 $blockHeight={getBlockHeight()}
                 $blockColor={timeBlock.color}
                 $positionalPad={getTopPositionalPadding()}
+                $canceled={isCanceled}
                 onAuxClick={(event: MouseEvent<HTMLDivElement>) => contextMenuHandler(event)}
             >
                 <s.StylingLineContainer>
@@ -120,6 +159,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock }) => {
 
 type TimeBlockProps = {
     timeBlock: ITimeBlock
+    daySub: DayID | null
 }
 
 export default TimeBlock

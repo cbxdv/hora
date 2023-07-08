@@ -27,13 +27,13 @@ export const serviceIS: IServiceState = {
 
 export const timetableIS: ITimetableState = {
     blocks: {
+        0: [],
         1: [],
         2: [],
         3: [],
         4: [],
         5: [],
-        6: [],
-        0: []
+        6: []
     },
     settings: {
         daysToShow: {
@@ -52,13 +52,56 @@ export const timetableIS: ITimetableState = {
     },
     statuses: {
         isBlockFormVisible: false,
+        isSubFormVisible: false,
         selectedBlock: null,
-        blockToBeDuplicated: null
+        blockToBeDuplicated: null,
+        dayToBeOpenSubForm: null,
+        subDayToOpenBlockForm: null
     },
     formCache: {
         startTime: null,
         endTime: null,
         day: null,
         subjects: []
+    },
+    allocations: {
+        daySubs: {
+            0: {
+                subWith: null,
+                blocks: [],
+                canceled: []
+            },
+            1: {
+                subWith: null,
+                blocks: [],
+                canceled: []
+            },
+            2: {
+                subWith: null,
+                blocks: [],
+                canceled: []
+            },
+            3: {
+                subWith: null,
+                blocks: [],
+                canceled: []
+            },
+            4: {
+                subWith: null,
+                blocks: [],
+                canceled: []
+            },
+            5: {
+                subWith: null,
+                blocks: [],
+                canceled: []
+            },
+            6: {
+                subWith: null,
+                blocks: [],
+                canceled: []
+            }
+        },
+        canceledBlocks: []
     }
 }

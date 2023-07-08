@@ -46,7 +46,11 @@ export const SettingsSectionContainer = styled.div`
     height: 100%;
 `
 
-export const SettingsSection = styled.div`
+export const SettingsSection = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 }
+}))`
     width: 100%;
     margin-bottom: 10px;
 `
@@ -160,3 +164,62 @@ export const SettingsComponentItem = styled(motion.div).attrs(() => ({
     animate: { opacity: 1 },
     exit: { opacity: 0 }
 }))``
+
+export const SubsContainer = styled.div`
+    ${flexCenter({ flexDirection: `column` })}
+`
+
+export const SubElement = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 }
+}))`
+    width: 60%;
+
+    border: 0.1px solid ${({ theme }) => (theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`)};
+    padding: 5px 10px;
+    margin: 5px auto;
+    border-radius: 8px;
+    font-size: 12px;
+    ${flexCenter({ alignItems: `space-between` })};
+`
+
+export const SubElementDetails = styled.div`
+    width: 75%;
+    display: flex;
+
+    div:nth-child(1) {
+        ${flexCenter({ justifyContent: `flex-end` })};
+        width: 40%;
+        padding-right: 5px;
+    }
+
+    div:nth-child(2) {
+        ${flexCenter()};
+        width: 10%;
+    }
+
+    div:nth-child(3) {
+        ${flexCenter({ justifyContent: `flex-start` })};
+        width: 40%;
+        padding-left: 5px;
+    }
+`
+
+export const SubElementAction = styled(motion.div).attrs(() => ({
+    whileHover: { filter: `invert(8%)` },
+    whileTap: { filter: `invert(15%)`, scale: 0.98 }
+}))`
+    width: 20%;
+    ${flexCenter({ justifyContent: `flex-end` })};
+    cursor: pointer;
+
+    & > svg {
+        ${flexCenter()};
+        width: 12px;
+        height: 12px;
+        fill: none;
+        stroke: #c76162;
+        stroke-width: 2px;
+    }
+`

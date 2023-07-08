@@ -19,6 +19,7 @@ export const ContextMenuContainer = styled(motion.div).attrs(() => ({
     padding-bottom: 0;
     top: ${props => props.$y}px;
     left: ${props => props.$x}px;
+    z-index: 1;
 `
 
 export const MenuItem = styled(motion.div).attrs(({ theme }) => ({

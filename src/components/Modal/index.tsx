@@ -29,7 +29,7 @@ const Modal: React.FC<ModalProps> = ({ title, children, closeHandler, height, wi
                     onClick={(e: MouseEvent<HTMLDivElement>) => e.stopPropagation()}
                 >
                     <s.ModalHeader $hasTitle={title}>
-                        {title ? <s.ModalHeading>Settings</s.ModalHeading> : <></>}
+                        {title ? <s.ModalHeading>{title}</s.ModalHeading> : <></>}
                         <s.CloseButton onClick={closeHandler}>
                             <CrossIcon />
                         </s.CloseButton>

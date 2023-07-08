@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import * as s from './styles'
@@ -6,18 +6,20 @@ import * as s from './styles'
 const ContextMenu: React.FC<ContextMenuProps> = ({ menuItems, position, closeHandler }) => {
     const ref = useRef<HTMLDivElement>(null)
 
-    const [x, setX] = useState<number>(position.x)
-    const [y, setY] = useState<number>(position.y)
+    const [x, setX] = useState<number>(0)
+    const [y, setY] = useState<number>(0)
 
-    const correctPositions = (newX = position.x, newY = position.y) => {
-        if (ref.current) {
-            if (x + ref.current.offsetWidth > window.innerWidth) {
+    const correctPositions = (newX: number, newY: number) => {
+        if (ref?.current) {
+            // Width
+            if (newX + ref.current.offsetWidth > window.innerWidth - 10) {
                 setX(window.innerWidth - ref.current.offsetWidth - 10)
             } else {
                 setX(newX)
             }
 
-            if (y + ref.current.offsetHeight >= window.innerHeight) {
+            // Height
+            if (newY + ref.current.offsetHeight >= window.innerHeight - 10) {
                 setY(window.innerHeight - ref.current.offsetHeight - 10)
             } else {
                 setY(newY)
@@ -46,7 +48,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ menuItems, position, closeHan
         document.addEventListener(`scroll`, closeHandler, true)
         document.addEventListener(`mousedown`, handleClickOutside, true)
         document.addEventListener(`keydown`, keyBindHandler, true)
-        correctPositions()
+        correctPositions(position.x, position.y)
         return () => {
             document.addEventListener(`scroll`, closeHandler, true)
             document.removeEventListener(`mousedown`, handleClickOutside, true)
@@ -55,11 +57,22 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ menuItems, position, closeHan
     }, [])
 
     return createPortal(
-        <s.ContextMenuContainer $x={x} $y={y} ref={ref}>
+        <s.ContextMenuContainer
+            $x={x}
+            $y={y}
+            ref={ref}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            onAuxClick={(e: React.MouseEvent) => e.stopPropagation()}
+        >
             {menuItems.map(item => (
-                <s.MenuItem key={item.id} onClick={item.action} $danger={item.danger}>
+                <s.MenuItem
+                    key={item.id}
+                    $danger={item.danger}
+                    onClick={item.action}
+                    onAuxClick={(e: React.MouseEvent) => e.stopPropagation()}
+                >
                     <s.MenuItemIcon $danger={item.danger}>{<item.icon />}</s.MenuItemIcon>
-                    <span>{item.name}</span>
+                    <span>{item.label}</span>
                 </s.MenuItem>
             ))}
         </s.ContextMenuContainer>,
@@ -70,7 +83,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ menuItems, position, closeHan
 type ContextMenuProps = {
     menuItems: {
         id: string
-        name: string
+        label: string
         icon: React.FunctionComponent
         action: () => void
         danger?: boolean

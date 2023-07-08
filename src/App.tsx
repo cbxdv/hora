@@ -6,6 +6,7 @@ import BlockForm from '@components/BlockForm'
 import Header from '@components/Header'
 import Loader from '@components/Loader'
 import SettingsComponent from '@components/SettingsComponent'
+import SubstitutionForm from '@components/SubstitutionForm'
 import WeekViewer from '@components/WeekViewer'
 
 import {
@@ -16,7 +17,7 @@ import {
     showSettings,
     toggleTheme
 } from '@redux/slices/appSlice'
-import { showBlockForm, selectIsBlockFormVisible } from '@redux/slices/timetableSlice'
+import { showBlockForm, selectIsBlockFormVisible, selectIsSubFormVisible } from '@redux/slices/timetableSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
 import GlobalStyles from '@styles/globalStyles'
@@ -32,11 +33,13 @@ const App = () => {
     const isLoading = useAppSelector(selectIsLoading)
 
     useEffect(() => {
-        dispatch(appStarted()),
-            () => {
-                stopNS()
-            }
+        dispatch(appStarted())
+        return () => {
+            stopNS()
+        }
     }, [])
+
+    console.log(theme)
 
     return (
         <AnimatePresence>
@@ -61,6 +64,7 @@ const ModalsContainer = () => {
 
     const isBlockFormVisible = useAppSelector(selectIsBlockFormVisible)
     const isSettingsVisible = useAppSelector(selectIsSettingsVisible)
+    const isSubFormVisible = useAppSelector(selectIsSubFormVisible)
 
     const keyBindHandler = (event: KeyboardEvent) => {
         if (isBlockFormVisible || isSettingsVisible) {
@@ -87,12 +91,13 @@ const ModalsContainer = () => {
         return () => {
             window.removeEventListener(`keydown`, keyBindHandler)
         }
-    }, [isBlockFormVisible, isSettingsVisible])
+    }, [isBlockFormVisible, isSettingsVisible, isSubFormVisible])
 
     return (
         <AnimatePresence>
-            {isBlockFormVisible && <BlockForm key='modal' />}
-            {isSettingsVisible && <SettingsComponent key='modal' />}
+            {isBlockFormVisible && <BlockForm />}
+            {isSettingsVisible && <SettingsComponent />}
+            {isSubFormVisible && <SubstitutionForm />}
         </AnimatePresence>
     )
 }

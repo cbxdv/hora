@@ -18,13 +18,18 @@ export interface IBlockFormState {
     endHours: number
     endMinutes: number
     endAmPm: `am` | `pm`
+
     isSubjectDDVisible: boolean
     isDayDDVisible: boolean
     isColorDDVisible: boolean
     isStartTimeDDVisible: boolean
     isEndTimeDDVisible: boolean
+
     filteredSubjects: ValueDropdownItemType[]
     selectedSubjectIndex: number | null
+
+    isEditing: boolean
+    isDaySub: boolean
 }
 
 export const blockFormIS: IBlockFormState = {
@@ -44,15 +49,18 @@ export const blockFormIS: IBlockFormState = {
     isStartTimeDDVisible: false,
     isEndTimeDDVisible: false,
     filteredSubjects: [],
-    selectedSubjectIndex: null
+    selectedSubjectIndex: null,
+    isEditing: false,
+    isDaySub: false
 }
 
 type createBlockFormProps = (data: {
     oldBlock: ITimeBlock | null
     duplicateBlock: ITimeBlock | null
     formCache: ITimetableFormCache | null
+    daySub: DayID | null
 }) => IBlockFormState
-export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlock, formCache }) => {
+export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlock, formCache, daySub }) => {
     let title = blockFormIS.title
     let day = blockFormIS.day
     let color = blockFormIS.color
@@ -100,6 +108,9 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
             }
         })
     }
+    if (daySub != null) {
+        day = daySub
+    }
     return {
         ...blockFormIS,
         title,
@@ -112,7 +123,9 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
         endHours,
         endMinutes,
         endAmPm,
-        filteredSubjects
+        filteredSubjects,
+        isEditing: oldBlock != null,
+        isDaySub: daySub != null
     }
 }
 

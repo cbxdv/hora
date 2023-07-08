@@ -54,6 +54,7 @@ export const createWindow = async () => {
             label: `hora`,
             submenu: [
                 { role: `close` },
+                { role: `reload` },
                 {
                     label: `Exit`,
                     click() {

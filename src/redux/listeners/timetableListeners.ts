@@ -6,22 +6,29 @@ import { ITimetableFormCache } from '@appTypes/TimetableInterfaces'
 import { listenerMiddleware } from '@redux/listeners'
 import { updateServiceData } from '@redux/slices/serviceSlice'
 import {
+    addBlockCancellation,
     blockAdded,
     blockDeleted,
     blockUpdated,
     blocksCleared,
+    deleteBlockCancellation,
     selectAllBlocks,
-    selectBlockByCurrentDay,
+    selectBlockByCurrentDayWithSub,
+    selectCanceledBlocksWithSub,
+    selectTTAllocations,
     selectTimetableSettings,
     toggleDaysToShow,
     toggleTTNotification,
+    ttDaySubAdded,
+    ttDaySubDeleted,
     updateTTFormCache,
     updateTTNotifyBefore,
     updateTTSubjects
 } from '@redux/slices/timetableSlice'
 
 import { generateNotifyObjects } from '@utils/notificationsUtils'
-import { estimateNextBlock, updateSubjects } from '@utils/timetableUtils'
+import { normalizeObject } from '@utils/objectUtils'
+import { estimateNextBlock, filterNonCanceledBlocks, updateSubjects } from '@utils/timetableUtils'
 
 // Listener for timetable
 listenerMiddleware.startListening({
@@ -41,12 +48,43 @@ listenerMiddleware.startListening({
     }
 })
 
-// Listener for storing timetable & updating service data
+// Listener for storing allocations
 listenerMiddleware.startListening({
-    matcher: isAnyOf(blockAdded, blockDeleted, blockUpdated, blocksCleared, toggleTTNotification, updateTTNotifyBefore),
+    matcher: isAnyOf(
+        blockAdded,
+        blockDeleted,
+        blockUpdated,
+        ttDaySubAdded,
+        ttDaySubDeleted,
+        addBlockCancellation,
+        deleteBlockCancellation
+    ),
+    effect: (_, listenerApi) => {
+        let allocations = selectTTAllocations(listenerApi.getState())
+        allocations = normalizeObject(allocations)
+        api.saveTTAllocationsToDisk(allocations)
+    }
+})
+
+// Listener for updating service data
+listenerMiddleware.startListening({
+    matcher: isAnyOf(
+        blockAdded,
+        blockDeleted,
+        blockUpdated,
+        blocksCleared,
+        toggleTTNotification,
+        updateTTNotifyBefore,
+        ttDaySubAdded,
+        ttDaySubDeleted,
+        addBlockCancellation,
+        deleteBlockCancellation
+    ),
     effect: (_, listenerApi) => {
         const state = listenerApi.getState()
-        const blocks = selectBlockByCurrentDay(state)
+        let blocks = selectBlockByCurrentDayWithSub(state)
+        const canceledBlocks = selectCanceledBlocksWithSub(state)
+        blocks = filterNonCanceledBlocks(blocks, canceledBlocks)
         const notifyConfigs: notifyPropertiesType = {
             notifyStart: state.timetable.settings.notifyStart,
             notifyStartBefore: state.timetable.settings.notifyStartBefore,
@@ -64,7 +102,8 @@ listenerMiddleware.startListening({
     effect: (action, listenerApi) => {
         const state = listenerApi.getState()
         const oldSubjects = state.timetable.formCache.subjects
-        const newSubjects = updateSubjects(oldSubjects, action.payload)
+        const block = action.payload.newBlock || action.payload.block
+        const newSubjects = updateSubjects(oldSubjects, block)
         listenerApi.dispatch(updateTTSubjects(newSubjects))
     }
 })
@@ -74,7 +113,7 @@ listenerMiddleware.startListening({
     actionCreator: blockAdded,
     effect: (action, listenerApi) => {
         const state = listenerApi.getState()
-        const cache = estimateNextBlock(action.payload)
+        const cache = estimateNextBlock(action.payload.block)
         const estimatedCache: ITimetableFormCache = {
             ...cache,
             subjects: state.timetable.formCache.subjects

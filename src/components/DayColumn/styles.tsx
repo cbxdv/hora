@@ -1,8 +1,13 @@
+import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
 
 import { flexCenter } from '@styles/styleDefinitions'
 
-export const DayColumnContainer = styled.div<{ $dayId: number }>`
+export const DayColumnContainer = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0, width: 0 },
+    animate: { opacity: 1, width: `100%` },
+    exit: { opacity: 0, width: 0 }
+}))<{ $dayId: number }>`
     width: 100%;
     height: 2200px;
 
@@ -11,6 +16,7 @@ export const DayColumnContainer = styled.div<{ $dayId: number }>`
     margin-right: 2.5px;
     ${props => (props.$dayId == 1 ? `margin-left: 0` : ``)};
     ${props => (props.$dayId == 0 ? `margin-right: 0` : ``)};
+    transition: translate 0.2s linear;
 `
 
 export const BlocksContainer = styled.div`
@@ -33,4 +39,8 @@ export const DayIndicator = styled.div<{ $today: boolean }>`
     z-index: 1;
     font-size: 14px;
     font-weight: 500;
+`
+
+export const SubsIndicatorText = styled.span`
+    color: ${props => props.theme.text};
 `

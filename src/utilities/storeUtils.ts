@@ -6,7 +6,8 @@ import { normalizeObject, transferToFrom } from './objectUtils'
 
 const timetableData: ITimetableDiskData = {
     blocks: timetableIS.blocks,
-    settings: timetableIS.settings
+    settings: timetableIS.settings,
+    allocations: timetableIS.allocations
 }
 
 const appData: IAppSettings = appIS.settings

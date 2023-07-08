@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react'
 
 import { ITimeBlock } from '@appTypes/TimeBlockInterfaces'
 
-import { selectBlockByCurrentDay } from '@redux/slices/timetableSlice'
+import { selectBlockByCurrentDayWithSub } from '@redux/slices/timetableSlice'
 import { useAppSelector } from '@redux/store'
 
 import * as s from './styles'
+import { AnimatePresence } from 'framer-motion'
 
 const CurrentBlockViewer = () => {
     const [currentBlock, setCurrentBlock] = useState<ITimeBlock | null>(null)
 
-    const blocks = useAppSelector(selectBlockByCurrentDay)
+    const blocks = useAppSelector(selectBlockByCurrentDayWithSub)
 
     const getRemainingTimeString = (block: ITimeBlock) => {
         if (block === null) {
@@ -82,12 +83,14 @@ const CurrentBlockViewer = () => {
     }, [blocks])
 
     return (
-        currentBlock && (
-            <s.CBlockContainer>
-                <s.Heading>{currentBlock.title || ``}</s.Heading>
-                <s.SubText>{getRemainingTimeString(currentBlock)} remaining</s.SubText>
-            </s.CBlockContainer>
-        )
+        <AnimatePresence>
+            {currentBlock && (
+                <s.CBlockContainer>
+                    <s.Heading>{currentBlock.title || ``}</s.Heading>
+                    <s.SubText>{getRemainingTimeString(currentBlock)} remaining</s.SubText>
+                </s.CBlockContainer>
+            )}
+        </AnimatePresence>
     )
 }
 

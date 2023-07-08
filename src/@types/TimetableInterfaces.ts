@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 
-import { ITime, IBlocks, DayID } from './TimeBlockInterfaces'
+import { ITime, IBlocks, DayID, ITimeBlock } from './TimeBlockInterfaces'
 
 export type IUpdateDaysPayload = PayloadAction<DayID>
 
@@ -17,6 +17,7 @@ export interface ITimetableSettings {
 export type ITimetableDiskData = {
     blocks: IBlocks
     settings: ITimetableSettings
+    allocations: ITTAllocations
 }
 
 export interface ITimetableSubject {
@@ -46,3 +47,34 @@ export type ITimetableNotifyUpdatePayload = PayloadAction<{
 export type ITimetableFormCacheUpdatePayload = PayloadAction<ITimetableFormCache>
 
 export type ITimetableSubjectsUpdatePayload = PayloadAction<ITimetableSubject[]>
+
+export type ITTFormCacheDayUpdatePayload = PayloadAction<DayID>
+
+export type ITTCanceledBlocks = string[]
+
+export type ITTDaySubs = {
+    [key in DayID]: {
+        subWith: DayID | null
+        blocks: ITimeBlock[]
+        canceled: ITTCanceledBlocks
+    }
+}
+
+export interface ITTAllocations {
+    daySubs: ITTDaySubs
+    canceledBlocks: ITTCanceledBlocks
+}
+
+export type ITTDayToSubUpdatePayload = PayloadAction<DayID>
+
+export type ITTDaySubAddPayload = PayloadAction<{
+    subTo: DayID
+    subWith: DayID
+}>
+
+export type ITTDaySubDeletePayload = PayloadAction<DayID>
+
+export type ITTBlockCancellationPayload = PayloadAction<{
+    blockId: string
+    subDay: DayID | null
+}>

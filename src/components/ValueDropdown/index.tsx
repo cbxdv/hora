@@ -23,6 +23,9 @@ const ValueDropdown: React.FC<ValueDropdownProps> = ({ selected, items, selectHa
     }
 
     useEffect(() => {
+        if (items.length === 0) {
+            closeHandler()
+        }
         document.addEventListener(`click`, handleClickOutside, true)
         document.addEventListener(`keydown`, keyBindHandler, true)
 

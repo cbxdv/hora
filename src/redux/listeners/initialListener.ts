@@ -10,7 +10,7 @@ import { timetableInitialize, updateTTSubjects } from '@redux/slices/timetableSl
 
 import { generateNotifyObjects } from '@utils/notificationsUtils'
 import { normalizeAppData, normalizeTimetableData } from '@utils/storeUtils'
-import { generateSubjects } from '@utils/timetableUtils'
+import { filterNonCanceledBlocks, generateSubjects } from '@utils/timetableUtils'
 
 // Listener to initialize app with data
 listenerMiddleware.startListening({
@@ -35,9 +35,23 @@ listenerMiddleware.startListening({
 
         if (appSettings.theme === `system`) {
             showingTheme = osTheme
+        } else {
+            showingTheme = appSettings.theme
         }
 
-        const blocksForNotification = timetableData.blocks[new Date().getDay() as DayID]
+        // Checking if the day is substituted
+        const daySub = timetableData.allocations.daySubs[new Date().getDay() as DayID]
+        let blocksForNotification = []
+        if (daySub.subWith != null) {
+            blocksForNotification = daySub.blocks
+            blocksForNotification = filterNonCanceledBlocks(blocksForNotification, daySub.canceled)
+        } else {
+            blocksForNotification = timetableData.blocks[new Date().getDay() as DayID]
+            blocksForNotification = filterNonCanceledBlocks(
+                blocksForNotification,
+                timetableData.allocations.canceledBlocks
+            )
+        }
         const notifyConfigs: notifyPropertiesType = {
             notifyStart: timetableData.settings.notifyStart,
             notifyStartBefore: timetableData.settings.notifyStartBefore,

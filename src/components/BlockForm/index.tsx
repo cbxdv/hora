@@ -12,8 +12,16 @@ import TextButton from '@components/TextButton'
 import TimeSelector from '@components/TimeSelector'
 import ValueDropdown, { ValueDropdownItemType } from '@components/ValueDropdown'
 
-import { hideBlockForm, selectDuplicateBlock, selectFormCache, selectSelectedBlock } from '@redux/slices/timetableSlice'
+import {
+    hideBlockForm,
+    selectDuplicateBlock,
+    selectFormCache,
+    selectSelectedBlock,
+    selectSubDayToOpenBlockForm
+} from '@redux/slices/timetableSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
+
+import { dayDropItems } from '@utils/timetableUtils'
 
 import blockFormReducer, { createBlockFormIS, blockFormActions as fa } from './reducer'
 import * as s from './styles'
@@ -25,6 +33,7 @@ const BlockForm = () => {
     const oldBlock = useAppSelector(selectSelectedBlock)
     const duplicateBlock = useAppSelector(selectDuplicateBlock)
     const formCache = useAppSelector(selectFormCache)
+    const daySub = useAppSelector(selectSubDayToOpenBlockForm)
     const subjects = formCache.subjects
     const subjectList: ValueDropdownItemType[] = subjects.map((subject, index) => ({
         name: subject.title,
@@ -33,7 +42,7 @@ const BlockForm = () => {
 
     const [state, formDispatch] = useReducer(
         blockFormReducer,
-        { oldBlock, duplicateBlock, formCache },
+        { oldBlock, duplicateBlock, formCache, daySub },
         createBlockFormIS
     )
 
@@ -42,11 +51,6 @@ const BlockForm = () => {
 
     // Filter subjects whenever there the title updates
     useEffect(() => {
-        if (state.title.length !== 0) {
-            formDispatch(fa.showSubjectDD())
-        } else {
-            formDispatch(fa.hideSubjectDD())
-        }
         const filtered = subjectList.filter(s => s.name.toLowerCase().includes(state.title.toLowerCase()))
         formDispatch(fa.setFilteredSub(filtered))
         if (state.selectedSubjectIndex !== null) {
@@ -55,17 +59,10 @@ const BlockForm = () => {
                 formDispatch(fa.setSelSubIndex(null))
             }
         }
+        if (filtered.length === 0) {
+            formDispatch(fa.hideSubjectDD())
+        }
     }, [state.title])
-
-    const dayDropItems = [
-        { name: `Monday`, value: 1 },
-        { name: `Tuesday`, value: 2 },
-        { name: `Wednesday`, value: 3 },
-        { name: `Thursday`, value: 4 },
-        { name: `Friday`, value: 5 },
-        { name: `Saturday`, value: 6 },
-        { name: `Sunday`, value: 0 }
-    ]
 
     return (
         <Modal closeHandler={() => appDispatch(hideBlockForm())}>
@@ -79,6 +76,7 @@ const BlockForm = () => {
                             value={state.title}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => formDispatch(fa.setTitle(e.target.value))}
                             autoFocus={!(oldBlock || duplicateBlock)}
+                            onKeyDownCapture={() => formDispatch(fa.showSubjectDD())}
                         />
                         {state.title.length === 0 && <s.TitlePlaceholder>Enter a title</s.TitlePlaceholder>}
                     </s.TitleContainer>
@@ -107,23 +105,29 @@ const BlockForm = () => {
                     <s.InputContainer>
                         <s.InputName>Day</s.InputName>
                         <s.InputValue>
-                            {DayID[state.day]}
-                            <s.InputValueArrowContainer
-                                $isVisible={state.isDayDDVisible}
-                                onClick={() => formDispatch(fa.toggleDayDD())}
-                            >
-                                <ArrowDownIcon />
-                            </s.InputValueArrowContainer>
-                            <AnimatePresence>
-                                {state.isDayDDVisible && (
-                                    <ValueDropdown
-                                        selected={state.day}
-                                        items={dayDropItems}
-                                        selectHandler={(value: number) => formDispatch(fa.setDay(value))}
-                                        closeHandler={() => formDispatch(fa.hideDayDD())}
-                                    />
-                                )}
-                            </AnimatePresence>
+                            {daySub !== null ? (
+                                <>Sub - {DayID[daySub]}</>
+                            ) : (
+                                <>
+                                    {DayID[state.day]}
+                                    <s.InputValueArrowContainer
+                                        $isVisible={state.isDayDDVisible}
+                                        onClick={() => formDispatch(fa.toggleDayDD())}
+                                    >
+                                        <ArrowDownIcon />
+                                    </s.InputValueArrowContainer>
+                                    <AnimatePresence>
+                                        {state.isDayDDVisible && (
+                                            <ValueDropdown
+                                                selected={state.day}
+                                                items={dayDropItems}
+                                                selectHandler={(value: number) => formDispatch(fa.setDay(value))}
+                                                closeHandler={() => formDispatch(fa.hideDayDD())}
+                                            />
+                                        )}
+                                    </AnimatePresence>
+                                </>
+                            )}
                         </s.InputValue>
                     </s.InputContainer>
 
@@ -239,7 +243,7 @@ const BlockForm = () => {
                     <s.ButtonContainer>
                         <TextButton
                             text={oldBlock ? `Delete` : `Discard`}
-                            onClick={() => dangerButtonHandler(oldBlock, appDispatch)}
+                            onClick={() => dangerButtonHandler(state, oldBlock, appDispatch)}
                             danger
                         />
                     </s.ButtonContainer>

@@ -1,7 +1,7 @@
 import { IAppSettings, themeTypes } from '@appTypes/AppInterfaces'
 import { INotifyObject } from '@appTypes/ServiceInterfaces'
-import { IBlocks, ITimeBlock } from '@appTypes/TimeBlockInterfaces'
-import { ITimetableFormCache, ITimetableSettings } from '@appTypes/TimetableInterfaces'
+import { DayID, IBlocks, ITimeBlock } from '@appTypes/TimeBlockInterfaces'
+import { ITTAllocations, ITimetableFormCache, ITimetableSettings } from '@appTypes/TimetableInterfaces'
 
 export interface IAppState {
     statuses: {
@@ -27,10 +27,14 @@ export interface ITimetableState {
     settings: ITimetableSettings
     statuses: {
         isBlockFormVisible: boolean
+        isSubFormVisible: boolean
         selectedBlock: ITimeBlock | null
         blockToBeDuplicated: ITimeBlock | null
+        dayToBeOpenSubForm: DayID | null
+        subDayToOpenBlockForm: DayID | null
     }
     formCache: ITimetableFormCache
+    allocations: ITTAllocations
 }
 
 export interface IState {

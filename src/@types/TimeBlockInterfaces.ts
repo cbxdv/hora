@@ -35,14 +35,19 @@ export type IBlocks = {
 
 export type ITimeBlockPayload = PayloadAction<ITimeBlock>
 
-export type ITimeBlockAddPayload = PayloadAction<ITimeBlockBase>
+export type ITimeBlockAddPayload = PayloadAction<{
+    block: ITimeBlockBase
+    isDaySub: boolean
+}>
 
 export type ITimeBlockDeletePayload = PayloadAction<{
     day: DayID
     readonly id: string
+    daySub: DayID | null
 }>
 
 export type ITimeBlockUpdatePayload = PayloadAction<{
     oldBlock: ITimeBlock
     newBlock: ITimeBlock
+    isDaySub: boolean
 }>

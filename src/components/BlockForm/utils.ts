@@ -44,11 +44,16 @@ export const createHandler = (state: IBlockFormState, appDispatch: AppDispatch) 
             minutes: state.endMinutes
         }
     }
-    appDispatch(blockAdded(newBlock))
+    appDispatch(
+        blockAdded({
+            block: newBlock,
+            isDaySub: state.isDaySub
+        })
+    )
 }
 
 export const editHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null, appDispatch: AppDispatch) => {
-    if (state.title.length === 0) {
+    if (checkIsInvalid(state)) {
         return
     }
     if (oldBlock == null) {
@@ -69,13 +74,12 @@ export const editHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null,
             minutes: state.endMinutes
         }
     }
-    const data = { oldBlock, newBlock }
-    appDispatch(blockUpdated(data))
+    appDispatch(blockUpdated({ oldBlock, newBlock, isDaySub: state.isDaySub }))
 }
 
-export const dangerButtonHandler = (oldBlock: ITimeBlock | null, appDispatch: AppDispatch) => {
+export const dangerButtonHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null, appDispatch: AppDispatch) => {
     if (oldBlock) {
-        appDispatch(blockDeleted({ day: oldBlock.day, id: oldBlock.id }))
+        appDispatch(blockDeleted({ day: oldBlock.day, id: oldBlock.id, daySub: state.isDaySub ? state.day : null }))
     } else {
         appDispatch(hideBlockForm())
     }

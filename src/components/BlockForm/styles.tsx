@@ -18,6 +18,7 @@ export const TitleIconContainer = styled.div`
     height: 30px;
     background-color: ${props => props.theme.shade1};
     border-radius: 8px;
+    cursor: pointer;
 
     & > svg {
         height: 20px;
@@ -76,7 +77,7 @@ export const InputValue = styled.div`
     font-size: 13px;
     padding: 5px 10px;
     position: relative;
-    ${subtleBorder}
+    ${subtleBorder};
 `
 
 export const InputValueArrowContainer = styled.button<{ $isVisible: boolean }>`
@@ -145,6 +146,7 @@ export const ActionsContainer = styled.div`
 export const ButtonContainer = styled.div`
     width: 100%;
     padding: 0 5px;
+    margin-top: 10px;
 
     & > button {
         width: 100%;

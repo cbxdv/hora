@@ -25,7 +25,7 @@ ipcMain.handle(ipcHandlerTypes.getOSTheme, () => {
 })
 
 ipcMain.handle(ipcHandlerTypes.fetchAppSettingsFromDisk, async () => {
-    const data = await store.get(appStoreTypes.settings)
+    const data = await store.get(appStoreTypes.settings, {})
     return data
 })
 
@@ -34,7 +34,7 @@ ipcMain.handle(ipcHandlerTypes.saveAppSettingsToDisk, async (_, data) => {
 })
 
 ipcMain.handle(ipcHandlerTypes.fetchTTDataFromDisk, async () => {
-    const blocks = await store.get(timetableStoreTypes.all)
+    const blocks = await store.get(timetableStoreTypes.all, {})
     return blocks
 })
 
@@ -44,6 +44,10 @@ ipcMain.handle(ipcHandlerTypes.saveTTBlocksToDisk, (_, data) => {
 
 ipcMain.handle(ipcHandlerTypes.saveTTSettingsToDisk, (_, data) => {
     store.set(timetableStoreTypes.settings, data)
+})
+
+ipcMain.handle(ipcHandlerTypes.saveTTAllocationsToDisk, (_, data) => {
+    store.set(timetableStoreTypes.allocations, data)
 })
 
 ipcMain.handle(ipcHandlerTypes.enableAutoLogin, () => registerLogin())

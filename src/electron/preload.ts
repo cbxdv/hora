@@ -2,7 +2,7 @@ import { ipcRenderer, contextBridge } from 'electron'
 
 import { themeTypes, IAppSettings } from '@appTypes/AppInterfaces'
 import { IBlocks } from '@appTypes/TimeBlockInterfaces'
-import { ITimetableDiskData, ITimetableSettings } from '@appTypes/TimetableInterfaces'
+import { ITTAllocations, ITimetableDiskData, ITimetableSettings } from '@appTypes/TimetableInterfaces'
 
 import { ipcHandlerTypes as ipc } from './electronConstants'
 
@@ -26,7 +26,8 @@ export const api = {
     // Timetable
     fetchTTDataFromDisk: () => <Promise<ITimetableDiskData>>ipcRenderer.invoke(ipc.fetchTTDataFromDisk),
     saveTTBlocksToDisk: (data: IBlocks) => ipcRenderer.invoke(ipc.saveTTBlocksToDisk, data),
-    saveTTSettingsToDisk: (data: ITimetableSettings) => ipcRenderer.invoke(ipc.saveTTSettingsToDisk, data)
+    saveTTSettingsToDisk: (data: ITimetableSettings) => ipcRenderer.invoke(ipc.saveTTSettingsToDisk, data),
+    saveTTAllocationsToDisk: (data: ITTAllocations) => ipcRenderer.invoke(ipc.saveTTAllocationsToDisk, data)
 }
 
 contextBridge.exposeInMainWorld(`api`, api)

@@ -1,8 +1,13 @@
+import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
 
 import { flexCenter } from '@styles/styleDefinitions'
 
-export const CBlockContainer = styled.div`
+export const CBlockContainer = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 }
+}))`
     ${flexCenter({ flexDirection: `column` })};
     background-color: ${({ theme }) => theme.shade1};
     border-radius: 8px;

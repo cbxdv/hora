@@ -7,6 +7,7 @@ interface TimeBlockContainerProps {
     readonly $blockHeight: number
     readonly $blockColor: string
     readonly $positionalPad: number
+    readonly $canceled: boolean
 }
 
 export const TimeBlockContainer = styled(motion.div).attrs(() => ({
@@ -25,6 +26,8 @@ export const TimeBlockContainer = styled(motion.div).attrs(() => ({
     position: absolute;
     top: ${({ $positionalPad }) => $positionalPad}px;
     box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
+    transition: filter 0.2s linear;
+    filter: ${({ $canceled }) => ($canceled ? `opacity(0.5)` : ``)};
 `
 
 export const StylingLineContainer = styled.div`

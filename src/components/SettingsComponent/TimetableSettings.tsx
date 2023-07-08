@@ -1,5 +1,7 @@
 import { DayID } from '@appTypes/TimeBlockInterfaces'
 
+import TrashIcon from '@assets/icons/Trash.svg'
+
 import TextButton from '@components/TextButton'
 
 import {
@@ -7,20 +9,27 @@ import {
     selectTimetableSettings,
     toggleDaysToShow,
     toggleTTNotification,
-    updateTTNotifyBefore
+    updateTTNotifyBefore,
+    selectTTAllocations,
+    ttDaySubDeleted
 } from '@redux/slices/timetableSlice'
 import { useAppSelector, useAppDispatch } from '@redux/store'
+
+import { dayIds, shouldShowSubsInSettings } from '@utils/timetableUtils'
 
 import SettingsCheckBox from './SettingsCheckbox'
 import SettingsNumberInput from './SettingsNumberInput'
 
 import * as s from './styles'
+import { AnimatePresence } from 'framer-motion'
 
 const TimetableSettings = () => {
     const dispatch = useAppDispatch()
 
     const settings = useAppSelector(selectTimetableSettings)
-    const dayIds: DayID[] = [1, 2, 3, 4, 5, 6, 0]
+    const allocations = useAppSelector(selectTTAllocations)
+
+    const shouldShowSubs = shouldShowSubsInSettings(allocations.daySubs)
 
     return (
         <s.SettingsComponentItem>
@@ -79,6 +88,34 @@ const TimetableSettings = () => {
                     </s.CheckSettingContainer>
                 </s.SectionBodyGrid>
             </s.SettingsSection>
+            <AnimatePresence>
+                {shouldShowSubs && (
+                    <s.SettingsSection>
+                        <s.SectionHeading>Substitutions</s.SectionHeading>
+                        <s.SubsContainer>
+                            <AnimatePresence>
+                                {dayIds.map(dayId => {
+                                    const daySub = allocations.daySubs[dayId]
+                                    if (daySub.subWith !== null) {
+                                        return (
+                                            <s.SubElement key={dayId}>
+                                                <s.SubElementDetails>
+                                                    <div>{DayID[dayId]}</div>
+                                                    <div>&larr;</div>
+                                                    <div>{DayID[daySub.subWith]}</div>
+                                                </s.SubElementDetails>
+                                                <s.SubElementAction onClick={() => dispatch(ttDaySubDeleted(dayId))}>
+                                                    <TrashIcon />
+                                                </s.SubElementAction>
+                                            </s.SubElement>
+                                        )
+                                    }
+                                })}
+                            </AnimatePresence>
+                        </s.SubsContainer>
+                    </s.SettingsSection>
+                )}
+            </AnimatePresence>
             <s.SettingsSection>
                 <s.SectionHeading>Danger Zone</s.SectionHeading>
                 <s.DangerMiddle>
