@@ -4,11 +4,29 @@ import { IState } from '@appTypes/StateInterfaces'
 
 export const listenerMiddleware = createListenerMiddleware<IState>()
 
-// Listing all the files that has listeners
-// This is done so that the files are included in the build
-import './listeners/appListeners'
-import './listeners/initialListener'
-import './listeners/serviceListeners'
-import './listeners/timetableListeners'
+import appListeners from './listeners/appListeners'
+import initialListeners from './listeners/initialListener'
+import serviceListener from './listeners/serviceListeners'
+import timetableListeners from './listeners/timetableListeners'
+
+const allListeners: { [key: string]: AppListeners } = {
+    initial: initialListeners,
+    app: appListeners,
+    timetable: timetableListeners,
+    service: serviceListener
+}
+
+// Iterating through listeners and start listening
+Object.keys(allListeners).forEach(listenerGroupId => {
+    const listenerGroup = allListeners[listenerGroupId]
+    Object.keys(listenerGroup).forEach(listenerId => {
+        const listenerFunction = listenerGroup[listenerId]
+        listenerFunction(listenerMiddleware.startListening)
+    })
+})
+
+type AppStartListening = typeof listenerMiddleware.startListening
+type ListenerFn = (startListening: AppStartListening) => void
+export type AppListeners = { [key: string]: ListenerFn }
 
 export default listenerMiddleware.middleware

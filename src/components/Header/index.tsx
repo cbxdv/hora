@@ -1,18 +1,26 @@
+import { AnimatePresence } from 'framer-motion'
+
 import SettingsIcon from '@assets/icons/Settings.svg'
 import Logo from '@assets/logo/logo.svg'
 
-import CurrentBlockViewer from '@components/CurrentBlockViewer'
-import CurrentTimeViewer from '@components/CurrentTimeViewer'
 import IconButton from '@components/IconButton'
 import NewBlockButton from '@components/NewBlockButton'
 
-import { showSettings } from '@redux/slices/appSlice'
-import { useAppDispatch } from '@redux/store'
+import { selectTTShowCurentTime, selectTTShowCurrentBlock } from '@redux/selectors/timetableSelectors'
+
+import { appSettingsOpened } from '@redux/slices/appSlice'
+import { useAppDispatch, useAppSelector } from '@redux/store'
+
+import CurrentBlockViewer from './CurrentBlockViewer'
+import CurrentTimeViewer from './CurrentTimeViewer'
 
 import * as s from './styles'
 
 const Header = () => {
     const dispatch = useAppDispatch()
+
+    const showCurrentTime = useAppSelector(selectTTShowCurentTime)
+    const showCurrentBlock = useAppSelector(selectTTShowCurrentBlock)
 
     return (
         <s.HeaderContainer>
@@ -20,12 +28,13 @@ const Header = () => {
                 <Logo />
             </s.LogoContainer>
             <s.DetailsContainer>
-                <CurrentTimeViewer />
-                <CurrentBlockViewer />
+                <AnimatePresence>{showCurrentTime && <CurrentTimeViewer />}</AnimatePresence>
+                <div style={{ width: `10px` }} />
+                <AnimatePresence>{showCurrentBlock && <CurrentBlockViewer />}</AnimatePresence>
             </s.DetailsContainer>
             <s.ActionsContainer>
                 <NewBlockButton />
-                <IconButton Icon={SettingsIcon} size={36} onClick={() => dispatch(showSettings())} />
+                <IconButton Icon={SettingsIcon} size={36} onClick={() => dispatch(appSettingsOpened())} />
             </s.ActionsContainer>
         </s.HeaderContainer>
     )

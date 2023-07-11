@@ -16,8 +16,8 @@ export const ModalDrop = styled(motion.div).attrs(() => ({
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: ${props => (props.theme.name === `dark` ? `rgba(255, 255, 255, 0.05)` : `rgba(0, 0, 0, 0.5)`)};
-    backdrop-filter: blur(5px);
+    background-color: ${props => props.theme.modalBackground};
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;

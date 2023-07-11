@@ -1,6 +1,6 @@
 import { DayID, IBlocks, ITime, ITimeBlock, ITimeBlockBase } from '@appTypes/TimeBlockInterfaces'
-import { ITTDaySubs, ITimetableFormCache, ITimetableSubject } from '@appTypes/TimetableInterfaces'
-import { addDurationToTime, getDurationMinutes } from '@utils/timeUtils'
+import { ITTFormCache, ITTSubDays, ITTSubject } from '@appTypes/TimetableInterfaces'
+import { addDurationToTime, addDurationToTimeLimited, getDurationMinutes } from '@utils/timeUtils'
 
 /**
  * A week of day IDs
@@ -20,7 +20,7 @@ export const dayDropItems = [
     { name: `Sunday`, value: 0 }
 ]
 
-type estimateNextBlockType = (block: ITimeBlockBase) => ITimetableFormCache
+type generateFormCacheType = (oldCache: ITTFormCache, block: ITimeBlockBase) => ITTFormCache
 /**
  * Calculates a form cache using the provided block. Uses the end time of the block as start time and
  * the duration of the block added to the selected start time. Based on the duration and start time, the day
@@ -28,36 +28,47 @@ type estimateNextBlockType = (block: ITimeBlockBase) => ITimetableFormCache
  * @param block The block that is used to estimate and generate a form cache
  * @returns A form cache
  */
-export const estimateNextBlock: estimateNextBlockType = block => {
+export const generateFormCache: generateFormCacheType = (oldCache, block) => {
     // Getting the duration of the given block
     const duration = getDurationMinutes(block)
 
     // Sets the end time of the new block as the start
-    const startTime: ITime = block.endTime
+    let startTime: ITime = block.endTime
 
     // Add duration and calculates time and day
-    const { newEndTime, newDay } = addDurationToTime(startTime, block.day, duration)
+    let endTime = addDurationToTime(startTime, duration)
 
-    const cache: ITimetableFormCache = {
-        startTime: block.endTime,
-        endTime: newEndTime,
-        day: newDay,
-        subjects: []
+    // If it exceed the current day, then it is started from the next day
+    if (endTime.day != block.startTime.day) {
+        startTime = { hours: 8, minutes: 0, day: endTime.day }
+        endTime = addDurationToTimeLimited(startTime, duration)
     }
-    return cache
+
+    // Update subjects with the current block
+    const subjects = updateSubjects(oldCache.subjects, block)
+
+    const newCache: ITTFormCache = {
+        startTime: startTime,
+        endTime: endTime,
+        duration,
+        day: endTime.day,
+        subjects: subjects
+    }
+
+    return newCache
 }
 
-type generateSubjectsType = (blocks: IBlocks) => ITimetableSubject[]
+type generateSubjectsType = (blocks: IBlocks) => ITTSubject[]
 /**
  * Generates a list of subjects from the provided blocks. No duplicates will be found in the list.
  * @param blocks The week object with block that is used to generate subjects
  * @returns A list of subjects from the provided blocks
  */
 export const generateSubjects: generateSubjectsType = blocks => {
-    const subjects: ITimetableSubject[] = []
+    const subjects: ITTSubject[] = []
 
     // A map/object to store all subjects so that no duplicates exists
-    const tempSubjects: { [key: string]: ITimetableSubject } = {}
+    const tempSubjects: { [key: string]: ITTSubject } = {}
 
     // Iterating through each day and generating subjects
     dayIds.forEach(dayId => {
@@ -82,7 +93,7 @@ export const generateSubjects: generateSubjectsType = blocks => {
     return subjects
 }
 
-type updateSubjectsType = (subjects: ITimetableSubject[], block: ITimeBlock | ITimeBlockBase) => ITimetableSubject[]
+type updateSubjectsType = (subjects: ITTSubject[], block: ITimeBlockBase) => ITTSubject[]
 /**
  * Generates a new list of subjects based on the block added or updated
  * @param subjects The old subjects cache in the state
@@ -98,7 +109,7 @@ export const updateSubjects: updateSubjectsType = (subjects, block) => {
     let wasUpdated = false
 
     // New subjects
-    const newSubjects: ITimetableSubject[] = []
+    const newSubjects: ITTSubject[] = []
 
     // Iterating through the subjects array
     subjects.forEach(subject => {
@@ -127,16 +138,16 @@ export const updateSubjects: updateSubjectsType = (subjects, block) => {
     return newSubjects
 }
 
-type shouldShowSubsInSettingsType = (daySubs: ITTDaySubs) => boolean
+type shouldShowSubsInSettingsType = (subDays: ITTSubDays) => boolean
 /**
  * Based on the length of the substitutions made, decides whether to show the section
  * in timetable settings. Greater or equal to 1 sub is need for a true to be returned.
- * @param daySubs Substitutions data from store
+ * @param subDays Substitutions data from store
  * @returns A boolean indicating whether to show or hide
  */
-export const shouldShowSubsInSettings: shouldShowSubsInSettingsType = daySubs => {
+export const shouldShowSubsInSettings: shouldShowSubsInSettingsType = subDays => {
     for (let i = 0; i < dayIds.length; i++) {
-        if (daySubs[dayIds[i]].subWith != null) {
+        if (subDays[dayIds[i]].subWith != null) {
             return true
         }
     }

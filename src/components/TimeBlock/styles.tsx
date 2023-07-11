@@ -25,7 +25,7 @@ export const TimeBlockContainer = styled(motion.div).attrs(() => ({
     color: #29272c;
     position: absolute;
     top: ${({ $positionalPad }) => $positionalPad}px;
-    box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
+    box-shadow: ${({ theme }) => theme.shadow};
     transition: filter 0.2s linear;
     filter: ${({ $canceled }) => ($canceled ? `opacity(0.5)` : ``)};
 `

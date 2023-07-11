@@ -7,21 +7,21 @@ import * as s from './styles'
 const ColorSelector: React.FC<ColorSelectorProps> = ({ selected, changeHandler, closeHandler }) => {
     const ref = useRef<HTMLDivElement>(null)
 
-    const handleClickOutside = (event: MouseEvent) => {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
-            event.stopPropagation()
-            closeHandler()
-        }
-    }
-
-    const keyBindHandler = (event: KeyboardEvent) => {
-        event.stopPropagation()
-        if (event.key === `Escape`) {
-            closeHandler()
-        }
-    }
-
     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                event.stopPropagation()
+                closeHandler()
+            }
+        }
+
+        const keyBindHandler = (event: KeyboardEvent) => {
+            event.stopPropagation()
+            if (event.key === `Escape`) {
+                closeHandler()
+            }
+        }
+
         document.addEventListener(`click`, handleClickOutside, true)
         document.addEventListener(`keydown`, keyBindHandler, true)
         return () => {
@@ -29,24 +29,23 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ selected, changeHandler, 
             document.removeEventListener(`keydown`, keyBindHandler, true)
         }
     }, [])
+
     return (
         <s.ColorSelectorContainer ref={ref}>
-            <div>
-                {Object.keys(varietyColors).map(c => (
+            <s.ColorsContainer>
+                {Object.keys(varietyColors).map(vColor => (
                     <s.ColorButtonContainer
-                        $selected={selected === varietyColors[c]}
+                        $selected={selected === varietyColors[vColor]}
                         onClick={() => {
-                            changeHandler(varietyColors[c])
-                            setTimeout(() => {
-                                closeHandler()
-                            })
+                            changeHandler(varietyColors[vColor])
+                            closeHandler()
                         }}
-                        key={c}
+                        key={`${vColor}-button`}
                     >
-                        <s.ColorButton $color={varietyColors[c]} />
+                        <s.ColorButton $color={varietyColors[vColor]} />
                     </s.ColorButtonContainer>
                 ))}
-            </div>
+            </s.ColorsContainer>
         </s.ColorSelectorContainer>
     )
 }

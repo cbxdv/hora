@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
 
-import { flexCenter } from '@styles/styleDefinitions'
+import { flexCenter, hoverAndTapMotion, subtleBorder } from '@styles/styleDefinitions'
 
 export const ValueDropdownContainer = styled(motion.div).attrs(() => ({
-    initial: { height: 0 },
-    animate: { height: `unset` },
-    exit: { height: 0 },
+    initial: { maxHeight: 0 },
+    animate: { maxHeight: 150 },
+    exit: { maxHeight: 0 },
     transition: { duration: 0.2 }
 }))`
     width: 100%;
@@ -14,17 +14,19 @@ export const ValueDropdownContainer = styled(motion.div).attrs(() => ({
     left: 0;
     top: 110%;
     border-radius: 8px;
-    background-color: ${props => props.theme.background};
+    background-color: ${props => props.theme.contextBackground};
+    backdrop-filter: blur(4px);
     color: ${props => props.theme.text};
     font-size: 13px;
     padding: 0 5px;
     z-index: 1;
     max-height: 150px;
     overflow: auto;
-    box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
+    box-shadow: ${({ theme }) => theme.shadow};
+    ${subtleBorder}
 `
 export const DropdownItem = styled(motion.div).attrs(({ theme }) => ({
-    whileHover: { borderColor: `${theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}` }
+    ...hoverAndTapMotion(theme.name)
 }))<{ $selected: boolean }>`
     width: 100%;
     height: 30px;

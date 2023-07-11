@@ -2,207 +2,293 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { nanoid } from 'nanoid'
 
-import { IState } from '@appTypes/StateInterfaces'
+import { ITimeBlock, TimeBlockNullPayload, TimeBlockPayload } from '@appTypes/TimeBlockInterfaces'
+import { TTNotifyType } from '@appTypes/TimetableInterfaces'
 import {
-    DayID,
-    ITimeBlock,
-    ITimeBlockAddPayload,
-    ITimeBlockDeletePayload,
-    ITimeBlockPayload,
-    ITimeBlockUpdatePayload
-} from '@appTypes/TimeBlockInterfaces'
-import {
-    ITTBlockCancellationPayload,
-    ITTDaySubAddPayload,
-    ITTDaySubDeletePayload,
-    ITTDayToSubUpdatePayload,
-    ITTFormCacheDayUpdatePayload,
-    ITimetableFormCacheUpdatePayload,
-    ITimetableInitPayload,
-    ITimetableNotifyUpdatePayload,
-    ITimetableSubjectsUpdatePayload,
-    ITimetableToggleNotifyPayload,
-    IUpdateDaysPayload
-} from '@appTypes/TimetableInterfaces'
-import { timetableIS } from '@redux/initialStates'
+    TTBlockAddedPayload,
+    TTBlockDeletedPayload,
+    TTBlockUpdatedPayload,
+    TTCancellationPayload,
+    TTDayIdPayload,
+    TTFormCacheTimeUpdated,
+    TTFormCacheUpdatedPayload,
+    TTInitPayload,
+    TTNotifyToggledPayload,
+    TTNotifyUpdatedPayload,
+    TTSubDayAddedPayload,
+    TTSubjectsUpdatedPayload
+} from '@appTypes/TimetablePayloadTypes'
+
+import { TimetableIS } from '@redux/initialStates'
 
 const timetableSlice = createSlice({
     name: `timetable`,
-    initialState: timetableIS,
+    initialState: TimetableIS,
     reducers: {
-        timetableInitialize(state, action: ITimetableInitPayload) {
+        ttInitialized(state, action: TTInitPayload) {
             const { blocks, settings, allocations } = action.payload
             state.blocks = blocks
             state.settings = settings
             state.allocations = allocations
         },
-        blockAdded(state, action: ITimeBlockAddPayload) {
-            const { block, isDaySub } = action.payload
-            const dayID = block.day
+
+        ttBlockAdded(state, action: TTBlockAddedPayload) {
+            const { block, isSubDay } = action.payload
+            const dayID = block.startTime.day
+            // A new ID is assigned for each new block
             const newBlock: ITimeBlock = {
                 id: nanoid(),
                 ...block
             }
-            if (isDaySub) {
-                if (state.allocations.daySubs[dayID].subWith != null) {
-                    state.allocations.daySubs[dayID].blocks.push(newBlock)
+            // If a substituted day, then block pushed to the allocations
+            if (isSubDay) {
+                if (state.allocations.subDays[dayID].subWith != null) {
+                    state.allocations.subDays[dayID].blocks.push(newBlock)
                 }
             } else {
+                // else block pushed to the main blocks
                 state.blocks[dayID].push(newBlock)
             }
-            // Closing the form
+            // Closing the form and resetting status values
             state.statuses.isBlockFormVisible = false
             state.statuses.subDayToOpenBlockForm = null
+            state.statuses.blockToBeDuplicated = null
         },
-        blockDeleted(state, action: ITimeBlockDeletePayload) {
-            const { day, id, daySub } = action.payload
-            if (daySub != null) {
+
+        ttBlockDeleted(state, action: TTBlockDeletedPayload) {
+            const { day, id, isSubDay } = action.payload
+            // If a substituted day, then block deleted from the allocations
+            if (isSubDay) {
                 // Deleting the block
-                if (state.allocations.daySubs[daySub].subWith !== null) {
-                    state.allocations.daySubs[daySub].blocks = state.allocations.daySubs[daySub].blocks.filter(
+                if (state.allocations.subDays[day].subWith !== null) {
+                    state.allocations.subDays[day].blocks = state.allocations.subDays[day].blocks.filter(
                         block => block.id !== id
                     )
                 }
                 // Deleting cancellations
-                let oldCanceled = state.allocations.daySubs[daySub].canceled
-                oldCanceled = state.allocations.daySubs[daySub].canceled.filter(blockId => blockId !== id)
-                state.allocations.daySubs[daySub].canceled = oldCanceled
+                let oldCanceled = state.allocations.subDays[day].canceled
+                oldCanceled = state.allocations.subDays[day].canceled.filter(blockId => blockId !== id)
+                state.allocations.subDays[day].canceled = oldCanceled
             } else {
                 // Deleting the block
                 state.blocks[day] = state.blocks[day].filter(block => block.id !== id)
                 // Deleting cancellations
                 state.allocations.canceledBlocks = state.allocations.canceledBlocks.filter(oldId => oldId !== id)
             }
-            // CLosing the form
+            // Closing the form and resetting status values
             state.statuses.isBlockFormVisible = false
             state.statuses.selectedBlock = null
             state.statuses.subDayToOpenBlockForm = null
+            // Updating the header block if needed
+            if (state.statuses.headerBlock && state.statuses.headerBlock.id === id) {
+                state.statuses.headerBlock = null
+            }
         },
-        blockUpdated(state, action: ITimeBlockUpdatePayload) {
-            const { oldBlock, newBlock, isDaySub } = action.payload
+
+        ttBlockUpdated(state, action: TTBlockUpdatedPayload) {
+            const { oldBlock, newBlock, isSubDay } = action.payload
             const id = oldBlock.id
-            if (isDaySub) {
-                if (state.allocations.daySubs[newBlock.day].subWith != null) {
-                    let oldBlocks = state.allocations.daySubs[newBlock.day].blocks
+            const oldDay = oldBlock.startTime.day
+            const newDay = newBlock.startTime.day
+            // If a substituted day, then block updated in the allocations
+            if (isSubDay) {
+                if (state.allocations.subDays[newDay].subWith != null) {
+                    let oldBlocks = state.allocations.subDays[newDay].blocks
                     // Deleting old block
                     oldBlocks = oldBlocks.filter(block => block.id !== id)
                     // Adding new block
                     oldBlocks.push(newBlock)
-                    state.allocations.daySubs[newBlock.day].blocks = oldBlocks
+                    state.allocations.subDays[newDay].blocks = oldBlocks
                     // Deleting cancellations
-                    let oldCanceled = state.allocations.daySubs[newBlock.day].canceled
+                    let oldCanceled = state.allocations.subDays[newDay].canceled
                     oldCanceled = oldCanceled.filter(oldId => oldId !== id)
-                    state.allocations.daySubs[newBlock.day].canceled = oldCanceled
+                    state.allocations.subDays[newDay].canceled = oldCanceled
                 }
             } else {
                 // Deleting old block
-                state.blocks[oldBlock.day] = state.blocks[oldBlock.day].filter(block => block.id !== id)
+                state.blocks[oldDay] = state.blocks[oldDay].filter(block => block.id !== id)
                 // Adding new block
-                state.blocks[newBlock.day].push(newBlock)
+                state.blocks[newDay].push(newBlock)
                 // Deleting cancellations
                 state.allocations.canceledBlocks = state.allocations.canceledBlocks.filter(oldId => oldId !== id)
             }
-            // Closing the form
+            // Closing the form and resetting status values
             state.statuses.isBlockFormVisible = false
             state.statuses.selectedBlock = null
             state.statuses.subDayToOpenBlockForm = null
+            // Updating the header block if needed
+            if (state.statuses.headerBlock && state.statuses.headerBlock.id === id) {
+                state.statuses.headerBlock = newBlock
+            }
         },
-        blocksCleared(state) {
-            state.blocks = timetableIS.blocks
+
+        ttBlocksCleared(state) {
+            state.blocks = TimetableIS.blocks
+            state.allocations = TimetableIS.allocations
+            state.formCache.subjects = TimetableIS.formCache.subjects
         },
-        showBlockForm(state) {
+
+        ttBlockFormedOpened(state) {
             state.statuses.isBlockFormVisible = true
         },
-        hideBlockForm(state) {
+
+        ttBlockFormClosed(state) {
             state.statuses.isBlockFormVisible = false
             state.statuses.selectedBlock = null
             state.statuses.blockToBeDuplicated = null
             state.statuses.subDayToOpenBlockForm = null
         },
-        showSubstitutionForm(state) {
+
+        ttSubFormOpened(state) {
             state.statuses.isSubFormVisible = true
         },
-        hideSubstitutionForm(state) {
+
+        ttSubFormClosed(state) {
             state.statuses.isSubFormVisible = false
+            state.statuses.dayToBeOpenSubForm = null
         },
-        updateSelectedBlock(state, action: ITimeBlockPayload) {
+
+        ttSelectedBlockUpdated(state, action: TimeBlockPayload) {
             state.statuses.selectedBlock = action.payload
         },
-        toggleDaysToShow(state, action: IUpdateDaysPayload) {
+
+        ttDayToShowToggled(state, action: TTDayIdPayload) {
             const dayId = action.payload
             state.settings.daysToShow[dayId] = !state.settings.daysToShow[dayId]
         },
-        toggleTTNotification(state, action: ITimetableToggleNotifyPayload) {
+
+        ttNotificationToggled(state, action: TTNotifyToggledPayload) {
             const type = action.payload
-            if (type === `start`) {
+
+            if (type === TTNotifyType.Start) {
                 state.settings.notifyStart = !state.settings.notifyStart
-            } else if (type === `end`) {
+            } else if (type === TTNotifyType.End) {
                 state.settings.notifyEnd = !state.settings.notifyEnd
             }
         },
-        updateTTNotifyBefore(state, action: ITimetableNotifyUpdatePayload) {
+
+        ttNotifyBeforeUpdated(state, action: TTNotifyUpdatedPayload) {
             const { type, value } = action.payload
-            if (type === `start`) {
+            if (type === TTNotifyType.Start) {
                 state.settings.notifyStartBefore = value
-            } else if (type === `end`) {
+            } else if (type === TTNotifyType.End) {
                 state.settings.notifyEndBefore = value
             }
         },
-        updateDuplicateBlock(state, action: ITimeBlockPayload) {
+
+        ttShowCurrentTimeToggled(state) {
+            state.settings.showCurrentTimeInHeader = !state.settings.showCurrentTimeInHeader
+        },
+
+        ttShowCurrentBlockToggled(state) {
+            state.settings.showCurrentBlockInHeader = !state.settings.showCurrentBlockInHeader
+        },
+
+        ttHeaderBlockUpdated(state, action: TimeBlockNullPayload) {
+            state.statuses.headerBlock = action.payload
+        },
+
+        ttDupBlockUpdated(state, action: TimeBlockPayload) {
             state.statuses.blockToBeDuplicated = action.payload
         },
-        updateTTFormCache(state, action: ITimetableFormCacheUpdatePayload) {
+
+        ttFormCacheUpdated(state, action: TTFormCacheUpdatedPayload) {
             state.formCache = action.payload
         },
-        updateTTSubjects(state, action: ITimetableSubjectsUpdatePayload) {
+
+        ttSubjectsUpdated(state, action: TTSubjectsUpdatedPayload) {
             state.formCache.subjects = action.payload
         },
-        updateTTFormCacheDay(state, action: ITTFormCacheDayUpdatePayload) {
+
+        ttFormCacheDayUpdated(state, action: TTDayIdPayload) {
             state.formCache.day = action.payload
         },
-        updateSubDayToOpenBlockForm(state, action: ITTDayToSubUpdatePayload) {
+
+        ttFormCacheTimeUpdated(state, action: TTFormCacheTimeUpdated) {
+            const { startTime, endTime } = action.payload
+            state.formCache.startTime = startTime
+            state.formCache.endTime = endTime
+        },
+
+        ttSubDayToOpenBlockFormUpdated(state, action: TTDayIdPayload) {
             state.statuses.subDayToOpenBlockForm = action.payload
         },
-        updateDayToOpenSubForm(state, action: ITTDayToSubUpdatePayload) {
+
+        ttDayToOpenSubFormUpdated(state, action: TTDayIdPayload) {
             state.statuses.dayToBeOpenSubForm = action.payload
         },
-        ttDaySubAdded(state, action: ITTDaySubAddPayload) {
+
+        ttSubDayAdded(state, action: TTSubDayAddedPayload) {
             const { subTo, subWith } = action.payload
-            state.allocations.daySubs[subTo] = {
-                blocks: [...state.blocks[subWith]],
+            // A new list of blocks for substitution
+            const newBlocks: ITimeBlock[] = []
+            // Iterating and replacing the ids of the blocks
+            state.blocks[subWith].forEach(block => {
+                newBlocks.push({
+                    ...block,
+                    id: nanoid(),
+                    startTime: {
+                        ...block.startTime,
+                        day: subTo
+                    },
+                    endTime: {
+                        ...block.endTime,
+                        day: subTo
+                    }
+                })
+            })
+            // Updating the properties of the sub day
+            state.allocations.subDays[subTo] = {
+                blocks: newBlocks,
                 canceled: [],
                 subWith
             }
+            // Closing the substitution form
             state.statuses.isSubFormVisible = false
+            state.statuses.dayToBeOpenSubForm = null
         },
-        ttDaySubDeleted(state, action: ITTDaySubDeletePayload) {
-            for (let i = 0; i < state.allocations.daySubs[action.payload].blocks.length; i++) {
-                delete state.allocations.daySubs[action.payload].blocks[i]
+
+        ttSubDayDeleted(state, action: TTDayIdPayload) {
+            // Explicitly deleting blocks objects in the allocations
+            const subDay = state.allocations.subDays[action.payload]
+            for (let i = 0; i < subDay.blocks.length; i++) {
+                delete subDay.blocks[i]
             }
-            state.allocations.daySubs[action.payload] = {
+            // Resetting the substitution day properties
+            state.allocations.subDays[action.payload] = {
                 subWith: null,
                 blocks: [],
                 canceled: []
             }
         },
-        addBlockCancellation(state, action: ITTBlockCancellationPayload) {
+
+        ttCancellationAdded(state, action: TTCancellationPayload) {
             const { blockId, subDay } = action.payload
+            // If a substituted day, cancellation is pushed in the allocations
             if (subDay != null) {
-                let oldCanceled = state.allocations.daySubs[subDay].canceled
-                oldCanceled = state.allocations.daySubs[subDay].canceled.filter(id => blockId !== id)
+                // Extracting the substitution day
+                let oldCanceled = state.allocations.subDays[subDay].canceled
+                // Deleting the day id if already exists in cancellation
+                oldCanceled = state.allocations.subDays[subDay].canceled.filter(id => blockId !== id)
+                // Pushing the block id for cancellation
                 oldCanceled.push(blockId)
-                state.allocations.daySubs[subDay].canceled = oldCanceled
+
+                state.allocations.subDays[subDay].canceled = oldCanceled
             } else {
+                // Deleting the day id if already exists in cancellation
                 state.allocations.canceledBlocks = state.allocations.canceledBlocks.filter(oldId => oldId !== blockId)
+                // Pushing the block id for cancellation
                 state.allocations.canceledBlocks.push(blockId)
             }
         },
-        deleteBlockCancellation(state, action: ITTBlockCancellationPayload) {
+
+        ttCancellationDeleted(state, action: TTCancellationPayload) {
             const { blockId, subDay } = action.payload
+            // If a substituted day, cancellation is deleted from the allocations
             if (subDay != null) {
-                let oldCanceled = state.allocations.daySubs[subDay].canceled
-                oldCanceled = state.allocations.daySubs[subDay].canceled.filter(id => blockId !== id)
-                state.allocations.daySubs[subDay].canceled = oldCanceled
+                let oldCanceled = state.allocations.subDays[subDay].canceled
+                oldCanceled = state.allocations.subDays[subDay].canceled.filter(id => blockId !== id)
+                state.allocations.subDays[subDay].canceled = oldCanceled
             } else {
                 state.allocations.canceledBlocks = state.allocations.canceledBlocks.filter(oldId => oldId !== blockId)
             }
@@ -210,64 +296,34 @@ const timetableSlice = createSlice({
     }
 })
 
-export default timetableSlice.reducer
-
 export const {
-    timetableInitialize,
-    blockAdded,
-    blockDeleted,
-    blockUpdated,
-    blocksCleared,
-    showBlockForm,
-    hideBlockForm,
-    updateSelectedBlock,
-    toggleDaysToShow,
-    toggleTTNotification,
-    updateTTNotifyBefore,
-    updateDuplicateBlock,
-    updateTTFormCache,
-    updateTTSubjects,
-    updateTTFormCacheDay,
-    showSubstitutionForm,
-    hideSubstitutionForm,
-    updateDayToOpenSubForm,
-    ttDaySubAdded,
-    ttDaySubDeleted,
-    addBlockCancellation,
-    deleteBlockCancellation,
-    updateSubDayToOpenBlockForm
+    ttInitialized,
+    ttBlockAdded,
+    ttBlockDeleted,
+    ttBlockUpdated,
+    ttBlocksCleared,
+    ttBlockFormedOpened,
+    ttBlockFormClosed,
+    ttSubFormOpened,
+    ttSubFormClosed,
+    ttSelectedBlockUpdated,
+    ttDayToShowToggled,
+    ttNotificationToggled,
+    ttNotifyBeforeUpdated,
+    ttShowCurrentTimeToggled,
+    ttShowCurrentBlockToggled,
+    ttHeaderBlockUpdated,
+    ttDupBlockUpdated,
+    ttFormCacheUpdated,
+    ttSubjectsUpdated,
+    ttFormCacheDayUpdated,
+    ttFormCacheTimeUpdated,
+    ttSubDayToOpenBlockFormUpdated,
+    ttDayToOpenSubFormUpdated,
+    ttSubDayAdded,
+    ttSubDayDeleted,
+    ttCancellationAdded,
+    ttCancellationDeleted
 } = timetableSlice.actions
 
-export const selectAllBlocks = (state: IState) => state.timetable.blocks
-export const selectIsBlockFormVisible = (state: IState) => state.timetable.statuses.isBlockFormVisible
-export const selectSelectedBlock = (state: IState) => state.timetable.statuses.selectedBlock
-export const selectBlocksByDayId = (state: IState, day: DayID) => state.timetable.blocks[day]
-export const selectDaysToShow = (state: IState) => state.timetable.settings.daysToShow
-export const selectTimetableSettings = (state: IState) => state.timetable.settings
-export const selectDuplicateBlock = (state: IState) => state.timetable.statuses.blockToBeDuplicated
-export const selectFormCache = (state: IState) => state.timetable.formCache
-export const selectDayToBeOpenSubForm = (state: IState) => state.timetable.statuses.dayToBeOpenSubForm
-export const selectSubDayToOpenBlockForm = (state: IState) => state.timetable.statuses.subDayToOpenBlockForm
-export const selectIsSubFormVisible = (state: IState) => state.timetable.statuses.isSubFormVisible
-export const selectTTAllocations = (state: IState) => state.timetable.allocations
-export const selectDayToSub = (state: IState, day: DayID) => state.timetable.allocations.daySubs[day]
-export const selectCanceledBlocks = (state: IState) => state.timetable.allocations.canceledBlocks
-export const selectSubDayCancellation = (state: IState, day: DayID) => state.timetable.allocations.daySubs[day].canceled
-export const selectBlockByCurrentDayWithSub = (state: IState) => {
-    const currentDay = new Date().getDay() as DayID
-    const dayToBeSubbed = state.timetable.allocations.daySubs[currentDay].subWith
-    if (dayToBeSubbed != null) {
-        return state.timetable.allocations.daySubs[currentDay].blocks
-    } else {
-        return state.timetable.blocks[currentDay]
-    }
-}
-export const selectCanceledBlocksWithSub = (state: IState) => {
-    const currentDay = new Date().getDay() as DayID
-    const dayToBeSubbed = state.timetable.allocations.daySubs[currentDay].subWith
-    if (dayToBeSubbed != null) {
-        return state.timetable.allocations.daySubs[currentDay].canceled
-    } else {
-        return state.timetable.allocations.canceledBlocks
-    }
-}
+export default timetableSlice.reducer

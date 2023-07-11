@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'framer-motion'
 import { ChangeEvent, useEffect, useReducer } from 'react'
 
-import { DayID } from '@appTypes/TimeBlockInterfaces'
+import { DayID, TimeM } from '@appTypes/TimeBlockInterfaces'
 
 import ArrowDownIcon from '@assets/icons/ArrowDown.svg'
 import SubjectIcon from '@assets/icons/Subject.svg'
@@ -13,12 +13,12 @@ import TimeSelector from '@components/TimeSelector'
 import ValueDropdown, { ValueDropdownItemType } from '@components/ValueDropdown'
 
 import {
-    hideBlockForm,
-    selectDuplicateBlock,
-    selectFormCache,
-    selectSelectedBlock,
-    selectSubDayToOpenBlockForm
-} from '@redux/slices/timetableSlice'
+    selectTTSubDayToOpenBlockForm,
+    selectTTDupBlock,
+    selectTTFormCache,
+    selectTTSelBlock
+} from '@redux/selectors/timetableSelectors'
+import { ttBlockFormClosed } from '@redux/slices/timetableSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
 import { dayDropItems } from '@utils/timetableUtils'
@@ -30,10 +30,11 @@ import { createHandler, dangerButtonHandler, editHandler } from './utils'
 const BlockForm = () => {
     const appDispatch = useAppDispatch()
 
-    const oldBlock = useAppSelector(selectSelectedBlock)
-    const duplicateBlock = useAppSelector(selectDuplicateBlock)
-    const formCache = useAppSelector(selectFormCache)
-    const daySub = useAppSelector(selectSubDayToOpenBlockForm)
+    const oldBlock = useAppSelector(selectTTSelBlock)
+    const duplicateBlock = useAppSelector(selectTTDupBlock)
+    const formCache = useAppSelector(selectTTFormCache)
+    const subDay = useAppSelector(selectTTSubDayToOpenBlockForm)
+
     const subjects = formCache.subjects
     const subjectList: ValueDropdownItemType[] = subjects.map((subject, index) => ({
         name: subject.title,
@@ -42,7 +43,7 @@ const BlockForm = () => {
 
     const [state, formDispatch] = useReducer(
         blockFormReducer,
-        { oldBlock, duplicateBlock, formCache, daySub },
+        { oldBlock, duplicateBlock, formCache, subDay },
         createBlockFormIS
     )
 
@@ -65,7 +66,7 @@ const BlockForm = () => {
     }, [state.title])
 
     return (
-        <Modal closeHandler={() => appDispatch(hideBlockForm())}>
+        <Modal closeHandler={() => appDispatch(ttBlockFormClosed())}>
             <s.BlockFormContainer>
                 <div>
                     <s.TitleContainer>
@@ -105,8 +106,8 @@ const BlockForm = () => {
                     <s.InputContainer>
                         <s.InputName>Day</s.InputName>
                         <s.InputValue>
-                            {daySub !== null ? (
-                                <>Sub - {DayID[daySub]}</>
+                            {subDay !== null ? (
+                                <>Sub - {DayID[subDay]}</>
                             ) : (
                                 <>
                                     {DayID[state.day]}
@@ -135,7 +136,7 @@ const BlockForm = () => {
                     <s.InputContainer>
                         <s.InputName>Start Time</s.InputName>
                         <s.InputValue>
-                            <span style={{ letterSpacing: `0.5px` }}>
+                            <span>
                                 {state.startHours.toString().padStart(2, `0`)}:
                                 {state.startMinutes.toString().padStart(2, `0`)} {state.startAmPm}
                             </span>
@@ -153,7 +154,7 @@ const BlockForm = () => {
                                         minutes={state.startMinutes}
                                         setMinutes={(minutes: number) => formDispatch(fa.setStartMinutes(minutes))}
                                         timeAmPm={state.startAmPm}
-                                        setAmPm={(amPm: `am` | `pm`) => formDispatch(fa.setStartAmPm(amPm))}
+                                        setAmPm={(amPm: TimeM) => formDispatch(fa.setStartAmPm(amPm))}
                                         closeHandler={() => formDispatch(fa.hideStartDD())}
                                     />
                                 )}
@@ -165,7 +166,7 @@ const BlockForm = () => {
                     <s.InputContainer>
                         <s.InputName>End Time</s.InputName>
                         <s.InputValue>
-                            <span style={{ letterSpacing: `0.5px` }}>
+                            <span>
                                 {state.endHours.toString().padStart(2, `0`)}:
                                 {state.endMinutes.toString().padStart(2, `0`)} {state.endAmPm}
                             </span>
@@ -183,7 +184,7 @@ const BlockForm = () => {
                                         minutes={state.endMinutes}
                                         setMinutes={(minutes: number) => formDispatch(fa.setEndMinutes(minutes))}
                                         timeAmPm={state.endAmPm}
-                                        setAmPm={(amPm: `am` | `pm`) => formDispatch(fa.setEndAmPm(amPm))}
+                                        setAmPm={(amPm: TimeM) => formDispatch(fa.setEndAmPm(amPm))}
                                         closeHandler={() => formDispatch(fa.hideEndDD())}
                                     />
                                 )}

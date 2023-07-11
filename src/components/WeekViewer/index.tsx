@@ -3,13 +3,13 @@ import { AnimatePresence } from 'framer-motion'
 import DayColumn from '@components/DayColumn'
 import Timeline from '@components/Timeline'
 
-import { selectDaysToShow } from '@redux/slices/timetableSlice'
+import { selectTTDaysToShow } from '@redux/selectors/timetableSelectors'
 import { useAppSelector } from '@redux/store'
 
 import * as s from './styles'
 
 const WeekViewer = () => {
-    const daysToShow = useAppSelector(selectDaysToShow)
+    const daysToShow = useAppSelector(selectTTDaysToShow)
 
     return (
         <s.WeekViewerContainer>

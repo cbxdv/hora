@@ -38,16 +38,8 @@ ipcMain.handle(ipcHandlerTypes.fetchTTDataFromDisk, async () => {
     return blocks
 })
 
-ipcMain.handle(ipcHandlerTypes.saveTTBlocksToDisk, (_, data) => {
-    store.set(timetableStoreTypes.blocks, data)
-})
-
-ipcMain.handle(ipcHandlerTypes.saveTTSettingsToDisk, (_, data) => {
-    store.set(timetableStoreTypes.settings, data)
-})
-
-ipcMain.handle(ipcHandlerTypes.saveTTAllocationsToDisk, (_, data) => {
-    store.set(timetableStoreTypes.allocations, data)
+ipcMain.handle(ipcHandlerTypes.saveTTDataToDisk, (_, data) => {
+    store.set(timetableStoreTypes.all, data)
 })
 
 ipcMain.handle(ipcHandlerTypes.enableAutoLogin, () => registerLogin())

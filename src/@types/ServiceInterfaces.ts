@@ -2,8 +2,6 @@ import { PayloadAction } from '@reduxjs/toolkit'
 
 import { ITime } from './TimeBlockInterfaces'
 
-export type IServiceDataPayload = PayloadAction<INotifyObject[]>
-
 export interface INotifyObject {
     readonly id: string
     title: string
@@ -11,9 +9,4 @@ export interface INotifyObject {
     time: ITime
 }
 
-export type notifyPropertiesType = {
-    notifyStart: boolean
-    notifyStartBefore: number
-    notifyEnd: boolean
-    notifyEndBefore: number
-}
+export type ServiceDataPayload = PayloadAction<INotifyObject[]>

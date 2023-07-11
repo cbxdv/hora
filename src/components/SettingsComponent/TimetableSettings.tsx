@@ -1,17 +1,21 @@
+import { AnimatePresence } from 'framer-motion'
+
 import { DayID } from '@appTypes/TimeBlockInterfaces'
+import { TTNotifyType } from '@appTypes/TimetableInterfaces'
 
 import TrashIcon from '@assets/icons/Trash.svg'
 
 import TextButton from '@components/TextButton'
 
+import { selectTTAllocations, selectTTSettings } from '@redux/selectors/timetableSelectors'
 import {
-    blocksCleared,
-    selectTimetableSettings,
-    toggleDaysToShow,
-    toggleTTNotification,
-    updateTTNotifyBefore,
-    selectTTAllocations,
-    ttDaySubDeleted
+    ttBlocksCleared,
+    ttDayToShowToggled,
+    ttNotificationToggled,
+    ttNotifyBeforeUpdated,
+    ttShowCurrentBlockToggled,
+    ttShowCurrentTimeToggled,
+    ttSubDayDeleted
 } from '@redux/slices/timetableSlice'
 import { useAppSelector, useAppDispatch } from '@redux/store'
 
@@ -21,18 +25,36 @@ import SettingsCheckBox from './SettingsCheckbox'
 import SettingsNumberInput from './SettingsNumberInput'
 
 import * as s from './styles'
-import { AnimatePresence } from 'framer-motion'
 
 const TimetableSettings = () => {
     const dispatch = useAppDispatch()
 
-    const settings = useAppSelector(selectTimetableSettings)
+    const settings = useAppSelector(selectTTSettings)
     const allocations = useAppSelector(selectTTAllocations)
 
-    const shouldShowSubs = shouldShowSubsInSettings(allocations.daySubs)
+    const shouldShowSubs = shouldShowSubsInSettings(allocations.subDays)
 
     return (
         <s.SettingsComponentItem>
+            <s.SettingsSection>
+                <s.SectionHeading>Header Settings</s.SectionHeading>
+                <s.SectionBodyGrid>
+                    <s.CheckSettingContainer>
+                        <s.CheckSettingName>Show current time</s.CheckSettingName>
+                        <SettingsCheckBox
+                            value={settings.showCurrentTimeInHeader}
+                            setValue={() => dispatch(ttShowCurrentTimeToggled())}
+                        />
+                    </s.CheckSettingContainer>
+                    <s.CheckSettingContainer>
+                        <s.CheckSettingName>Show header block</s.CheckSettingName>
+                        <SettingsCheckBox
+                            value={settings.showCurrentBlockInHeader}
+                            setValue={() => dispatch(ttShowCurrentBlockToggled())}
+                        />
+                    </s.CheckSettingContainer>
+                </s.SectionBodyGrid>
+            </s.SettingsSection>
             <s.SettingsSection>
                 <s.SectionHeading>Days to Show</s.SectionHeading>
                 <s.SectionBodyGrid>
@@ -41,7 +63,7 @@ const TimetableSettings = () => {
                             <s.CheckSettingName>{DayID[dayId]}</s.CheckSettingName>
                             <SettingsCheckBox
                                 value={settings.daysToShow[dayId]}
-                                setValue={() => dispatch(toggleDaysToShow(dayId))}
+                                setValue={() => dispatch(ttDayToShowToggled(dayId))}
                             />
                         </s.CheckSettingContainer>
                     ))}
@@ -54,7 +76,7 @@ const TimetableSettings = () => {
                         <s.CheckSettingName>Notify at start</s.CheckSettingName>
                         <SettingsCheckBox
                             value={settings.notifyStart}
-                            setValue={() => dispatch(toggleTTNotification(`start`))}
+                            setValue={() => dispatch(ttNotificationToggled(TTNotifyType.Start))}
                         />
                     </s.CheckSettingContainer>
                     <s.CheckSettingContainer>
@@ -62,7 +84,7 @@ const TimetableSettings = () => {
                         <SettingsNumberInput
                             value={settings.notifyStartBefore}
                             setValue={value => {
-                                dispatch(updateTTNotifyBefore({ type: `start`, value }))
+                                dispatch(ttNotifyBeforeUpdated({ type: TTNotifyType.Start, value }))
                             }}
                         />
                         {` `}
@@ -72,7 +94,7 @@ const TimetableSettings = () => {
                         <s.CheckSettingName>Notify at end</s.CheckSettingName>
                         <SettingsCheckBox
                             value={settings.notifyEnd}
-                            setValue={() => dispatch(toggleTTNotification(`end`))}
+                            setValue={() => dispatch(ttNotificationToggled(TTNotifyType.End))}
                         />
                     </s.CheckSettingContainer>
                     <s.CheckSettingContainer>
@@ -80,7 +102,7 @@ const TimetableSettings = () => {
                         <SettingsNumberInput
                             value={settings.notifyEndBefore}
                             setValue={value => {
-                                dispatch(updateTTNotifyBefore({ type: `end`, value }))
+                                dispatch(ttNotifyBeforeUpdated({ type: TTNotifyType.End, value }))
                             }}
                         />
                         {` `}
@@ -95,16 +117,16 @@ const TimetableSettings = () => {
                         <s.SubsContainer>
                             <AnimatePresence>
                                 {dayIds.map(dayId => {
-                                    const daySub = allocations.daySubs[dayId]
-                                    if (daySub.subWith !== null) {
+                                    const subDay = allocations.subDays[dayId]
+                                    if (subDay.subWith !== null) {
                                         return (
                                             <s.SubElement key={dayId}>
                                                 <s.SubElementDetails>
                                                     <div>{DayID[dayId]}</div>
                                                     <div>&larr;</div>
-                                                    <div>{DayID[daySub.subWith]}</div>
+                                                    <div>{DayID[subDay.subWith]}</div>
                                                 </s.SubElementDetails>
-                                                <s.SubElementAction onClick={() => dispatch(ttDaySubDeleted(dayId))}>
+                                                <s.SubElementAction onClick={() => dispatch(ttSubDayDeleted(dayId))}>
                                                     <TrashIcon />
                                                 </s.SubElementAction>
                                             </s.SubElement>
@@ -119,7 +141,7 @@ const TimetableSettings = () => {
             <s.SettingsSection>
                 <s.SectionHeading>Danger Zone</s.SectionHeading>
                 <s.DangerMiddle>
-                    <TextButton text='Clear all Blocks' danger onClick={() => dispatch(blocksCleared())} />
+                    <TextButton text='Clear all Blocks' danger onClick={() => dispatch(ttBlocksCleared())} />
                 </s.DangerMiddle>
             </s.SettingsSection>
         </s.SettingsComponentItem>

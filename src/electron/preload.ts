@@ -1,8 +1,7 @@
 import { ipcRenderer, contextBridge } from 'electron'
 
-import { themeTypes, IAppSettings } from '@appTypes/AppInterfaces'
-import { IBlocks } from '@appTypes/TimeBlockInterfaces'
-import { ITTAllocations, ITimetableDiskData, ITimetableSettings } from '@appTypes/TimetableInterfaces'
+import { IAppSettings } from '@appTypes/AppInterfaces'
+import { ITTDiskData } from '@appTypes/TimetableInterfaces'
 
 import { ipcHandlerTypes as ipc } from './electronConstants'
 
@@ -12,7 +11,7 @@ export const api = {
     sendNotification: (data: { title: string; body: string }) => ipcRenderer.invoke(ipc.sendNotification, data),
 
     // Theme
-    getOSTheme: () => <Promise<themeTypes>>ipcRenderer.invoke(ipc.getOSTheme),
+    getOSTheme: () => <Promise<string>>ipcRenderer.invoke(ipc.getOSTheme),
 
     // App
     fetchAppSettingsFromDisk: () => <Promise<IAppSettings>>ipcRenderer.invoke(ipc.fetchAppSettingsFromDisk),
@@ -24,10 +23,8 @@ export const api = {
     disableAutoLogin: () => ipcRenderer.invoke(ipc.disableAutoLogin),
 
     // Timetable
-    fetchTTDataFromDisk: () => <Promise<ITimetableDiskData>>ipcRenderer.invoke(ipc.fetchTTDataFromDisk),
-    saveTTBlocksToDisk: (data: IBlocks) => ipcRenderer.invoke(ipc.saveTTBlocksToDisk, data),
-    saveTTSettingsToDisk: (data: ITimetableSettings) => ipcRenderer.invoke(ipc.saveTTSettingsToDisk, data),
-    saveTTAllocationsToDisk: (data: ITTAllocations) => ipcRenderer.invoke(ipc.saveTTAllocationsToDisk, data)
+    fetchTTDataFromDisk: () => <Promise<ITTDiskData>>ipcRenderer.invoke(ipc.fetchTTDataFromDisk),
+    saveTTDataToDisk: (data: ITTDiskData) => ipcRenderer.invoke(ipc.saveTTDataToDisk, data)
 }
 
 contextBridge.exposeInMainWorld(`api`, api)

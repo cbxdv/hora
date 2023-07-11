@@ -1,8 +1,7 @@
-type getPixesToScrollInListProps = (
+type getPixesToScrollInListType = (
     listRef: React.RefObject<HTMLDivElement> | null,
     listItemRef: React.RefObject<HTMLDivElement> | null
 ) => number
-
 /**
  * Gives number of pixels that have to be scrolled, to get item to be brought to middle of the
  * container. The calculation uses the position and height of item and container to calculate an
@@ -11,7 +10,7 @@ type getPixesToScrollInListProps = (
  * @param listItemRef The ref of the item that has to be scrolled into the view
  * @returns Number to pixels
  */
-export const getPixelsToScrollInList: getPixesToScrollInListProps = (listRef, listItemRef) => {
+export const getPixelsToScrollInList: getPixesToScrollInListType = (listRef, listItemRef) => {
     if (!listRef || !listItemRef || !listRef.current || !listItemRef.current) {
         return 0
     }

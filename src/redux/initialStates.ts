@@ -1,14 +1,15 @@
+import { AppThemes, Themes } from '@appTypes/AppInterfaces'
 import { IAppState, IServiceState, ITimetableState } from '@appTypes/StateInterfaces'
 
-export const appIS: IAppState = {
+export const AppIS: IAppState = {
     statuses: {
         isLoading: true,
         isSettingsVisible: false,
-        showingTheme: `dark`,
-        osTheme: `dark`
+        showingTheme: Themes.Dark,
+        osTheme: Themes.Dark
     },
     settings: {
-        theme: `system`,
+        theme: AppThemes.System,
         notifications: true,
         minimizeOnClose: true,
         openAtStartup: false,
@@ -19,13 +20,13 @@ export const appIS: IAppState = {
     }
 }
 
-export const serviceIS: IServiceState = {
+export const ServiceIS: IServiceState = {
     serviceData: {
         notifications: []
     }
 }
 
-export const timetableIS: ITimetableState = {
+export const TimetableIS: ITimetableState = {
     blocks: {
         0: [],
         1: [],
@@ -48,7 +49,9 @@ export const timetableIS: ITimetableState = {
         notifyStart: true,
         notifyStartBefore: 5,
         notifyEnd: true,
-        notifyEndBefore: 5
+        notifyEndBefore: 5,
+        showCurrentTimeInHeader: true,
+        showCurrentBlockInHeader: true
     },
     statuses: {
         isBlockFormVisible: false,
@@ -56,16 +59,18 @@ export const timetableIS: ITimetableState = {
         selectedBlock: null,
         blockToBeDuplicated: null,
         dayToBeOpenSubForm: null,
-        subDayToOpenBlockForm: null
+        subDayToOpenBlockForm: null,
+        headerBlock: null
     },
     formCache: {
         startTime: null,
         endTime: null,
+        duration: 60,
         day: null,
         subjects: []
     },
     allocations: {
-        daySubs: {
+        subDays: {
             0: {
                 subWith: null,
                 blocks: [],

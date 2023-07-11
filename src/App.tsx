@@ -9,15 +9,10 @@ import SettingsComponent from '@components/SettingsComponent'
 import SubstitutionForm from '@components/SubstitutionForm'
 import WeekViewer from '@components/WeekViewer'
 
-import {
-    appStarted,
-    selectIsLoading,
-    selectIsSettingsVisible,
-    selectShowingTheme,
-    showSettings,
-    toggleTheme
-} from '@redux/slices/appSlice'
-import { showBlockForm, selectIsBlockFormVisible, selectIsSubFormVisible } from '@redux/slices/timetableSlice'
+import { selectIsAppLoading, selectIsAppSettingsVisible, selectShowingTheme } from '@redux/selectors/appSelectors'
+import { selectIsTTBlockFormVisible, selectIsTTSubFormVisible } from '@redux/selectors/timetableSelectors'
+import { appSettingsOpened, appStarted, appThemeToggled } from '@redux/slices/appSlice'
+import { ttBlockFormedOpened, ttSubFormOpened } from '@redux/slices/timetableSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
 import GlobalStyles from '@styles/globalStyles'
@@ -30,16 +25,21 @@ const App = () => {
     const dispatch = useAppDispatch()
     const theme = useAppSelector(selectShowingTheme)
 
-    const isLoading = useAppSelector(selectIsLoading)
+    const isLoading = useAppSelector(selectIsAppLoading)
+
+    const startApp = () => {
+        dispatch(appStarted())
+    }
 
     useEffect(() => {
-        dispatch(appStarted())
+        const contextMenuHandler = (event: MouseEvent) => event.preventDefault()
+        startApp()
+        document.addEventListener(`contextmenu`, contextMenuHandler)
         return () => {
             stopNS()
+            document.removeEventListener(`contextmenu`, contextMenuHandler)
         }
     }, [])
-
-    console.log(theme)
 
     return (
         <AnimatePresence>
@@ -62,31 +62,35 @@ const App = () => {
 const ModalsContainer = () => {
     const dispatch = useAppDispatch()
 
-    const isBlockFormVisible = useAppSelector(selectIsBlockFormVisible)
-    const isSettingsVisible = useAppSelector(selectIsSettingsVisible)
-    const isSubFormVisible = useAppSelector(selectIsSubFormVisible)
-
-    const keyBindHandler = (event: KeyboardEvent) => {
-        if (isBlockFormVisible || isSettingsVisible) {
-            return
-        }
-        if (!event.ctrlKey) {
-            return
-        }
-        switch (event.key.toLowerCase()) {
-            case `a`:
-                dispatch(showBlockForm())
-                break
-            case `i`:
-                dispatch(showSettings())
-                break
-            case `l`:
-                dispatch(toggleTheme())
-                break
-        }
-    }
+    const isBlockFormVisible = useAppSelector(selectIsTTBlockFormVisible)
+    const isSettingsVisible = useAppSelector(selectIsAppSettingsVisible)
+    const isSubFormVisible = useAppSelector(selectIsTTSubFormVisible)
 
     useEffect(() => {
+        const keyBindHandler = (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key.toLowerCase() === `l`) {
+                dispatch(appThemeToggled())
+                return
+            }
+            if (isBlockFormVisible || isSettingsVisible) {
+                return
+            }
+            if (!event.ctrlKey) {
+                return
+            }
+            switch (event.key.toLowerCase()) {
+                case `a`:
+                    dispatch(ttBlockFormedOpened())
+                    break
+                case `i`:
+                    dispatch(appSettingsOpened())
+                    break
+                case `s`:
+                    dispatch(ttSubFormOpened())
+                    break
+            }
+        }
+
         window.addEventListener(`keydown`, keyBindHandler)
         return () => {
             window.removeEventListener(`keydown`, keyBindHandler)
@@ -104,7 +108,7 @@ const ModalsContainer = () => {
 
 const AppMain = styled(motion.div).attrs(() => ({
     initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { delayChildren: 0.3 } },
+    animate: { opacity: 1 },
     exit: { opacity: 0 },
     transition: { duration: 0.2 }
 }))`

@@ -1,13 +1,8 @@
-import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
 
-import { buttonStyles, flexCenter } from '@styles/styleDefinitions'
+import { buttonWithStyles, flexCenter } from '@styles/styleDefinitions'
 
-export const IconButtonContainer = styled(motion.button).attrs(() => ({
-    whileHover: { filter: `invert(8%)` },
-    whileTap: { filter: `invert(15%)`, scale: 0.98 }
-}))<{ $size: number }>`
-    ${buttonStyles()};
+export const IconButtonContainer = styled(buttonWithStyles)<{ $size: number }>`
     width: ${({ $size }) => $size}px;
     height: ${({ $size }) => $size}px;
     scale: 1;

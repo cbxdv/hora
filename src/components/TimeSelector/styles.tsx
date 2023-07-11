@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
 
-import { flexCenter } from '@styles/styleDefinitions'
+import { flexCenter, hoverAndTapMotion, subtleBorder } from '@styles/styleDefinitions'
 
 export const TimeInputContainer = styled(motion.div).attrs(() => ({
     initial: { height: 0 },
@@ -16,10 +16,12 @@ export const TimeInputContainer = styled(motion.div).attrs(() => ({
     left: 0;
     top: 110%;
     border-radius: 8px;
-    background-color: ${props => props.theme.background};
+    background-color: ${props => props.theme.contextBackground};
+    backdrop-filter: blur(4px);
     padding: 0 5px;
     z-index: 1;
-    box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
+    box-shadow: ${({ theme }) => theme.shadow};
+    ${subtleBorder}
 `
 
 export const TimeInputComponent = styled.div`
@@ -29,8 +31,7 @@ export const TimeInputComponent = styled.div`
 `
 
 export const DropdownItem = styled(motion.div).attrs(({ theme }) => ({
-    whileHover: { borderColor: `${theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}` },
-    whileTap: { filter: `invert(15%)`, scale: 0.98 }
+    ...hoverAndTapMotion(theme.name)
 }))<{ $selected: boolean }>`
     width: 100%;
     height: 30px;

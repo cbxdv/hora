@@ -10,7 +10,7 @@ const TextButton: React.FC<TextButtonProps> = ({ text, onClick, danger }) => {
 
 type TextButtonProps = {
     text: string
-    onClick?: () => void
+    onClick: () => void
     danger?: boolean
 }
 

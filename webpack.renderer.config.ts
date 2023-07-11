@@ -23,7 +23,8 @@ export const rendererConfig: Configuration = {
             '@redux': path.resolve(__dirname, `./src/redux`),
             '@assets': path.resolve(__dirname, `./src/assets`),
             '@utils': path.resolve(__dirname, `./src/utilities`),
-            '@styles': path.resolve(__dirname, `./src/styles`)
+            '@styles': path.resolve(__dirname, `./src/styles`),
+            '@hooks': path.resolve(__dirname, `./src/hooks`)
         }
     }
 }

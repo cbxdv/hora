@@ -1,4 +1,4 @@
-import { DayID, ITime, ITimeBlockBase } from '@appTypes/TimeBlockInterfaces'
+import { ITime, ITimeBlock, ITimeBlockBase, TimeM } from '@appTypes/TimeBlockInterfaces'
 
 /**
  * Get a 12-hour based time string
@@ -46,8 +46,8 @@ export const hours24To12 = (hours: number) => {
  * @param timeAmPm String that is `am` or `pm` in the clock
  * @returns Hour number based on the 24-hour clock
  */
-export const hours12To24 = (hours: number, timeAmPm: `am` | `pm`) => {
-    if (timeAmPm === `am`) {
+export const hours12To24 = (hours: number, timeAmPm: TimeM) => {
+    if (timeAmPm === TimeM.AM) {
         if (hours === 12) {
             return 0
         }
@@ -65,7 +65,7 @@ export const hours12To24 = (hours: number, timeAmPm: `am` | `pm`) => {
  * @param hours Hour number represented in 24-hour clock
  * @returns String representing `am` or `pm`
  */
-export const getAmPm = (hours: number) => (hours < 12 ? `am` : `pm`)
+export const getAmPm = (hours: number) => (hours < 12 ? TimeM.AM : TimeM.PM)
 
 /**
  * Calculates the duration of block in minutes
@@ -73,37 +73,180 @@ export const getAmPm = (hours: number) => (hours < 12 ? `am` : `pm`)
  * @returns Duration in minutes
  */
 export const getDurationMinutes = (block: ITimeBlockBase) => {
-    const hoursDiff = block.endTime.hours - block.startTime.hours
-    let minutesDiff = 60 - block.startTime.minutes
-    minutesDiff += block.endTime.minutes
-    return hoursDiff * 60 + minutesDiff
+    const start = new Date()
+    const end = new Date()
+    start.setHours(block.startTime.hours)
+    start.setMinutes(block.startTime.minutes)
+    end.setHours(block.endTime.hours)
+    end.setMinutes(block.endTime.minutes)
+    return Math.floor((end.valueOf() - start.valueOf()) / 1000 / 60)
 }
 
-type addDurationToTimeProps = (
-    block: ITime,
-    day: DayID,
-    durationMinutes: number
-) => { newEndTime: ITime | null; newDay: DayID }
+type addDurationToTimeProps = (time: ITime, durationMinutes: number) => ITime
 /**
  * Calculates and adds duration to the block time and returns a new time and day
- * @param block TimeBlock to which the duration have to be added
- * @param day The day at which the time is represented
+ * @param time Time to which the duration have to be added
  * @param durationMinutes The amount of minutes to add to the block
  * @returns An object with added block time and a new day ID if time exceed a threshold
  */
-export const addDurationToTime: addDurationToTimeProps = (block, day, durationMinutes) => {
-    let { hours, minutes } = block
+export const addDurationToTime: addDurationToTimeProps = (time, durationMinutes) => {
+    let { hours, minutes, day } = time
     minutes += durationMinutes
-    hours += Math.floor(minutes / 60) - 1
-    minutes = minutes - Math.floor(minutes / 60) * 60
-    if (hours >= 23) {
-        return {
-            newEndTime: null,
-            newDay: ((day + 1) % 7) as DayID
+    hours += Math.floor(minutes / 60)
+    minutes = minutes % 60
+    if (hours >= 24) {
+        day += Math.floor(hours / 24) % 7
+        hours = hours % 24
+    }
+    return { hours, minutes, day }
+}
+
+/**
+ * Calculates and adds duration to the block time and returns a new time. The time is limited to the
+ * provided day. If exceeds the current day, it is limited to 23:59, last minute of the day
+ * @param time Time to which the duration have to be added
+ * @param durationMinutes The amount of minutes to add to the block
+ * @returns An object with added block time and a new day ID if time exceed a threshold
+ */
+export const addDurationToTimeLimited: addDurationToTimeProps = (time, durationMinutes) => {
+    const added = addDurationToTime(time, durationMinutes)
+    if (added.day != time.day) {
+        added.hours = 23
+        added.minutes = 59
+        added.day = time.day
+    }
+    return added
+}
+
+type getRemainingTimeStringType = (time: ITime) => string
+/**
+ * Calculates difference of the time with current time, then returns a string with hours and
+ * minutes representation. If the time is considered to be a component occurring ahead
+ * @param time Time object whose difference is to be calculated
+ * @returns A string with hours and minutes
+ */
+export const getRemainingTimeString: getRemainingTimeStringType = time => {
+    if (time === null) {
+        return ``
+    }
+    const day = time.day
+    // Comparing with the current time
+    const currentTime = new Date()
+    const endTime = new Date()
+    // Comparing day differences between the current day and provided day
+    if (day > endTime.getDay()) {
+        // If the day provided is ahead, then the their day difference have to be added
+        const toAdd = (day.valueOf() - endTime.getDay()) * 86400000
+        endTime.setUTCMilliseconds(endTime.getUTCMilliseconds() + toAdd)
+    } else if (day < endTime.getDay()) {
+        // If the day provided is behind, then their difference is calculated
+        // The next occurrence will be the next week so difference is subtracted with 7
+        const toAdd = (7 - (endTime.getDay() - day.valueOf())) * 86400000
+        endTime.setUTCMilliseconds(endTime.getUTCMilliseconds() + toAdd)
+    } else {
+        // If both day provided and the current day is same, then checked whether to update day
+        // A boolean to indicate whether the time provided is behind the current time
+        let isBehind = true
+        if (time.hours > endTime.getHours()) {
+            /**
+             *  ========📦====
+             *     👆🏻
+             */
+            isBehind = false
+        }
+        if (time.hours === endTime.getHours() && time.minutes > endTime.getMinutes()) {
+            /**
+             *  ========📦====
+             *     👆🏻
+             */
+            isBehind = false
+        }
+        // If the block is behind, then the next occurrence of the block is next week.
+        // So milliseconds count worth of 7 days is added to the time
+        if (isBehind) {
+            endTime.setUTCMilliseconds(endTime.getUTCMilliseconds() + 86400000 * 7)
+        }
+        // If the block has same day, and is not behind, then no logic is required for adding
+        // milliseconds of days.
+    }
+    // The hours and minutes of provided time is set in the object
+    endTime.setHours(time.hours)
+    endTime.setMinutes(time.minutes)
+    // Difference of milliseconds is calculated between them
+    // It is maintained that the end time is always greater than current time with the above logic
+    const milliseconds = endTime.valueOf() - currentTime.valueOf()
+    if (milliseconds <= 0) {
+        return ``
+    }
+    // Minutes is calculated with basic time calculations
+    // 1 second = 1000 milliseconds
+    // 1 minute = 60 seconds = 60,000 milliseconds
+    const minutes = Math.floor(milliseconds / 1000 / 60)
+    // If the minutes is lesser than an hours, then hours string is not required
+    if (minutes < 60) {
+        return `${minutes} mins`
+    } else {
+        // If the time is exactly divisible by 60, then no minutes residues
+        if (minutes % 60 === 0) {
+            return `${minutes / 60} hr`
+        } else {
+            return `${Math.floor(minutes / 60)} hr ${minutes % 60} mins`
         }
     }
-    return {
-        newEndTime: { hours, minutes },
-        newDay: day
+    return ``
+}
+
+/**
+ * Checks and returns the first currently occurring block in the list provided.
+ * @param blocks List of current day blocks that have to be checked
+ * @returns A TimeBlock that is occurring now, or null if not any
+ */
+export const getFirstCurrentBlock = (blocks: ITimeBlock[]) => {
+    let newBlock = null
+    const currentTime = new Date()
+    const currentHour = currentTime.getHours()
+    const currentMinutes = currentTime.getMinutes()
+    // Iterating through the current day blocks and picking the current block
+    for (let i = 0; i < blocks.length; i++) {
+        let isCurrent = true
+        const block = blocks[i]
+        // Checking with all possible options that cannot qualify for current block
+        if (currentHour < block.startTime.hours) {
+            /**
+             *  ========📦📦====
+             *     👆🏻
+             */
+            isCurrent = false
+            continue
+        }
+        if (block.startTime.hours === currentHour && currentMinutes < block.startTime.minutes) {
+            /**
+             *  ========📦📦====
+             *     👆🏻
+             */
+            isCurrent = false
+            continue
+        }
+        if (block.endTime.hours < currentHour) {
+            /**
+             *  ====📦📦========
+             *             👆🏻
+             */
+            isCurrent = false
+            continue
+        }
+        if (block.endTime.hours === currentHour && block.endTime.minutes <= currentMinutes) {
+            /**
+             *  ====📦📦========
+             *             👆🏻
+             */
+            isCurrent = false
+            continue
+        }
+        if (isCurrent && !newBlock) {
+            newBlock = block
+            break
+        }
     }
+    return newBlock
 }

@@ -1,38 +1,41 @@
 import { AnimatePresence } from 'framer-motion'
-import { useState, MouseEvent } from 'react'
 
 import { DayID, ITimeBlock } from '@appTypes/TimeBlockInterfaces'
 
 import CancelIcon from '@assets/icons/Cancel.svg'
 import DuplicateIcon from '@assets/icons/Copy.svg'
 import EditIcon from '@assets/icons/Edit.svg'
+import ForwardIcon from '@assets/icons/ForwardItem.svg'
 import TrashIcon from '@assets/icons/Trash.svg'
 
-import ContextMenu from '@components/ContextMenu'
+import ContextMenu, { ContextMenuItemType } from '@components/ContextMenu'
 
+import useContextMenu from '@hooks/useContextMenu'
+
+import { selectTTCanceledBlocks, selectTTHeaderBlock, selectTTSubDayCancels } from '@redux/selectors/timetableSelectors'
 import {
-    addBlockCancellation,
-    blockDeleted,
-    deleteBlockCancellation,
-    selectCanceledBlocks,
-    selectSubDayCancellation,
-    showBlockForm,
-    updateDuplicateBlock,
-    updateSelectedBlock,
-    updateSubDayToOpenBlockForm
+    ttBlockDeleted,
+    ttBlockFormedOpened,
+    ttCancellationAdded,
+    ttCancellationDeleted,
+    ttDupBlockUpdated,
+    ttSelectedBlockUpdated,
+    ttSubDayToOpenBlockFormUpdated,
+    ttHeaderBlockUpdated
 } from '@redux/slices/timetableSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
 import { checkIsBlockCanceled } from '@utils/timetableUtils'
-import { timeObjectTo12HourStr } from '@utils/timeUtils'
+import { getFirstCurrentBlock, timeObjectTo12HourStr } from '@utils/timeUtils'
 
 import * as s from './styles'
 
-const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock, daySub }) => {
+const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock, subDay }) => {
     const dispatch = useAppDispatch()
 
-    const [isContextMenuVisible, setIsContextMenuVisible] = useState<boolean>(false)
-    const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
+    const blockInHeader = useAppSelector(selectTTHeaderBlock)
+
+    const { isContextMenuVisible, showContextMenu, hideContextMenu, mousePos } = useContextMenu()
 
     const getBlockHeight = () => {
         // Conversion rate -> 60 mins = 90px
@@ -56,82 +59,86 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock, daySub }) => {
         return topMinutes * 1.5
     }
 
-    const contextMenuHandler = (event: MouseEvent) => {
-        event.stopPropagation()
-        const x = event.clientX
-        const y = event.clientY
-        setMousePos({
-            x,
-            y
-        })
-        setIsContextMenuVisible(true)
-    }
+    const subDayCancels = useAppSelector(state => selectTTSubDayCancels(state, subDay || timeBlock.startTime.day))
+    const cancels = useAppSelector(selectTTCanceledBlocks)
 
     let isCanceled = false
-    if (daySub != null) {
-        const canceledBlocks = useAppSelector(state => selectSubDayCancellation(state, daySub))
+    if (subDay != null) {
+        const canceledBlocks = subDayCancels
         isCanceled = checkIsBlockCanceled(timeBlock, canceledBlocks)
     } else {
-        const canceledBlocks = useAppSelector(selectCanceledBlocks)
+        const canceledBlocks = cancels
         isCanceled = checkIsBlockCanceled(timeBlock, canceledBlocks)
+    }
+
+    const isHeaderBlock = blockInHeader != null && blockInHeader.id == timeBlock.id
+
+    const contextMenuItems: ContextMenuItemType[] = [
+        {
+            id: `edit`,
+            label: `Edit`,
+            icon: EditIcon,
+            action() {
+                if (subDay != null) {
+                    dispatch(ttSubDayToOpenBlockFormUpdated(subDay))
+                }
+                dispatch(ttSelectedBlockUpdated(timeBlock))
+                dispatch(ttBlockFormedOpened())
+            }
+        },
+        {
+            id: `duplicate`,
+            label: `Duplicate`,
+            icon: DuplicateIcon,
+            action() {
+                dispatch(ttDupBlockUpdated(timeBlock))
+                dispatch(ttBlockFormedOpened())
+            }
+        },
+        {
+            id: `cancel`,
+            label: isCanceled ? `Restore` : `Cancel`,
+            icon: CancelIcon,
+            action() {
+                if (isCanceled) {
+                    dispatch(ttCancellationDeleted({ blockId: timeBlock.id, subDay: subDay }))
+                } else {
+                    dispatch(ttCancellationAdded({ blockId: timeBlock.id, subDay: subDay }))
+                }
+            }
+        },
+        {
+            id: `delete`,
+            label: `Delete`,
+            icon: TrashIcon,
+            action() {
+                dispatch(ttBlockDeleted({ day: timeBlock.startTime.day, id: timeBlock.id, isSubDay: subDay != null }))
+            },
+            danger: true
+        }
+    ]
+
+    // Ability to add to header block only if it is not a current block
+    if (getFirstCurrentBlock([timeBlock]) === null) {
+        contextMenuItems.unshift({
+            id: `track`,
+            label: isHeaderBlock ? `Remove from header` : `Show in header`,
+            icon: ForwardIcon,
+            action() {
+                if (isHeaderBlock) {
+                    dispatch(ttHeaderBlockUpdated(null))
+                } else {
+                    dispatch(ttHeaderBlockUpdated(timeBlock))
+                }
+            }
+        })
     }
 
     return (
         <>
             <AnimatePresence>
                 {isContextMenuVisible && (
-                    <ContextMenu
-                        menuItems={[
-                            {
-                                id: `edit`,
-                                label: `Edit`,
-                                icon: EditIcon,
-                                action: () => {
-                                    setIsContextMenuVisible(false)
-                                    if (daySub != null) {
-                                        dispatch(updateSubDayToOpenBlockForm(daySub))
-                                    }
-                                    dispatch(updateSelectedBlock(timeBlock))
-                                    dispatch(showBlockForm())
-                                }
-                            },
-                            {
-                                id: `duplicate`,
-                                label: `Duplicate`,
-                                icon: DuplicateIcon,
-                                action: () => {
-                                    setIsContextMenuVisible(false)
-                                    dispatch(updateDuplicateBlock(timeBlock))
-                                    dispatch(showBlockForm())
-                                }
-                            },
-                            {
-                                id: `cancel`,
-                                label: isCanceled ? `Restore` : `Cancel`,
-                                icon: CancelIcon,
-                                action: () => {
-                                    setIsContextMenuVisible(false)
-                                    if (isCanceled) {
-                                        dispatch(deleteBlockCancellation({ blockId: timeBlock.id, subDay: daySub }))
-                                    } else {
-                                        dispatch(addBlockCancellation({ blockId: timeBlock.id, subDay: daySub }))
-                                    }
-                                }
-                            },
-                            {
-                                id: `delete`,
-                                label: `Delete`,
-                                icon: TrashIcon,
-                                action: () => {
-                                    setIsContextMenuVisible(false)
-                                    dispatch(blockDeleted({ day: timeBlock.day, id: timeBlock.id, daySub }))
-                                },
-                                danger: true
-                            }
-                        ]}
-                        position={mousePos}
-                        closeHandler={() => setIsContextMenuVisible(false)}
-                    />
+                    <ContextMenu menuItems={contextMenuItems} position={mousePos} closeHandler={hideContextMenu} />
                 )}
             </AnimatePresence>
             <s.TimeBlockContainer
@@ -139,7 +146,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock, daySub }) => {
                 $blockColor={timeBlock.color}
                 $positionalPad={getTopPositionalPadding()}
                 $canceled={isCanceled}
-                onAuxClick={(event: MouseEvent<HTMLDivElement>) => contextMenuHandler(event)}
+                onAuxClick={showContextMenu}
             >
                 <s.StylingLineContainer>
                     <s.StylingLine />
@@ -159,7 +166,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock, daySub }) => {
 
 type TimeBlockProps = {
     timeBlock: ITimeBlock
-    daySub: DayID | null
+    subDay: DayID | null
 }
 
 export default TimeBlock

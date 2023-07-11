@@ -1,58 +1,48 @@
-import { PayloadAction } from '@reduxjs/toolkit'
-
 import { ITime, IBlocks, DayID, ITimeBlock } from './TimeBlockInterfaces'
 
-export type IUpdateDaysPayload = PayloadAction<DayID>
-
-export interface ITimetableSettings {
+export interface ITTSettings extends ITTNotifyPropType {
     daysToShow: {
         [key in DayID]: boolean
     }
+    showCurrentTimeInHeader: boolean
+    showCurrentBlockInHeader: boolean
+}
+
+export interface ITTNotifyPropType {
     notifyStart: boolean
     notifyStartBefore: number
     notifyEnd: boolean
     notifyEndBefore: number
 }
 
-export type ITimetableDiskData = {
+export type ITTDiskData = {
     blocks: IBlocks
-    settings: ITimetableSettings
+    settings: ITTSettings
     allocations: ITTAllocations
 }
 
-export interface ITimetableSubject {
+export interface ITTSubject {
     title: string
     color: string
     description: string
 }
 
-export type ITimetableFormCache = {
+export type ITTFormCache = {
     startTime: ITime | null
     endTime: ITime | null
+    duration: number
     day: DayID | null
-    subjects: ITimetableSubject[]
+    subjects: ITTSubject[]
 }
 
-export type ITimetableInitPayload = PayloadAction<ITimetableDiskData>
-
-export type timetableNotifyTypes = `start` | `end`
-
-export type ITimetableToggleNotifyPayload = PayloadAction<timetableNotifyTypes>
-
-export type ITimetableNotifyUpdatePayload = PayloadAction<{
-    type: timetableNotifyTypes
-    value: number
-}>
-
-export type ITimetableFormCacheUpdatePayload = PayloadAction<ITimetableFormCache>
-
-export type ITimetableSubjectsUpdatePayload = PayloadAction<ITimetableSubject[]>
-
-export type ITTFormCacheDayUpdatePayload = PayloadAction<DayID>
+export enum TTNotifyType {
+    Start = `start`,
+    End = `end`
+}
 
 export type ITTCanceledBlocks = string[]
 
-export type ITTDaySubs = {
+export type ITTSubDays = {
     [key in DayID]: {
         subWith: DayID | null
         blocks: ITimeBlock[]
@@ -61,20 +51,6 @@ export type ITTDaySubs = {
 }
 
 export interface ITTAllocations {
-    daySubs: ITTDaySubs
+    subDays: ITTSubDays
     canceledBlocks: ITTCanceledBlocks
 }
-
-export type ITTDayToSubUpdatePayload = PayloadAction<DayID>
-
-export type ITTDaySubAddPayload = PayloadAction<{
-    subTo: DayID
-    subWith: DayID
-}>
-
-export type ITTDaySubDeletePayload = PayloadAction<DayID>
-
-export type ITTBlockCancellationPayload = PayloadAction<{
-    blockId: string
-    subDay: DayID | null
-}>

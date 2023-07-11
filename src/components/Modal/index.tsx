@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ title, children, closeHandler, height, wi
         return () => {
             window.removeEventListener(`keydown`, keyBindHandler)
         }
-    })
+    }, [])
 
     return createPortal(
         <s.ModalContainer>

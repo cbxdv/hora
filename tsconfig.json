@@ -21,7 +21,8 @@
             "@redux/*": ["src/redux/*"],
             "@assets/*": ["src/assets/*"],
             "@utils/*": ["src/utilities/*"],
-            "@styles/*": ["src/styles/*"]
+            "@styles/*": ["src/styles/*"],
+            "@hooks/*": ["src/hooks/*"]
         }
     },
     "include": ["src/**/*"]

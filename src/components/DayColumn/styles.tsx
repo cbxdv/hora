@@ -3,20 +3,21 @@ import { styled } from 'styled-components'
 
 import { flexCenter } from '@styles/styleDefinitions'
 
+const containerMotion = {
+    hide: { opacity: 0, maxWidth: 0, margin: 0, padding: 0 },
+    show: { opacity: 1, maxWidth: `100%`, margin: `0 2.5px` }
+}
+
 export const DayColumnContainer = styled(motion.div).attrs(() => ({
-    initial: { opacity: 0, width: 0 },
-    animate: { opacity: 1, width: `100%` },
-    exit: { opacity: 0, width: 0 }
+    variants: containerMotion,
+    initial: `hide`,
+    animate: `show`,
+    exit: `hide`
 }))<{ $dayId: number }>`
     width: 100%;
     height: 2200px;
-
-    // Rejecting styles if it is first and last day
     margin-left: 2.5px;
     margin-right: 2.5px;
-    ${props => (props.$dayId == 1 ? `margin-left: 0` : ``)};
-    ${props => (props.$dayId == 0 ? `margin-right: 0` : ``)};
-    transition: translate 0.2s linear;
 `
 
 export const BlocksContainer = styled.div`
@@ -37,7 +38,6 @@ export const DayIndicator = styled.div<{ $today: boolean }>`
     top: 0;
     left: 0;
     z-index: 1;
-    font-size: 14px;
     font-weight: 500;
 `
 

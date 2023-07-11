@@ -8,24 +8,25 @@ const ValueDropdown: React.FC<ValueDropdownProps> = ({ selected, items, selectHa
     const dropdownRef = useRef<HTMLDivElement>(null)
     const selectedItemRef = useRef<HTMLDivElement>(null)
 
-    const handleClickOutside = (event: MouseEvent) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-            event.stopPropagation()
-            closeHandler()
-        }
-    }
-
-    const keyBindHandler = (event: KeyboardEvent) => {
-        event.stopPropagation()
-        if (event.key === `Escape`) {
-            closeHandler()
-        }
-    }
-
     useEffect(() => {
         if (items.length === 0) {
             closeHandler()
         }
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                event.stopPropagation()
+                closeHandler()
+            }
+        }
+
+        const keyBindHandler = (event: KeyboardEvent) => {
+            event.stopPropagation()
+            if (event.key === `Escape`) {
+                closeHandler()
+            }
+        }
+
         document.addEventListener(`click`, handleClickOutside, true)
         document.addEventListener(`keydown`, keyBindHandler, true)
 
@@ -51,9 +52,7 @@ const ValueDropdown: React.FC<ValueDropdownProps> = ({ selected, items, selectHa
                     ref={selected === item.value ? selectedItemRef : null}
                     onClick={() => {
                         selectHandler(item.value)
-                        setTimeout(() => {
-                            closeHandler()
-                        })
+                        closeHandler()
                     }}
                 >
                     {item.name}

@@ -4,7 +4,6 @@ import isDev from 'electron-is-dev'
 import Store from 'electron-store'
 
 import { appStoreTypes } from './electronConstants'
-import { appIS } from '../redux/initialStates'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -85,7 +84,7 @@ const closeWindow = async () => {
     }
 
     // Get configs from disk
-    const shouldMinimize = await store.get(appStoreTypes.minimizeOnClose, appIS.settings.minimizeOnClose)
+    const shouldMinimize = await store.get(appStoreTypes.minimizeOnClose, true)
 
     // Defaults to minimize
     if (shouldMinimize) {

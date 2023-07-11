@@ -4,7 +4,6 @@ import Store from 'electron-store'
 
 import { appStoreTypes } from './electronConstants'
 import { createWindow } from './electronWindow'
-import { appIS } from '../redux/initialStates'
 
 const store = new Store()
 
@@ -23,7 +22,7 @@ export const nativeThemeHandler = async () => {
 
     // Get theme saved from disk
     // If no config found, then defaults to initial
-    const modeFromDisk = await store.get(appStoreTypes.theme, appIS.settings.theme)
+    const modeFromDisk = await store.get(appStoreTypes.theme, `dark`)
 
     // If theme in configs is not `system`, then releasing
     if (modeFromDisk !== `system`) {

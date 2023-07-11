@@ -1,21 +1,21 @@
 import { IAppSettings } from '@appTypes/AppInterfaces'
-import { ITimetableDiskData } from '@appTypes/TimetableInterfaces'
-import { appIS, timetableIS } from '@redux/initialStates'
+import { ITTDiskData } from '@appTypes/TimetableInterfaces'
+import { AppIS, TimetableIS } from '@redux/initialStates'
 
 import { normalizeObject, transferToFrom } from './objectUtils'
 
-const timetableData: ITimetableDiskData = {
-    blocks: timetableIS.blocks,
-    settings: timetableIS.settings,
-    allocations: timetableIS.allocations
+const timetableData: ITTDiskData = {
+    blocks: TimetableIS.blocks,
+    settings: TimetableIS.settings,
+    allocations: TimetableIS.allocations
 }
 
-const appData: IAppSettings = appIS.settings
+const appData: IAppSettings = AppIS.settings
 
-type normTTDataType = (data: any) => ITimetableDiskData
+type normTTDataType = (data: any) => ITTDiskData
 export const normalizeTimetableData: normTTDataType = data => {
     const normalizedData = normalizeObject(data)
-    const transferredData: ITimetableDiskData = transferToFrom(timetableData, normalizedData)
+    const transferredData: ITTDiskData = transferToFrom(timetableData, normalizedData)
     return transferredData
 }
 

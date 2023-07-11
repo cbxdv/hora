@@ -22,14 +22,15 @@ const CurrentTimeLine = () => {
         }
     }
 
-    const keyBindHandler = (event: KeyboardEvent) => {
-        if (event.key === `f` || event.key === `F`) {
-            scrollTo()
-        }
-    }
-
     useEffect(() => {
-        setInterval(() => {
+        const keyBindHandler = (event: KeyboardEvent) => {
+            if (event.key === `f` || event.key === `F`) {
+                scrollTo()
+            }
+        }
+
+        // Updating every 60 seconds
+        const timer = setInterval(() => {
             updateStartingPosition()
         }, 60000)
         updateStartingPosition()
@@ -39,8 +40,10 @@ const CurrentTimeLine = () => {
         window.addEventListener(`keydown`, keyBindHandler)
 
         return () => {
-            // Removing key bindings while unmounting
+            // Removing key bindings on unmount
             window.removeEventListener(`keydown`, keyBindHandler)
+            // Clearing timer on unmount
+            clearInterval(timer)
         }
     }, [])
 

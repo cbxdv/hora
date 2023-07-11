@@ -22,9 +22,7 @@ export const ipcHandlerTypes = {
 
     // Timetable
     fetchTTDataFromDisk: `timetable:get`,
-    saveTTBlocksToDisk: `timetable:set`,
-    saveTTSettingsToDisk: `timetable:setSettings`,
-    saveTTAllocationsToDisk: `timetable:setAllocations`
+    saveTTDataToDisk: `timetable:set`
 }
 
 export const appStoreTypes = {
@@ -35,8 +33,5 @@ export const appStoreTypes = {
 }
 
 export const timetableStoreTypes = {
-    all: `timetable`,
-    blocks: `timetable.blocks`,
-    settings: `timetable.settings`,
-    allocations: `timetable.allocations`
+    all: `timetable`
 }

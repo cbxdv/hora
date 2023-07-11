@@ -4,6 +4,7 @@ export interface ITime {
     hours: number
     minutes: number
     seconds?: number
+    day: DayID
 }
 
 export enum DayID {
@@ -22,7 +23,6 @@ export interface ITimeBlockBase {
     endTime: ITime
     color: string
     description: string
-    day: DayID
 }
 
 export interface ITimeBlock extends ITimeBlockBase {
@@ -33,21 +33,11 @@ export type IBlocks = {
     [key in DayID]: ITimeBlock[]
 }
 
-export type ITimeBlockPayload = PayloadAction<ITimeBlock>
+export enum TimeM {
+    AM = `am`,
+    PM = `pm`
+}
 
-export type ITimeBlockAddPayload = PayloadAction<{
-    block: ITimeBlockBase
-    isDaySub: boolean
-}>
+export type TimeBlockPayload = PayloadAction<ITimeBlock>
 
-export type ITimeBlockDeletePayload = PayloadAction<{
-    day: DayID
-    readonly id: string
-    daySub: DayID | null
-}>
-
-export type ITimeBlockUpdatePayload = PayloadAction<{
-    oldBlock: ITimeBlock
-    newBlock: ITimeBlock
-    isDaySub: boolean
-}>
+export type TimeBlockNullPayload = PayloadAction<ITimeBlock | null>

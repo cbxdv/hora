@@ -1,48 +1,52 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import { DayID, ITimeBlock } from '@appTypes/TimeBlockInterfaces'
-import { ITimetableFormCache, ITimetableSubject } from '@appTypes/TimetableInterfaces'
+import { DayID, ITime, ITimeBlock, TimeM } from '@appTypes/TimeBlockInterfaces'
+import { ITTFormCache, ITTSubject } from '@appTypes/TimetableInterfaces'
 
 import { ValueDropdownItemType } from '@components/ValueDropdown'
 
-import { getAmPm, hours24To12 } from '@utils/timeUtils'
+import { addDurationToTimeLimited, getAmPm, hours12To24, hours24To12 } from '@utils/timeUtils'
 
 export interface IBlockFormState {
+    // Form attributes
     title: string
     day: DayID
     color: string
     description: string
     startHours: number
     startMinutes: number
-    startAmPm: `am` | `pm`
+    startAmPm: TimeM
     endHours: number
     endMinutes: number
-    endAmPm: `am` | `pm`
+    endAmPm: TimeM
 
+    // Dropdown visibilities
     isSubjectDDVisible: boolean
     isDayDDVisible: boolean
     isColorDDVisible: boolean
     isStartTimeDDVisible: boolean
     isEndTimeDDVisible: boolean
 
+    // Subjects for dropdown
     filteredSubjects: ValueDropdownItemType[]
     selectedSubjectIndex: number | null
 
-    isEditing: boolean
-    isDaySub: boolean
+    // Statuses & cache
+    isSubDay: boolean
+    cacheDuration: number
 }
 
-export const blockFormIS: IBlockFormState = {
+export const BlockFormIS: IBlockFormState = {
     title: ``,
     day: 1,
     color: `#FFADAD`,
     description: ``,
     startHours: 8,
     startMinutes: 0,
-    startAmPm: `am`,
+    startAmPm: TimeM.AM,
     endHours: 9,
     endMinutes: 0,
-    endAmPm: `am`,
+    endAmPm: TimeM.AM,
     isSubjectDDVisible: false,
     isDayDDVisible: false,
     isColorDDVisible: false,
@@ -50,33 +54,34 @@ export const blockFormIS: IBlockFormState = {
     isEndTimeDDVisible: false,
     filteredSubjects: [],
     selectedSubjectIndex: null,
-    isEditing: false,
-    isDaySub: false
+    isSubDay: false,
+    cacheDuration: 60
 }
 
 type createBlockFormProps = (data: {
     oldBlock: ITimeBlock | null
     duplicateBlock: ITimeBlock | null
-    formCache: ITimetableFormCache | null
-    daySub: DayID | null
+    formCache: ITTFormCache | null
+    subDay: DayID | null
 }) => IBlockFormState
-export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlock, formCache, daySub }) => {
-    let title = blockFormIS.title
-    let day = blockFormIS.day
-    let color = blockFormIS.color
-    let description = blockFormIS.description
-    let startHours = blockFormIS.startHours
-    let startMinutes = blockFormIS.startMinutes
-    let startAmPm = blockFormIS.startAmPm
-    let endHours = blockFormIS.endHours
-    let endMinutes = blockFormIS.endMinutes
-    let endAmPm = blockFormIS.endAmPm
-    let filteredSubjects = blockFormIS.filteredSubjects
+export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlock, formCache, subDay }) => {
+    let title = BlockFormIS.title
+    let day = BlockFormIS.day
+    let color = BlockFormIS.color
+    let description = BlockFormIS.description
+    let startHours = BlockFormIS.startHours
+    let startMinutes = BlockFormIS.startMinutes
+    let startAmPm = BlockFormIS.startAmPm
+    let endHours = BlockFormIS.endHours
+    let endMinutes = BlockFormIS.endMinutes
+    let endAmPm = BlockFormIS.endAmPm
+    let filteredSubjects = BlockFormIS.filteredSubjects
+    let cacheDuration = BlockFormIS.cacheDuration
 
     const blockToUse = oldBlock || duplicateBlock
     if (blockToUse) {
         title = blockToUse.title
-        day = blockToUse.day
+        day = blockToUse.startTime.day
         color = blockToUse.color
         description = blockToUse.description
         startHours = hours24To12(blockToUse.startTime.hours)
@@ -85,22 +90,25 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
         endHours = hours24To12(blockToUse.endTime.hours)
         endMinutes = blockToUse.endTime.minutes
         endAmPm = getAmPm(blockToUse.endTime.hours)
-    } else {
-        if (formCache?.day) {
+    } else if (formCache != null) {
+        if (formCache.day != null) {
             day = formCache.day
         }
-        if (formCache?.startTime) {
+        if (formCache.startTime != null) {
             startHours = hours24To12(formCache.startTime.hours)
             startMinutes = formCache.startTime.minutes
             startAmPm = getAmPm(formCache.startTime.hours)
         }
-        if (formCache?.endTime) {
+        if (formCache.endTime != null) {
             endHours = hours24To12(formCache.endTime.hours)
             endMinutes = formCache.endTime.minutes
             endAmPm = getAmPm(formCache.endTime.hours)
         }
+        if (formCache.duration != null) {
+            cacheDuration = formCache.duration
+        }
     }
-    if (formCache?.subjects) {
+    if (formCache?.subjects != null) {
         filteredSubjects = formCache.subjects.map((subject, index) => {
             return {
                 name: subject.title,
@@ -108,11 +116,11 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
             }
         })
     }
-    if (daySub != null) {
-        day = daySub
+    if (subDay != null) {
+        day = subDay
     }
     return {
-        ...blockFormIS,
+        ...BlockFormIS,
         title,
         day,
         color,
@@ -125,13 +133,14 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
         endAmPm,
         filteredSubjects,
         isEditing: oldBlock != null,
-        isDaySub: daySub != null
+        isSubDay: subDay != null,
+        cacheDuration
     }
 }
 
 const blockFormSlice = createSlice({
     name: `blockForm`,
-    initialState: blockFormIS,
+    initialState: BlockFormIS,
     reducers: {
         setTitle(state, action: PayloadAction<string>) {
             state.title = action.payload
@@ -147,12 +156,42 @@ const blockFormSlice = createSlice({
         },
         setStartHours(state, action: PayloadAction<number>) {
             state.startHours = action.payload
+            // Adding duration to the start time updated
+            const start: ITime = {
+                hours: hours12To24(state.startHours, state.startAmPm),
+                minutes: state.startMinutes,
+                day: state.day
+            }
+            const addedTime = addDurationToTimeLimited(start, state.cacheDuration)
+            state.endHours = hours24To12(addedTime.hours)
+            state.endMinutes = addedTime.minutes
+            state.endAmPm = getAmPm(addedTime.hours)
         },
         setStartMinutes(state, action: PayloadAction<number>) {
             state.startMinutes = action.payload
+            // Adding duration to the start time updated
+            const start: ITime = {
+                hours: hours12To24(state.startHours, state.startAmPm),
+                minutes: state.startMinutes,
+                day: state.day
+            }
+            const addedTime = addDurationToTimeLimited(start, state.cacheDuration)
+            state.endHours = hours24To12(addedTime.hours)
+            state.endMinutes = addedTime.minutes
+            state.endAmPm = getAmPm(addedTime.hours)
         },
-        setStartAmPm(state, action: PayloadAction<`am` | `pm`>) {
+        setStartAmPm(state, action: PayloadAction<TimeM>) {
             state.startAmPm = action.payload
+            // Adding duration to the start time updated
+            const start: ITime = {
+                hours: hours12To24(state.startHours, state.startAmPm),
+                minutes: state.startMinutes,
+                day: state.day
+            }
+            const addedTime = addDurationToTimeLimited(start, state.cacheDuration)
+            state.endHours = hours24To12(addedTime.hours)
+            state.endMinutes = addedTime.minutes
+            state.endAmPm = getAmPm(addedTime.hours)
         },
         setEndHours(state, action: PayloadAction<number>) {
             state.endHours = action.payload
@@ -160,7 +199,7 @@ const blockFormSlice = createSlice({
         setEndMinutes(state, action: PayloadAction<number>) {
             state.endMinutes = action.payload
         },
-        setEndAmPm(state, action: PayloadAction<`am` | `pm`>) {
+        setEndAmPm(state, action: PayloadAction<TimeM>) {
             state.endAmPm = action.payload
         },
         setFilteredSub(state, action: PayloadAction<ValueDropdownItemType[]>) {
@@ -170,7 +209,9 @@ const blockFormSlice = createSlice({
             state.selectedSubjectIndex = action.payload
         },
         showSubjectDD(state) {
-            state.isSubjectDDVisible = true
+            if (state.filteredSubjects.length !== 0) {
+                state.isSubjectDDVisible = true
+            }
         },
         hideSubjectDD(state) {
             state.isSubjectDDVisible = false
@@ -214,7 +255,7 @@ const blockFormSlice = createSlice({
         toggleEndDD(state) {
             state.isEndTimeDDVisible = !state.isEndTimeDDVisible
         },
-        substituteSubject(state, action: PayloadAction<{ index: number; subject: ITimetableSubject }>) {
+        substituteSubject(state, action: PayloadAction<{ index: number; subject: ITTSubject }>) {
             const { index, subject } = action.payload
             state.selectedSubjectIndex = index
             state.title = subject.title

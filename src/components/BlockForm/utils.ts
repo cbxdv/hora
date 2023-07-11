@@ -1,6 +1,6 @@
-import { ITimeBlock, ITimeBlockBase } from '@appTypes/TimeBlockInterfaces'
+import { ITimeBlock, ITimeBlockBase, TimeM } from '@appTypes/TimeBlockInterfaces'
 
-import { blockAdded, blockDeleted, blockUpdated, hideBlockForm } from '@redux/slices/timetableSlice'
+import { ttBlockAdded, ttBlockDeleted, ttBlockFormClosed, ttBlockUpdated } from '@redux/slices/timetableSlice'
 import { AppDispatch } from '@redux/store'
 
 import { hours12To24 } from '@utils/timeUtils'
@@ -12,11 +12,11 @@ export const checkIsInvalid = (state: IBlockFormState) => {
     if (title.length === 0) {
         return true
     }
-    if (startAmPm === `pm` && endAmPm === `am`) {
+    if (startAmPm === TimeM.PM && endAmPm === TimeM.AM) {
         return true
     }
     if (startHours > endHours) {
-        if (startAmPm === `pm` && endAmPm === `am`) {
+        if (startAmPm === TimeM.PM && endAmPm === TimeM.AM) {
             return true
         }
     }
@@ -32,22 +32,23 @@ export const createHandler = (state: IBlockFormState, appDispatch: AppDispatch) 
     }
     const newBlock: ITimeBlockBase = {
         title: state.title.trim(),
-        day: state.day,
         color: state.color,
         description: state.description.trim(),
         startTime: {
             hours: hours12To24(state.startHours, state.startAmPm),
-            minutes: state.startMinutes
+            minutes: state.startMinutes,
+            day: state.day
         },
         endTime: {
             hours: hours12To24(state.endHours, state.endAmPm),
-            minutes: state.endMinutes
+            minutes: state.endMinutes,
+            day: state.day
         }
     }
     appDispatch(
-        blockAdded({
+        ttBlockAdded({
             block: newBlock,
-            isDaySub: state.isDaySub
+            isSubDay: state.isSubDay
         })
     )
 }
@@ -62,25 +63,26 @@ export const editHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null,
     const newBlock = {
         ...oldBlock,
         title: state.title.trim(),
-        day: state.day,
         color: state.color,
         description: state.description.trim(),
         startTime: {
             hours: hours12To24(state.startHours, state.startAmPm),
-            minutes: state.startMinutes
+            minutes: state.startMinutes,
+            day: state.day
         },
         endTime: {
             hours: hours12To24(state.endHours, state.endAmPm),
-            minutes: state.endMinutes
+            minutes: state.endMinutes,
+            day: state.day
         }
     }
-    appDispatch(blockUpdated({ oldBlock, newBlock, isDaySub: state.isDaySub }))
+    appDispatch(ttBlockUpdated({ oldBlock, newBlock, isSubDay: state.isSubDay }))
 }
 
 export const dangerButtonHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null, appDispatch: AppDispatch) => {
     if (oldBlock) {
-        appDispatch(blockDeleted({ day: oldBlock.day, id: oldBlock.id, daySub: state.isDaySub ? state.day : null }))
+        appDispatch(ttBlockDeleted({ day: oldBlock.startTime.day, id: oldBlock.id, isSubDay: state.isSubDay }))
     } else {
-        appDispatch(hideBlockForm())
+        appDispatch(ttBlockFormClosed())
     }
 }

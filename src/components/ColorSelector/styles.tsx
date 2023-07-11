@@ -1,28 +1,36 @@
 import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
 
-import { flexCenter } from '@styles/styleDefinitions'
+import { flexCenter, hoverAndTapMotion, subtleBorder } from '@styles/styleDefinitions'
 
 export const ColorSelectorContainer = styled(motion.div).attrs(() => ({
     initial: { height: 0 },
-    animate: { height: `unset` },
+    animate: { height: 100 },
     exit: { height: 0 },
     transition: { duration: 0.2 }
 }))`
     position: absolute;
     top: 110%;
     border-radius: 8px;
-    background-color: ${props => props.theme.background};
+    background-color: ${props => props.theme.contextBackground};
+    backdrop-filter: blur(4px);
     left: 0;
-    box-shadow: ${({ theme }) => (theme.name === `light` ? `0px 0px 4px rgba(0, 0, 0, 0.25)` : ``)};
     z-index: 1;
     width: 100%;
     overflow: auto;
     padding: 0 5px;
+    box-shadow: ${({ theme }) => theme.shadow};
+    ${subtleBorder}
+`
+
+export const ColorsContainer = styled.div`
+    width: 95%;
+    height: 100%;
+    margin: auto;
 `
 
 export const ColorButtonContainer = styled(motion.div).attrs(({ theme }) => ({
-    whileHover: { borderColor: `${theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}` }
+    ...hoverAndTapMotion(theme.name)
 }))<{ $selected: boolean }>`
     ${flexCenter()};
     cursor: pointer;

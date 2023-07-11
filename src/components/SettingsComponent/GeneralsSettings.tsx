@@ -1,11 +1,11 @@
 import ThemeSelector from '@components/ThemeSelector'
 
+import { selectAppSettings } from '@redux/selectors/appSelectors'
 import {
-    selectAppSettings,
-    toggleMinimizeOnClose,
-    toggleNotifications,
-    toggleOpenAtStartup,
-    toggleOpenMinimized
+    appNotificationsToggled,
+    minimizeOnCloseToggled,
+    openAtStartupToggled,
+    openMinimizedToggled
 } from '@redux/slices/appSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
@@ -31,21 +31,21 @@ const GeneralSettings = () => {
                             <s.CheckSettingName>Minimize on close</s.CheckSettingName>
                             <SettingsCheckBox
                                 value={settings.minimizeOnClose}
-                                setValue={() => dispatch(toggleMinimizeOnClose())}
+                                setValue={() => dispatch(minimizeOnCloseToggled())}
                             />
                         </s.CheckSettingContainer>
                         <s.CheckSettingContainer>
                             <s.CheckSettingName>Open on startup</s.CheckSettingName>
                             <SettingsCheckBox
                                 value={settings.openAtStartup}
-                                setValue={() => dispatch(toggleOpenAtStartup())}
+                                setValue={() => dispatch(openAtStartupToggled())}
                             />
                         </s.CheckSettingContainer>
                         <s.CheckSettingContainer>
                             <s.CheckSettingName>Open minimized</s.CheckSettingName>
                             <SettingsCheckBox
                                 value={settings.openMinimized}
-                                setValue={() => dispatch(toggleOpenMinimized())}
+                                setValue={() => dispatch(openMinimizedToggled())}
                             />
                         </s.CheckSettingContainer>
                     </s.SectionBodyGrid>
@@ -57,7 +57,7 @@ const GeneralSettings = () => {
                             <s.CheckSettingName>Notifications</s.CheckSettingName>
                             <SettingsCheckBox
                                 value={settings.notifications}
-                                setValue={() => dispatch(toggleNotifications())}
+                                setValue={() => dispatch(appNotificationsToggled())}
                             />
                         </s.CheckSettingContainer>
                     </s.SectionBodyGrid>

@@ -1,5 +1,6 @@
-import { INotifyObject, notifyPropertiesType } from '@appTypes/ServiceInterfaces'
+import { INotifyObject } from '@appTypes/ServiceInterfaces'
 import { ITimeBlock } from '@appTypes/TimeBlockInterfaces'
+import { ITTNotifyPropType } from '@appTypes/TimetableInterfaces'
 
 // Variable holding the timer of the notification service
 let timer: NodeJS.Timer | null = null
@@ -11,12 +12,6 @@ let timer: NodeJS.Timer | null = null
 const notificationService = (blocks: INotifyObject[]) => {
     return setInterval(() => {
         const now = new Date()
-
-        // Reload if state is time is 00:00
-        if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
-            location.reload()
-        }
-
         blocks.forEach(block => {
             let shouldNotify = true
             shouldNotify = shouldNotify && block.time.hours === now.getHours()
@@ -51,7 +46,7 @@ export const startNS = (blocks: INotifyObject[]) => {
     timer = notificationService(blocks)
 }
 
-type generateNotifyType = (blocks: ITimeBlock[], notifyProperties: notifyPropertiesType) => INotifyObject[]
+type generateNotifyType = (blocks: ITimeBlock[], notifyProperties: ITTNotifyPropType) => INotifyObject[]
 
 /**
  * Generates NotifyObjects for the given blocks corresponding to the given properties
@@ -61,7 +56,7 @@ type generateNotifyType = (blocks: ITimeBlock[], notifyProperties: notifyPropert
  */
 export const generateNotifyObjects: generateNotifyType = (
     blocks: ITimeBlock[],
-    notifyProperties: notifyPropertiesType
+    notifyProperties: ITTNotifyPropType
 ) => {
     const { notifyStart, notifyStartBefore, notifyEnd, notifyEndBefore } = notifyProperties
     const objects: INotifyObject[] = []

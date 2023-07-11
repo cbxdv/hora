@@ -1,3 +1,5 @@
+import { AppThemes, Themes } from '@appTypes/AppInterfaces'
+
 import DarkDarkSel from '@assets/icons/theme/D-dark-sel.svg'
 import DarkDark from '@assets/icons/theme/D-dark.svg'
 import DarkLightSel from '@assets/icons/theme/D-light-sel.svg'
@@ -9,7 +11,8 @@ import LightLightSel from '@assets/icons/theme/L-light-sel.svg'
 import LightLight from '@assets/icons/theme/L-light.svg'
 import LightSystem from '@assets/icons/theme/L-system.svg'
 
-import { changeTheme, selectShowingTheme, selectTheme } from '@redux/slices/appSlice'
+import { selectShowingTheme, selectAppTheme } from '@redux/selectors/appSelectors'
+import { appThemeChanged } from '@redux/slices/appSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
 import * as s from './styles'
@@ -17,39 +20,48 @@ import * as s from './styles'
 const ThemeSelector = () => {
     const dispatch = useAppDispatch()
 
-    const theme = useAppSelector(selectTheme)
+    const theme = useAppSelector(selectAppTheme)
     const showingTheme = useAppSelector(selectShowingTheme)
 
     return (
         <s.ThemeSelectorContainer>
-            <s.ThemeButton $selected={theme === `light`} onClick={() => dispatch(changeTheme(`light`))}>
+            <s.ThemeButton
+                $selected={theme === AppThemes.Light}
+                onClick={() => dispatch(appThemeChanged(AppThemes.Light))}
+            >
                 <s.ThemeButtonImage>
-                    {showingTheme === `light` ? <LightLight /> : <DarkLight />}
-                    {theme === `light` && (
+                    {showingTheme === Themes.Light ? <LightLight /> : <DarkLight />}
+                    {theme === AppThemes.Light && (
                         <s.ThemeImageSelected>
-                            {showingTheme === `light` ? <LightLightSel /> : <DarkLightSel />}
+                            {showingTheme === Themes.Light ? <LightLightSel /> : <DarkLightSel />}
                         </s.ThemeImageSelected>
                     )}
                 </s.ThemeButtonImage>
                 <s.ThemeButtonText>Light</s.ThemeButtonText>
             </s.ThemeButton>
-            <s.ThemeButton $selected={theme === `dark`} onClick={() => dispatch(changeTheme(`dark`))}>
+            <s.ThemeButton
+                $selected={theme === AppThemes.Dark}
+                onClick={() => dispatch(appThemeChanged(AppThemes.Dark))}
+            >
                 <s.ThemeButtonImage>
-                    {showingTheme === `light` ? <LightDark /> : <DarkDark />}
-                    {theme === `dark` && (
+                    {showingTheme === Themes.Light ? <LightDark /> : <DarkDark />}
+                    {theme === AppThemes.Dark && (
                         <s.ThemeImageSelected>
-                            {showingTheme === `light` ? <LightDarkSel /> : <DarkDarkSel />}
+                            {showingTheme === Themes.Light ? <LightDarkSel /> : <DarkDarkSel />}
                         </s.ThemeImageSelected>
                     )}
                 </s.ThemeButtonImage>
                 <s.ThemeButtonText>Dark</s.ThemeButtonText>
             </s.ThemeButton>
-            <s.ThemeButton $selected={theme === `system`} onClick={() => dispatch(changeTheme(`system`))}>
+            <s.ThemeButton
+                $selected={theme === AppThemes.System}
+                onClick={() => dispatch(appThemeChanged(AppThemes.System))}
+            >
                 <s.ThemeButtonImage>
-                    {showingTheme === `light` ? <LightSystem /> : <DarkSystem />}
-                    {theme === `system` && (
+                    {showingTheme === Themes.Light ? <LightSystem /> : <DarkSystem />}
+                    {theme === AppThemes.System && (
                         <s.ThemeImageSelected>
-                            {showingTheme === `light` ? <LightDarkSel /> : <DarkDarkSel />}
+                            {showingTheme === Themes.Light ? <LightDarkSel /> : <DarkDarkSel />}
                         </s.ThemeImageSelected>
                     )}
                 </s.ThemeButtonImage>

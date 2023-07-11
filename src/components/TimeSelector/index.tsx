@@ -1,5 +1,7 @@
 import { useRef, useEffect } from 'react'
 
+import { TimeM } from '@appTypes/TimeBlockInterfaces'
+
 import { getPixelsToScrollInList } from '@utils/styleUtils'
 
 import * as s from './styles'
@@ -19,21 +21,21 @@ const TimeSelector: React.FC<TimeInputProps> = ({
     const minsRef = useRef<HTMLDivElement>(null)
     const minsSelectedRef = useRef<HTMLDivElement>(null)
 
-    const handleClickOutside = (event: MouseEvent) => {
-        if (selectorRef.current && !selectorRef.current.contains(event.target as Node)) {
-            event.stopPropagation()
-            closeHandler()
-        }
-    }
-
-    const keyBindHandler = (event: KeyboardEvent) => {
-        event.stopPropagation()
-        if (event.key === `Escape`) {
-            closeHandler()
-        }
-    }
-
     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (selectorRef.current && !selectorRef.current.contains(event.target as Node)) {
+                event.stopPropagation()
+                closeHandler()
+            }
+        }
+
+        const keyBindHandler = (event: KeyboardEvent) => {
+            event.stopPropagation()
+            if (event.key === `Escape`) {
+                closeHandler()
+            }
+        }
+
         document.addEventListener(`click`, handleClickOutside, true)
         document.addEventListener(`keydown`, keyBindHandler, true)
 
@@ -96,16 +98,16 @@ const TimeSelector: React.FC<TimeInputProps> = ({
             <s.TimeInputComponent ref={hoursRef}>{generateHours()}</s.TimeInputComponent>
             <s.TimeInputComponent ref={minsRef}>{generateMinutes()}</s.TimeInputComponent>
             <s.TimeInputComponent>
-                {[`AM`, `PM`].map(m => (
+                {[TimeM.AM, TimeM.PM].map(timeM => (
                     <s.DropdownItem
                         onClick={() => {
-                            setAmPm(m.toLowerCase() as `am` | `pm`)
+                            setAmPm(timeM)
                         }}
-                        $selected={m.toLowerCase() === timeAmPm}
-                        key={m}
+                        $selected={timeM.toLowerCase() === timeAmPm}
+                        key={timeM}
                         style={{ justifyContent: `center` }}
                     >
-                        {m}
+                        {timeM.toString().toUpperCase()}
                     </s.DropdownItem>
                 ))}
             </s.TimeInputComponent>
@@ -118,8 +120,8 @@ type TimeInputProps = {
     setHours: (newHours: number) => void
     minutes: number
     setMinutes: (newMinutes: number) => void
-    timeAmPm: `am` | `pm`
-    setAmPm: (newAmPm: `am` | `pm`) => void
+    timeAmPm: TimeM
+    setAmPm: (newAmPm: TimeM) => void
     closeHandler: () => void
 }
 

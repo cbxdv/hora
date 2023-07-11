@@ -1,5 +1,4 @@
-/* eslint-disable quotes */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable  */
 
 declare module '*.svg' {
     const content: (props: SVGProps<SVGElement>) => ReactElement

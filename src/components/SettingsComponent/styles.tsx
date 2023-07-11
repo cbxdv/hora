@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
 
-import { flexCenter } from '@styles/styleDefinitions'
+import { flexCenter, hoverAndTapMotion } from '@styles/styleDefinitions'
 
 export const SettingsContainer = styled.div`
     width: 100%;
@@ -19,9 +19,7 @@ export const SettingsSidebar = styled.div`
 `
 
 export const SidebarItem = styled(motion.li).attrs(({ theme }) => ({
-    whileHover: {
-        borderColor: `${theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : `rgba(255, 255, 255, 0.2)`}`
-    }
+    ...hoverAndTapMotion(theme.name)
 }))<{ $selected?: boolean }>`
     height: 25px;
     width: 120px;
@@ -78,8 +76,7 @@ export const CheckSettingName = styled.div`
 export const CheckBoxContainer = styled.div`
     height: 20px;
     width: 20px;
-    background: ${({ theme }) => (theme.name === `dark` ? theme.shade1 : ``)};
-    border: 0.5px solid ${({ theme }) => (theme.name === `light` ? `rgba(0, 0, 0, 0.1)` : ``)};
+    border: 0.5px solid ${({ theme }) => theme.sec};
     border-radius: 4px;
     ${flexCenter()};
     cursor: pointer;

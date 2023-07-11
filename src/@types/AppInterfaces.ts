@@ -1,21 +1,28 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 
-export type themeTypes = `light` | `dark`
+export enum Themes {
+    Light = `light`,
+    Dark = `dark`
+}
 
-export type appThemeTypes = themeTypes | `system`
-
-export type IAppInitPayload = PayloadAction<{
-    osTheme: themeTypes
-    showingTheme: themeTypes
-    settings: IAppSettings
-}>
-
-export type IAppThemeChangePayload = PayloadAction<appThemeTypes>
+export enum AppThemes {
+    Light = `light`,
+    Dark = `dark`,
+    System = `system`
+}
 
 export interface IAppSettings {
-    theme: appThemeTypes
+    theme: AppThemes
     notifications: boolean
     minimizeOnClose: boolean
     openAtStartup: boolean
     openMinimized: boolean
 }
+
+export type AppInitPayload = PayloadAction<{
+    osTheme: Themes
+    showingTheme: Themes
+    settings: IAppSettings
+}>
+
+export type AppThemePayload = PayloadAction<AppThemes>

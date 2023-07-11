@@ -9,17 +9,18 @@ import Modal from '@components/Modal'
 import TextButton from '@components/TextButton'
 import ValueDropdown from '@components/ValueDropdown'
 
-import { hideSubstitutionForm, selectDayToBeOpenSubForm, ttDaySubAdded } from '@redux/slices/timetableSlice'
+import { selectTTDayToBeOpenSubForm } from '@redux/selectors/timetableSelectors'
+import { ttSubDayAdded, ttSubFormClosed } from '@redux/slices/timetableSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
-import { dayDropItems } from '@utils/timetableUtils'
+import * as fs from '@styles/formStyles'
 
-import * as s from './styles'
+import { dayDropItems } from '@utils/timetableUtils'
 
 const SubstitutionForm = () => {
     const dispatch = useAppDispatch()
 
-    const dayToBeOpenForm = useAppSelector(selectDayToBeOpenSubForm)
+    const dayToBeOpenForm = useAppSelector(selectTTDayToBeOpenSubForm)
 
     const [subWith, setSubWith] = useState<DayID>(1)
     const [subTo, setSubTo] = useState<DayID>(2)
@@ -32,7 +33,7 @@ const SubstitutionForm = () => {
             return
         }
         dispatch(
-            ttDaySubAdded({
+            ttSubDayAdded({
                 subTo,
                 subWith
             })
@@ -40,26 +41,26 @@ const SubstitutionForm = () => {
     }
 
     useEffect(() => {
-        if (dayToBeOpenForm !== null) {
+        if (dayToBeOpenForm != null) {
             setSubTo(dayToBeOpenForm)
             setSubWith((dayToBeOpenForm + 1) % 7)
         }
-    }, [])
+    }, [dayToBeOpenForm])
 
     return (
-        <Modal title='Substitution' closeHandler={() => dispatch(hideSubstitutionForm())}>
+        <Modal title='Substitution' closeHandler={() => dispatch(ttSubFormClosed())}>
             <div>
-                <s.BodySectionContainer>
-                    <s.InputContainer>
-                        <s.InputName>Substitute to</s.InputName>
-                        <s.InputValue>
-                            <span style={{ letterSpacing: `0.5px` }}>{DayID[subTo]}</span>
-                            <s.InputValueArrowContainer
+                <fs.BodySectionContainer>
+                    <fs.InputContainer>
+                        <fs.InputName>Substitute to</fs.InputName>
+                        <fs.InputValue>
+                            <span>{DayID[subTo]}</span>
+                            <fs.InputValueArrowContainer
                                 $isVisible={isDestDDVisible}
                                 onClick={() => setIsDestDDVisible(prev => !prev)}
                             >
                                 <ArrowDownIcon />
-                            </s.InputValueArrowContainer>
+                            </fs.InputValueArrowContainer>
                             <AnimatePresence>
                                 {isDestDDVisible && (
                                     <ValueDropdown
@@ -70,18 +71,18 @@ const SubstitutionForm = () => {
                                     />
                                 )}
                             </AnimatePresence>
-                        </s.InputValue>
-                    </s.InputContainer>
-                    <s.InputContainer>
-                        <s.InputName>Use blocks from</s.InputName>
-                        <s.InputValue>
-                            <span style={{ letterSpacing: `0.5px` }}>{DayID[subWith]}</span>
-                            <s.InputValueArrowContainer
+                        </fs.InputValue>
+                    </fs.InputContainer>
+                    <fs.InputContainer>
+                        <fs.InputName>Use blocks from</fs.InputName>
+                        <fs.InputValue>
+                            <span>{DayID[subWith]}</span>
+                            <fs.InputValueArrowContainer
                                 $isVisible={isSrcDDVisible}
                                 onClick={() => setIsSrcDDVisible(prev => !prev)}
                             >
                                 <ArrowDownIcon />
-                            </s.InputValueArrowContainer>
+                            </fs.InputValueArrowContainer>
                             <AnimatePresence>
                                 {isSrcDDVisible && (
                                     <ValueDropdown
@@ -92,17 +93,17 @@ const SubstitutionForm = () => {
                                     />
                                 )}
                             </AnimatePresence>
-                        </s.InputValue>
-                    </s.InputContainer>
-                </s.BodySectionContainer>
-                <s.ActionsContainer>
-                    <s.ButtonContainer>
-                        <TextButton text='Discard' onClick={() => dispatch(hideSubstitutionForm())} danger />
-                    </s.ButtonContainer>
-                    <s.ButtonContainer>
+                        </fs.InputValue>
+                    </fs.InputContainer>
+                </fs.BodySectionContainer>
+                <fs.ActionsContainer>
+                    <fs.ButtonContainer>
+                        <TextButton text='Discard' onClick={() => dispatch(ttSubFormClosed())} danger />
+                    </fs.ButtonContainer>
+                    <fs.ButtonContainer>
                         <TextButton text='Create' onClick={submitHandler} />
-                    </s.ButtonContainer>
-                </s.ActionsContainer>
+                    </fs.ButtonContainer>
+                </fs.ActionsContainer>
             </div>
         </Modal>
     )

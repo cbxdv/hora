@@ -1,9 +1,9 @@
 import { AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import Modal from '@components/Modal'
 
-import { hideSettings } from '@redux/slices/appSlice'
+import { appSettingsClosed } from '@redux/slices/appSlice'
 import { useAppDispatch } from '@redux/store'
 
 import AboutSettings from './AboutSettings'
@@ -11,42 +11,37 @@ import GeneralSettings from './GeneralsSettings'
 import * as s from './styles'
 import TimetableSettings from './TimetableSettings'
 
+/**
+ * Settings Components
+ */
+const SC: { [key: string]: React.ReactElement } = {
+    General: <GeneralSettings />,
+    Timetable: <TimetableSettings />,
+    About: <AboutSettings />
+}
+
 const SettingsComponent = () => {
     const dispatch = useAppDispatch()
-    const [currentTab, setCurrentTab] = useState<`general` | `timetable` | `about`>(`general`)
-
-    const getCurrentTab = () => {
-        switch (currentTab) {
-            case `general`:
-                return <GeneralSettings />
-            case `timetable`:
-                return <TimetableSettings />
-            case `about`:
-                return <AboutSettings />
-        }
-    }
+    const [currentTab, setCurrentTab] = useState<string>(Object.keys(SC)[0])
 
     return (
-        <Modal title='Settings' closeHandler={() => dispatch(hideSettings())} width='50%' height='60%'>
+        <Modal title='Settings' closeHandler={() => dispatch(appSettingsClosed())} width='650px' height='420px'>
             <s.SettingsContainer>
                 <s.SettingsSidebar>
                     <ul>
-                        <s.SidebarItem onClick={() => setCurrentTab(`general`)} $selected={currentTab === `general`}>
-                            General
-                        </s.SidebarItem>
-                        <s.SidebarItem
-                            onClick={() => setCurrentTab(`timetable`)}
-                            $selected={currentTab === `timetable`}
-                        >
-                            Timetable
-                        </s.SidebarItem>
-                        <s.SidebarItem onClick={() => setCurrentTab(`about`)} $selected={currentTab === `about`}>
-                            About
-                        </s.SidebarItem>
+                        {Object.keys(SC).map(scItem => (
+                            <s.SidebarItem
+                                key={scItem}
+                                onClick={() => setCurrentTab(scItem)}
+                                $selected={currentTab === scItem}
+                            >
+                                {scItem.toString()}
+                            </s.SidebarItem>
+                        ))}
                     </ul>
                 </s.SettingsSidebar>
                 <s.SettingsMain>
-                    <AnimatePresence>{getCurrentTab()}</AnimatePresence>
+                    <AnimatePresence initial={false}>{SC[currentTab]}</AnimatePresence>
                 </s.SettingsMain>
             </s.SettingsContainer>
         </Modal>
