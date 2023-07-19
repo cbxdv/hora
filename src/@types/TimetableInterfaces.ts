@@ -25,6 +25,7 @@ export interface ITTSubject {
     title: string
     color: string
     description: string
+    additionals: { [key: string]: string }
 }
 
 export type ITTFormCache = {

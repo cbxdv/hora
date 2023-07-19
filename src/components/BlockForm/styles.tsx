@@ -1,6 +1,7 @@
+import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
 
-import { flexCenter } from '@styles/styleDefinitions'
+import { flexCenter, subtleBorder } from '@styles/styleDefinitions'
 
 export {
     InputContainer,
@@ -14,7 +15,10 @@ export {
 
 export const BlockFormContainer = styled.div`
     height: 100%;
+    overflow: scroll;
 `
+
+export const BlockFormMain = styled.div``
 
 export const TitleContainer = styled.div`
     ${flexCenter({ justifyContent: `flex-start` })};
@@ -101,4 +105,84 @@ export const SubjectContainer = styled.div`
     width: 90%;
     position: relative;
     margin: auto;
+`
+
+export const AdditionalsButton = styled(motion.button).attrs(() => ({
+    whileHover: { scale: 0.99 },
+    whileTap: { scale: 0.98 }
+}))`
+    border: none;
+    outline: none;
+    ${flexCenter()};
+    height: 30px;
+    background-color: ${({ theme }) => theme.shade1};
+    color: ${({ theme }) => theme.sec};
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    ${subtleBorder};
+    scale: 1;
+    width: 100%;
+    border-style: dashed;
+`
+
+export const AdditionalsButtonContainer = styled.div`
+    width: 100%;
+    padding: 20px;
+`
+
+export const AdditionalsComponentContainer = styled(motion.div).attrs(() => ({
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 }
+}))`
+    ${flexCenter({ justifyContent: `space-between` })};
+    width: 350px;
+    padding: 20px 20px 0 20px;
+`
+
+export const AdditionalsName = styled.input`
+    width: 45%;
+    color: ${({ theme }) => theme.sec};
+    font-weight: 500;
+    font-family: Outfit;
+    background: ${({ theme }) => theme.shade2};
+    height: 30px;
+    border-radius: 8px;
+    ${flexCenter({ justifyContent: `space-between` })};
+    font-size: 13px;
+    padding: 5px 10px;
+    position: relative;
+    ${subtleBorder}
+    outline: none;
+`
+
+export const AdditionalsValue = styled.input`
+    background: ${({ theme }) => theme.shade2};
+    width: 45%;
+    height: 30px;
+    border-radius: 8px;
+    ${flexCenter({ justifyContent: `space-between` })};
+    font-size: 13px;
+    padding: 5px 10px;
+    position: relative;
+    ${subtleBorder};
+    font-family: Outfit;
+    outline: none;
+`
+
+export const AdditionalsTrashContainer = styled.div`
+    ${flexCenter()};
+    width: 4%;
+    cursor: pointer;
+
+    & > svg {
+        ${flexCenter()};
+        width: 12px;
+        height: 12px;
+        fill: none;
+        stroke: #c76162;
+        stroke-width: 2px;
+    }
 `

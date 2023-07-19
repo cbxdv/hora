@@ -23,6 +23,9 @@ export interface ITimeBlockBase {
     endTime: ITime
     color: string
     description: string
+    additionals?: {
+        [key: string]: string
+    }
 }
 
 export interface ITimeBlock extends ITimeBlockBase {

@@ -6,6 +6,13 @@ import { ITTFormCache, ITTSubject } from '@appTypes/TimetableInterfaces'
 import { ValueDropdownItemType } from '@components/ValueDropdown'
 
 import { addDurationToTimeLimited, getAmPm, hours12To24, hours24To12 } from '@utils/timeUtils'
+import { nanoid } from 'nanoid'
+
+export interface IBlockFormAdditional {
+    id: string
+    name: string
+    value: string
+}
 
 export interface IBlockFormState {
     // Form attributes
@@ -19,6 +26,7 @@ export interface IBlockFormState {
     endHours: number
     endMinutes: number
     endAmPm: TimeM
+    additionals: IBlockFormAdditional[]
 
     // Dropdown visibilities
     isSubjectDDVisible: boolean
@@ -47,6 +55,7 @@ export const BlockFormIS: IBlockFormState = {
     endHours: 9,
     endMinutes: 0,
     endAmPm: TimeM.AM,
+    additionals: [],
     isSubjectDDVisible: false,
     isDayDDVisible: false,
     isColorDDVisible: false,
@@ -77,6 +86,7 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
     let endAmPm = BlockFormIS.endAmPm
     let filteredSubjects = BlockFormIS.filteredSubjects
     let cacheDuration = BlockFormIS.cacheDuration
+    let additionals = BlockFormIS.additionals
 
     const blockToUse = oldBlock || duplicateBlock
     if (blockToUse) {
@@ -90,6 +100,15 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
         endHours = hours24To12(blockToUse.endTime.hours)
         endMinutes = blockToUse.endTime.minutes
         endAmPm = getAmPm(blockToUse.endTime.hours)
+        const blockAdd = blockToUse.additionals || {}
+        if (blockAdd) {
+            additionals =
+                Object.keys(blockAdd).map(a => ({
+                    id: nanoid(),
+                    name: a,
+                    value: blockAdd[a] || ''
+                })) || []
+        }
     } else if (formCache != null) {
         if (formCache.day != null) {
             day = formCache.day
@@ -131,6 +150,7 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
         endHours,
         endMinutes,
         endAmPm,
+        additionals,
         filteredSubjects,
         isEditing: oldBlock != null,
         isSubDay: subDay != null,
@@ -202,6 +222,21 @@ const blockFormSlice = createSlice({
         setEndAmPm(state, action: PayloadAction<TimeM>) {
             state.endAmPm = action.payload
         },
+        addNewAdditionals(state) {
+            state.additionals.push({ id: nanoid(), name: '', value: '' })
+        },
+        updateAdditional(state, action: PayloadAction<IBlockFormAdditional>) {
+            const { id } = action.payload
+            state.additionals = state.additionals.map(a => {
+                if (a.id === id) {
+                    return action.payload
+                }
+                return a
+            })
+        },
+        deleteAdditional(state, action: PayloadAction<string>) {
+            state.additionals = state.additionals.filter(a => a.id !== action.payload)
+        },
         setFilteredSub(state, action: PayloadAction<ValueDropdownItemType[]>) {
             state.filteredSubjects = action.payload
         },
@@ -261,6 +296,13 @@ const blockFormSlice = createSlice({
             state.title = subject.title
             state.color = subject.color
             state.description = subject.description
+            state.additionals = Object.keys(subject.additionals).map(ad => {
+                return {
+                    id: nanoid(),
+                    name: ad,
+                    value: subject.additionals[ad]
+                }
+            })
         }
     }
 })

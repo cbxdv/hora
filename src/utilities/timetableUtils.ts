@@ -81,7 +81,8 @@ export const generateSubjects: generateSubjectsType = blocks => {
                 tempSubjects[title] = {
                     title: block.title,
                     description: block.description,
-                    color: block.color
+                    color: block.color,
+                    additionals: block.additionals || {}
                 }
             }
         })
@@ -120,7 +121,8 @@ export const updateSubjects: updateSubjectsType = (subjects, block) => {
             newSubjects.push({
                 title: block.title,
                 description: block.description,
-                color: block.color
+                color: block.color,
+                additionals: block.additionals || {}
             })
         } else {
             newSubjects.push(subject)
@@ -131,7 +133,8 @@ export const updateSubjects: updateSubjectsType = (subjects, block) => {
         newSubjects.push({
             title: block.title,
             description: block.description,
-            color: block.color
+            color: block.color,
+            additionals: block.additionals || {}
         })
     }
 
