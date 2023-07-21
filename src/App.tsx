@@ -64,7 +64,6 @@ const ModalsContainer = () => {
 
     useEffect(() => {
         const keyBindHandler = (event: KeyboardEvent) => {
-            event.preventDefault()
             if (event.ctrlKey && event.key.toLowerCase() === `l`) {
                 dispatch(appThemeToggled())
                 return
