@@ -13,7 +13,7 @@ const serviceSlice = createSlice({
         },
 
         serviceRefreshed(state) {
-            state.serviceData.notifications = []
+            state.serviceData = ServiceIS.serviceData
         }
     }
 })

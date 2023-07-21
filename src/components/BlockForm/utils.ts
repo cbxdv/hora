@@ -37,11 +37,13 @@ export const createHandler = (state: IBlockFormState, appDispatch: AppDispatch) 
         startTime: {
             hours: hours12To24(state.startHours, state.startAmPm),
             minutes: state.startMinutes,
+            seconds: 0,
             day: state.day
         },
         endTime: {
             hours: hours12To24(state.endHours, state.endAmPm),
             minutes: state.endMinutes,
+            seconds: 0,
             day: state.day
         }
     }
@@ -75,11 +77,13 @@ export const editHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null,
         startTime: {
             hours: hours12To24(state.startHours, state.startAmPm),
             minutes: state.startMinutes,
+            seconds: 0,
             day: state.day
         },
         endTime: {
             hours: hours12To24(state.endHours, state.endAmPm),
             minutes: state.endMinutes,
+            seconds: 0,
             day: state.day
         }
     }

@@ -2,49 +2,7 @@ import { INotifyObject } from '@appTypes/ServiceInterfaces'
 import { ITimeBlock } from '@appTypes/TimeBlockInterfaces'
 import { ITTNotifyPropType } from '@appTypes/TimetableInterfaces'
 
-// Variable holding the timer of the notification service
-let timer: NodeJS.Timer | null = null
-
-/**
- * Handles the notification service
- * @param blocks List of NotifyObject
- */
-const notificationService = (blocks: INotifyObject[]) => {
-    return setInterval(() => {
-        const now = new Date()
-        blocks.forEach(block => {
-            let shouldNotify = true
-            shouldNotify = shouldNotify && block.time.hours === now.getHours()
-            shouldNotify = shouldNotify && block.time.minutes === now.getMinutes()
-            shouldNotify = shouldNotify && now.getSeconds() === 0
-            if (shouldNotify) {
-                api.sendNotification({
-                    title: block.title,
-                    body: block.body
-                })
-            }
-        })
-    }, 1000)
-}
-
-/**
- * Stops the notification service
- */
-export const stopNS = () => {
-    if (timer == null) {
-        return
-    }
-    clearInterval(timer)
-    timer = null
-}
-
-/**
- * Starts the notification service
- */
-export const startNS = (blocks: INotifyObject[]) => {
-    stopNS()
-    timer = notificationService(blocks)
-}
+import { addDurationToTime } from './timeUtils'
 
 type generateNotifyType = (blocks: ITimeBlock[], notifyProperties: ITTNotifyPropType) => INotifyObject[]
 
@@ -65,8 +23,7 @@ export const generateNotifyObjects: generateNotifyType = (
     blocks.forEach(block => {
         // Start notifications
         if (notifyStart) {
-            const time = { ...block.startTime }
-            time.minutes -= notifyStartBefore
+            const time = addDurationToTime({ ...block.startTime }, -notifyStartBefore)
 
             objects.push({
                 id: block.id,
@@ -78,8 +35,7 @@ export const generateNotifyObjects: generateNotifyType = (
 
         // End notifications
         if (notifyEnd) {
-            const time = { ...block.endTime }
-            time.minutes -= notifyEndBefore
+            const time = addDurationToTime({ ...block.startTime }, -notifyEndBefore)
 
             objects.push({
                 id: block.id,

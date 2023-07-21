@@ -9,7 +9,9 @@ import { selectTTCurrentValidBlocksWithSub } from '@redux/selectors/timetableSel
 import { appInitialized, appNotificationsToggled } from '@redux/slices/appSlice'
 import { serviceDataUpdated, serviceRefreshed } from '@redux/slices/serviceSlice'
 
-import { generateNotifyObjects, startNS, stopNS } from '@utils/notificationsUtils'
+import { startNotificationService, stopNotificationService } from '@services/notificationService'
+
+import { generateNotifyObjects } from '@utils/notificationsUtils'
 
 const serviceListener: AppListeners = {
     // Listener for notifications service
@@ -21,19 +23,21 @@ const serviceListener: AppListeners = {
                 const shouldNotify = selectAppNotifications(state)
                 if (shouldNotify) {
                     const blocks = selectNotificationData(state)
-                    startNS(blocks)
+                    startNotificationService(blocks)
                 } else {
-                    stopNS()
+                    stopNotificationService()
                 }
-                // A timer for updating notification data at 00:00 am
+                // A timer for updating notification data at day change
+                let prev = new Date().getDay()
                 const timer = setInterval(() => {
                     const now = new Date()
-                    if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                    if (now.getDay() !== prev) {
                         clearInterval(timer)
-                        stopNS()
+                        stopNotificationService()
                         // Refreshing data
                         listenerApi.dispatch(serviceRefreshed())
                     }
+                    prev = now.getDay()
                 }, 1000)
             }
         })
@@ -44,7 +48,7 @@ const serviceListener: AppListeners = {
         startListening({
             actionCreator: serviceRefreshed,
             effect: (_, listenerApi) => {
-                stopNS()
+                stopNotificationService()
                 const state = listenerApi.getState()
                 const blocks = selectTTCurrentValidBlocksWithSub(state)
                 const notifyConfigs: ITTNotifyPropType = {

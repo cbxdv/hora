@@ -3,12 +3,13 @@ import { ITime, ITimeBlock, ITimeBlockBase, TimeM } from '@appTypes/TimeBlockInt
 /**
  * Get a 12-hour based time string
  * @param time Block time object to be converted
+ * @param withSeconds Indicates whether the seconds should be included in the string
  * @returns String in the format `hour`:`minutes`:`am` / `pm`
  */
-export const timeObjectTo12HourStr = (time: ITime) => {
+export const timeObjectTo12HourStr = (time: ITime, withSeconds = false) => {
     // Extracting the information
     let { hours } = time
-    const { minutes } = time
+    const { minutes, seconds } = time
 
     // Storing a.m. and p.m.
     const timeAmPm = `${hours >= 12 ? `p.m` : `a.m`}`
@@ -21,6 +22,11 @@ export const timeObjectTo12HourStr = (time: ITime) => {
     // Padding with 0 to achieve a 2 char output
     const hoursStr = hours24To12(hours).toString().padStart(2, `0`)
     const minutesStr = minutes.toString().padStart(2, `0`)
+
+    if (withSeconds) {
+        const secondsStr = seconds.toString().padStart(2, `0`)
+        return `${hoursStr}:${minutesStr}:${secondsStr} ${timeAmPm}`
+    }
 
     return `${hoursStr}:${minutesStr} ${timeAmPm}`
 }
@@ -77,8 +83,10 @@ export const getDurationMinutes = (block: ITimeBlockBase) => {
     const end = new Date()
     start.setHours(block.startTime.hours)
     start.setMinutes(block.startTime.minutes)
+    start.setSeconds(block.endTime.seconds)
     end.setHours(block.endTime.hours)
     end.setMinutes(block.endTime.minutes)
+    end.setSeconds(block.endTime.seconds)
     return Math.floor((end.valueOf() - start.valueOf()) / 1000 / 60)
 }
 
@@ -91,14 +99,20 @@ type addDurationToTimeProps = (time: ITime, durationMinutes: number) => ITime
  */
 export const addDurationToTime: addDurationToTimeProps = (time, durationMinutes) => {
     let { hours, minutes, day } = time
+    const { seconds } = time
     minutes += durationMinutes
-    hours += Math.floor(minutes / 60)
-    minutes = minutes % 60
+    if (minutes < 0) {
+        hours -= Math.floor(minutes / 60)
+        minutes = -Math.floor(minutes / 60) * 60 + minutes
+    } else {
+        hours += Math.floor(minutes / 60)
+        minutes = minutes % 60
+    }
     if (hours >= 24) {
         day += Math.floor(hours / 24) % 7
         hours = hours % 24
     }
-    return { hours, minutes, day }
+    return { hours, minutes, seconds, day }
 }
 
 /**
@@ -113,6 +127,7 @@ export const addDurationToTimeLimited: addDurationToTimeProps = (time, durationM
     if (added.day != time.day) {
         added.hours = 23
         added.minutes = 59
+        added.seconds = 59
         added.day = time.day
     }
     return added
@@ -193,7 +208,6 @@ export const getRemainingTimeString: getRemainingTimeStringType = time => {
             return `${Math.floor(minutes / 60)} hr ${minutes % 60} mins`
         }
     }
-    return ``
 }
 
 /**
@@ -249,4 +263,81 @@ export const getFirstCurrentBlock = (blocks: ITimeBlock[]) => {
         }
     }
     return newBlock
+}
+
+/**
+ * Compares two different time objects and returns an integer that tells the greatest of the both.
+ * @param time1 Time object 1
+ * @param time2 Time object 2
+ * @returns -1 if object 1 is greated. 1 if object 2 is greater. 0 if eaual
+ */
+export const compareTimes = (time1: ITime, time2: ITime) => {
+    if (time1.hours > time2.hours) {
+        return -1
+    } else if (time1.hours < time2.hours) {
+        return 1
+    } else if (time1.hours === time2.hours) {
+        if (time1.minutes > time2.minutes) {
+            return -1
+        } else if (time1.minutes < time2.minutes) {
+            return 1
+        } else if (time1.minutes === time2.minutes) {
+            if (time1.seconds > time2.seconds) {
+                return -1
+            } else if (time1.seconds < time2.seconds) {
+                return 1
+            } else if (time1.seconds === time2.seconds) {
+                return 0
+            }
+        }
+    }
+    return 0
+}
+
+/**
+ * Sort an array of time objects in descending order. The least nearest time is
+ * always at the end of the array. Uses the logic of Quick Sort algorithm.
+ * @param times An array with times sorted
+ */
+export const sortTimes = (times: ITime[]) => {
+    const partition = (array: ITime[], low: number, high: number) => {
+        const pivot = array[high]
+        let i = low - 1
+        for (let j = low; j < high; j++) {
+            if (compareTimes(array[j], pivot) === -1) {
+                i = i + 1
+                const temp = array[j]
+                array[j] = array[i]
+                array[i] = temp
+            }
+        }
+        const temp = array[i + 1]
+        array[i + 1] = array[high]
+        array[high] = temp
+        return i + 1
+    }
+
+    const sort = (array: ITime[], low: number, high: number) => {
+        if (low < high) {
+            const pivot = partition(array, low, high)
+            sort(array, low, pivot - 1)
+            sort(array, pivot + 1, high)
+        }
+    }
+
+    sort(times, 0, times.length - 1)
+}
+
+/**
+ * Converts a NodeJS Date object to the time object
+ * @param date A NodeJS Date object
+ * @returns A time object
+ */
+export const nodeDateToTime = (date: Date): ITime => {
+    return {
+        hours: date.getHours(),
+        minutes: date.getMinutes(),
+        seconds: date.getSeconds(),
+        day: date.getDay()
+    }
 }

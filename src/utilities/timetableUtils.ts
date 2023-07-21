@@ -40,7 +40,7 @@ export const generateFormCache: generateFormCacheType = (oldCache, block) => {
 
     // If it exceed the current day, then it is started from the next day
     if (endTime.day != block.startTime.day) {
-        startTime = { hours: 8, minutes: 0, day: endTime.day }
+        startTime = { hours: 8, minutes: 0, seconds: 0, day: endTime.day }
         endTime = addDurationToTimeLimited(startTime, duration)
     }
 

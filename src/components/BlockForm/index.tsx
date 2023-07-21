@@ -23,7 +23,7 @@ import { useAppDispatch, useAppSelector } from '@redux/store'
 
 import { dayDropItems } from '@utils/timetableUtils'
 
-import AdditionalsComponent from './BlockAdditionalComponent'
+import AdditionalsComponent from './Additionals'
 
 import blockFormReducer, { createBlockFormIS, blockFormActions as fa } from './reducer'
 import * as s from './styles'

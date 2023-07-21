@@ -15,11 +15,11 @@ import { appSettingsOpened, appStarted, appThemeToggled } from '@redux/slices/ap
 import { ttBlockFormedOpened, ttSubFormOpened } from '@redux/slices/timetableSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
+import { stopNotificationService } from '@services/notificationService'
+
 import GlobalStyles from '@styles/globalStyles'
 import { lightThemeColors, darkThemeColors } from '@styles/styleConstants'
 import '@styles/fonts.css'
-
-import { stopNS } from '@utils/notificationsUtils'
 
 const App = () => {
     const dispatch = useAppDispatch()
@@ -36,7 +36,7 @@ const App = () => {
         startApp()
         document.addEventListener(`contextmenu`, contextMenuHandler)
         return () => {
-            stopNS()
+            stopNotificationService()
             document.removeEventListener(`contextmenu`, contextMenuHandler)
         }
     }, [])

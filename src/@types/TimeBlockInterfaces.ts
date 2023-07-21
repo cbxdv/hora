@@ -3,7 +3,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 export interface ITime {
     hours: number
     minutes: number
-    seconds?: number
+    seconds: number
     day: DayID
 }
 

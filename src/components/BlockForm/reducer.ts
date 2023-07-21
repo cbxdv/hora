@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { nanoid } from 'nanoid'
 
 import { DayID, ITime, ITimeBlock, TimeM } from '@appTypes/TimeBlockInterfaces'
 import { ITTFormCache, ITTSubject } from '@appTypes/TimetableInterfaces'
@@ -6,7 +7,6 @@ import { ITTFormCache, ITTSubject } from '@appTypes/TimetableInterfaces'
 import { ValueDropdownItemType } from '@components/ValueDropdown'
 
 import { addDurationToTimeLimited, getAmPm, hours12To24, hours24To12 } from '@utils/timeUtils'
-import { nanoid } from 'nanoid'
 
 export interface IBlockFormAdditional {
     id: string
@@ -106,7 +106,7 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
                 Object.keys(blockAdd).map(a => ({
                     id: nanoid(),
                     name: a,
-                    value: blockAdd[a] || ''
+                    value: blockAdd[a] || ``
                 })) || []
         }
     } else if (formCache != null) {
@@ -180,6 +180,7 @@ const blockFormSlice = createSlice({
             const start: ITime = {
                 hours: hours12To24(state.startHours, state.startAmPm),
                 minutes: state.startMinutes,
+                seconds: 0,
                 day: state.day
             }
             const addedTime = addDurationToTimeLimited(start, state.cacheDuration)
@@ -193,6 +194,7 @@ const blockFormSlice = createSlice({
             const start: ITime = {
                 hours: hours12To24(state.startHours, state.startAmPm),
                 minutes: state.startMinutes,
+                seconds: 0,
                 day: state.day
             }
             const addedTime = addDurationToTimeLimited(start, state.cacheDuration)
@@ -206,6 +208,7 @@ const blockFormSlice = createSlice({
             const start: ITime = {
                 hours: hours12To24(state.startHours, state.startAmPm),
                 minutes: state.startMinutes,
+                seconds: 0,
                 day: state.day
             }
             const addedTime = addDurationToTimeLimited(start, state.cacheDuration)
@@ -223,7 +226,7 @@ const blockFormSlice = createSlice({
             state.endAmPm = action.payload
         },
         addNewAdditionals(state) {
-            state.additionals.push({ id: nanoid(), name: '', value: '' })
+            state.additionals.push({ id: nanoid(), name: ``, value: `` })
         },
         updateAdditional(state, action: PayloadAction<IBlockFormAdditional>) {
             const { id } = action.payload
