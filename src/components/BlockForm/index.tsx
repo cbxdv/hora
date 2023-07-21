@@ -73,7 +73,11 @@ const BlockForm = () => {
                 <s.BlockFormMain>
                     <div>
                         <s.TitleContainer>
-                            <s.TitleIconContainer onClick={() => formDispatch(fa.toggleSubjectDD())}>
+                            <s.TitleIconContainer
+                                onClick={() =>
+                                    state.filteredSubjects.length !== 0 && formDispatch(fa.toggleSubjectDD())
+                                }
+                            >
                                 <SubjectIcon />
                             </s.TitleIconContainer>
                             <s.TitleInput

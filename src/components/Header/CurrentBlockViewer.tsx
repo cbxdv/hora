@@ -56,7 +56,6 @@ const CurrentBlockViewer = () => {
         if (tempBlock != null && headerBlock.id == tempBlock.id) {
             dispatch(ttHeaderBlockUpdated(null))
         } else {
-            // console.log(getRemainingTimeString(headerBlock.startTime))
             setTitle(headerBlock.title)
             setSubTitle(getRemainingTimeString(headerBlock.startTime))
         }
@@ -64,16 +63,17 @@ const CurrentBlockViewer = () => {
 
     // Updating whenever there is a update in header block or the blocks itself
     useEffect(() => {
-        let timer: NodeJS.Timer
+        let timer1: NodeJS.Timer
+        let timer2: NodeJS.Timer
         // Checking if a header block is present
         // If present, then a timer for updating with respect to header block is started
         if (headerBlock != null) {
-            timer = setInterval(() => {
+            timer1 = setInterval(() => {
                 headerBlockHandler()
             }, 500)
         } else {
             // If no header block, then check and update for current block
-            timer = setInterval(() => {
+            timer2 = setInterval(() => {
                 currentBlockHandler()
             }, 500)
         }
@@ -83,7 +83,8 @@ const CurrentBlockViewer = () => {
         }
         return () => {
             // Clearing timer on unmount
-            clearInterval(timer)
+            clearInterval(timer1)
+            clearInterval(timer2)
         }
     }, [blocks, headerBlock])
 

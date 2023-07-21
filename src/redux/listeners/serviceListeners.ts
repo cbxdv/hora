@@ -10,6 +10,7 @@ import { appInitialized, appNotificationsToggled } from '@redux/slices/appSlice'
 import { serviceDataUpdated, serviceRefreshed } from '@redux/slices/serviceSlice'
 
 import { startNotificationService, stopNotificationService } from '@services/notificationService'
+import { startServiceDataService, stopServiceDataService } from '@services/serviceDataUpdater'
 
 import { generateNotifyObjects } from '@utils/notificationsUtils'
 
@@ -27,18 +28,9 @@ const serviceListener: AppListeners = {
                 } else {
                     stopNotificationService()
                 }
-                // A timer for updating notification data at day change
-                let prev = new Date().getDay()
-                const timer = setInterval(() => {
-                    const now = new Date()
-                    if (now.getDay() !== prev) {
-                        clearInterval(timer)
-                        stopNotificationService()
-                        // Refreshing data
-                        listenerApi.dispatch(serviceRefreshed())
-                    }
-                    prev = now.getDay()
-                }, 1000)
+
+                // A service runner for updating data on day intervals
+                startServiceDataService(() => listenerApi.dispatch(serviceRefreshed()))
             }
         })
     },
@@ -48,6 +40,7 @@ const serviceListener: AppListeners = {
         startListening({
             actionCreator: serviceRefreshed,
             effect: (_, listenerApi) => {
+                stopServiceDataService()
                 stopNotificationService()
                 const state = listenerApi.getState()
                 const blocks = selectTTCurrentValidBlocksWithSub(state)

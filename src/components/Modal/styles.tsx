@@ -60,8 +60,9 @@ export const CloseButton = styled.div`
         stroke-width: 2px;
     }
 `
-export const ModalChild = styled.div`
+
+export const ModalChild = styled.div<{ $overflowChildren?: boolean }>`
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: ${({ $overflowChildren }) => ($overflowChildren ? `none` : `hidden`)};
 `

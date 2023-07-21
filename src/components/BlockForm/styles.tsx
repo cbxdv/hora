@@ -121,10 +121,9 @@ export const AdditionalsButton = styled(motion.button).attrs(() => ({
     font-weight: 500;
     border-radius: 8px;
     cursor: pointer;
-    ${subtleBorder};
     scale: 1;
     width: 100%;
-    border-style: dashed;
+    border: 1px dashed ${({ theme }) => theme.sec};
 `
 
 export const AdditionalsButtonContainer = styled.div`
@@ -144,7 +143,7 @@ export const AdditionalsComponentContainer = styled(motion.div).attrs(() => ({
 
 export const AdditionalsName = styled.input`
     width: 45%;
-    color: ${({ theme }) => theme.sec};
+    color: ${({ theme }) => theme.text};
     font-weight: 500;
     font-family: Outfit;
     background: ${({ theme }) => theme.shade2};
@@ -170,6 +169,7 @@ export const AdditionalsValue = styled.input`
     ${subtleBorder};
     font-family: Outfit;
     outline: none;
+    color: ${({ theme }) => theme.text};
 `
 
 export const AdditionalsTrashContainer = styled.div`

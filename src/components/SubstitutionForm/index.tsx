@@ -48,7 +48,7 @@ const SubstitutionForm = () => {
     }, [dayToBeOpenForm])
 
     return (
-        <Modal title='Substitution' closeHandler={() => dispatch(ttSubFormClosed())}>
+        <Modal title='Substitution' closeHandler={() => dispatch(ttSubFormClosed())} overflowChildren>
             <div>
                 <fs.BodySectionContainer>
                     <fs.InputContainer>

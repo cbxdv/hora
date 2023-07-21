@@ -9,7 +9,7 @@ export const TimeInputContainer = styled(motion.div).attrs(() => ({
     exit: { height: 0 },
     transition: { duration: 0.2 }
 }))`
-    width: 140px;
+    width: 100%;
     height: 150px;
     ${flexCenter({ justifyContent: `space-between` })};
     position: absolute;
