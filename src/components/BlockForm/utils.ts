@@ -99,9 +99,25 @@ export const editHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null,
     appDispatch(ttBlockUpdated({ oldBlock, newBlock, isSubDay: state.isSubDay }))
 }
 
-export const dangerButtonHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null, appDispatch: AppDispatch) => {
+export const dangerButtonHandler = async (
+    state: IBlockFormState,
+    oldBlock: ITimeBlock | null,
+    appDispatch: AppDispatch,
+    confirm: ((data: any) => Promise<boolean>) | null
+) => {
     if (oldBlock) {
-        appDispatch(ttBlockDeleted({ day: oldBlock.startTime.day, id: oldBlock.id, isSubDay: state.isSubDay }))
+        if (confirm == null) {
+            return
+        }
+        const response = await confirm({
+            title: `Delete`,
+            description: `Delete this block (${state.title}) ?`,
+            acceptText: `Delete`,
+            rejectText: `Nope`
+        })
+        if (response) {
+            appDispatch(ttBlockDeleted({ day: oldBlock.startTime.day, id: oldBlock.id, isSubDay: state.isSubDay }))
+        }
     } else {
         appDispatch(ttBlockFormClosed())
     }

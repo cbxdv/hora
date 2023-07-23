@@ -7,6 +7,8 @@ import TrashIcon from '@assets/icons/Trash.svg'
 
 import TextButton from '@components/TextButton'
 
+import useConfirm from '@hooks/useConfirm'
+
 import { selectTTAllocations, selectTTSettings } from '@redux/selectors/timetableSelectors'
 import {
     ttBlocksCleared,
@@ -33,6 +35,23 @@ const TimetableSettings = () => {
     const allocations = useAppSelector(selectTTAllocations)
 
     const shouldShowSubs = shouldShowSubsInSettings(allocations.subDays)
+
+    const confirm = useConfirm()
+
+    const deleteHandler = async () => {
+        if (confirm == null) {
+            return
+        }
+        const response = await confirm({
+            title: `Clear all`,
+            description: `Clear all block in timetable ?`,
+            acceptText: `Clear`,
+            rejectText: `Nope`
+        })
+        if (response) {
+            dispatch(ttBlocksCleared())
+        }
+    }
 
     return (
         <s.SettingsComponentItem>
@@ -141,7 +160,7 @@ const TimetableSettings = () => {
             <s.SettingsSection>
                 <s.SectionHeading>Danger Zone</s.SectionHeading>
                 <s.DangerMiddle>
-                    <TextButton text='Clear all Blocks' danger onClick={() => dispatch(ttBlocksCleared())} />
+                    <TextButton text='Clear all Blocks' danger onClick={deleteHandler} />
                 </s.DangerMiddle>
             </s.SettingsSection>
         </s.SettingsComponentItem>

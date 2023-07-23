@@ -51,7 +51,7 @@ const DayColumn: React.FC<DayColumnProps> = ({ dayId }) => {
             const hours = Math.floor(y / 90)
             const minutes = Math.floor((y % 90) / 1.5)
             if (hours >= 0 && minutes >= 0 && hours < 24 && minutes < 60) {
-                setContextTime({ hours, minutes, day: dayId })
+                setContextTime({ hours, minutes, seconds: 0, day: dayId })
             }
         }
     }

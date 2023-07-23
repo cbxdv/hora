@@ -5,7 +5,15 @@ import CrossIcon from '@assets/icons/Cross.svg'
 
 import * as s from './styles'
 
-const Modal: React.FC<ModalProps> = ({ title, children, closeHandler, height, width, overflowChildren }) => {
+const Modal: React.FC<ModalProps> = ({
+    title,
+    children,
+    closeHandler,
+    height,
+    width,
+    overflowChildren,
+    hideCloseButton
+}) => {
     const keyBindHandler = (event: KeyboardEvent) => {
         if (event.key === `Escape`) {
             closeHandler()
@@ -29,9 +37,11 @@ const Modal: React.FC<ModalProps> = ({ title, children, closeHandler, height, wi
                 >
                     <s.ModalHeader $hasTitle={title}>
                         {title ? <s.ModalHeading>{title}</s.ModalHeading> : <></>}
-                        <s.CloseButton onClick={closeHandler}>
-                            <CrossIcon />
-                        </s.CloseButton>
+                        {!hideCloseButton && (
+                            <s.CloseButton onClick={closeHandler}>
+                                <CrossIcon />
+                            </s.CloseButton>
+                        )}
                     </s.ModalHeader>
                     <s.ModalChild $overflowChildren={overflowChildren}>{children}</s.ModalChild>
                 </s.ModalBody>
@@ -48,12 +58,14 @@ type ModalProps = {
     height?: string
     width?: string
     overflowChildren?: boolean
+    hideCloseButton?: boolean
 }
 
 Modal.defaultProps = {
     height: `unset`,
     width: `unset`,
-    overflowChildren: false
+    overflowChildren: false,
+    hideCloseButton: false
 }
 
 export default Modal

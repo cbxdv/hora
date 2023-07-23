@@ -10,6 +10,7 @@ import TrashIcon from '@assets/icons/Trash.svg'
 
 import ContextMenu, { ContextMenuItemType } from '@components/ContextMenu'
 
+import useConfirm from '@hooks/useConfirm'
 import useContextMenu from '@hooks/useContextMenu'
 
 import { selectTTCanceledBlocks, selectTTHeaderBlock, selectTTSubDayCancels } from '@redux/selectors/timetableSelectors'
@@ -73,6 +74,22 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock, subDay }) => {
 
     const isHeaderBlock = blockInHeader != null && blockInHeader.id == timeBlock.id
 
+    const confirm = useConfirm()
+    const deleteHandler = async () => {
+        if (confirm == null) {
+            return
+        }
+        const response = await confirm({
+            title: `Delete`,
+            description: `Delete this block (${timeBlock.title}) ?`,
+            acceptText: `Delete`,
+            rejectText: `Nope`
+        })
+        if (response) {
+            dispatch(ttBlockDeleted({ day: timeBlock.startTime.day, id: timeBlock.id, isSubDay: subDay != null }))
+        }
+    }
+
     const contextMenuItems: ContextMenuItemType[] = [
         {
             id: `edit`,
@@ -112,7 +129,7 @@ const TimeBlock: React.FC<TimeBlockProps> = ({ timeBlock, subDay }) => {
             label: `Delete`,
             icon: TrashIcon,
             action() {
-                dispatch(ttBlockDeleted({ day: timeBlock.startTime.day, id: timeBlock.id, isSubDay: subDay != null }))
+                deleteHandler()
             },
             danger: true
         }

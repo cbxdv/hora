@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { ThemeProvider, styled } from 'styled-components'
 
 import BlockForm from '@components/BlockForm'
@@ -8,6 +8,8 @@ import Loader from '@components/Loader'
 import SettingsComponent from '@components/SettingsComponent'
 import SubstitutionForm from '@components/SubstitutionForm'
 import WeekViewer from '@components/WeekViewer'
+
+import { ConfirmDialogProvider } from '@hooks/useConfirm'
 
 import { selectIsAppLoading, selectIsAppSettingsVisible, selectShowingTheme } from '@redux/selectors/appSelectors'
 import { selectIsTTBlockFormVisible, selectIsTTSubFormVisible } from '@redux/selectors/timetableSelectors'
@@ -47,19 +49,22 @@ const App = () => {
                 <Loader />
             ) : (
                 <ThemeProvider theme={theme === `light` ? lightThemeColors : darkThemeColors}>
-                    <GlobalStyles />
-                    <ModalsContainer />
-                    <AppMain>
-                        <Header />
-                        <WeekViewer />
-                    </AppMain>
+                    <ConfirmDialogProvider>
+                        <GlobalStyles />
+                        <AppWrapper>
+                            <AppMain>
+                                <Header />
+                                <WeekViewer />
+                            </AppMain>
+                        </AppWrapper>
+                    </ConfirmDialogProvider>
                 </ThemeProvider>
             )}
         </AnimatePresence>
     )
 }
 
-const ModalsContainer = () => {
+const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useAppDispatch()
 
     const isBlockFormVisible = useAppSelector(selectIsTTBlockFormVisible)
@@ -98,11 +103,14 @@ const ModalsContainer = () => {
     }, [isBlockFormVisible, isSettingsVisible, isSubFormVisible])
 
     return (
-        <AnimatePresence>
-            {isBlockFormVisible && <BlockForm />}
-            {isSettingsVisible && <SettingsComponent />}
-            {isSubFormVisible && <SubstitutionForm />}
-        </AnimatePresence>
+        <>
+            <AnimatePresence>
+                {isBlockFormVisible && <BlockForm />}
+                {isSettingsVisible && <SettingsComponent />}
+                {isSubFormVisible && <SubstitutionForm />}
+            </AnimatePresence>
+            <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
+        </>
     )
 }
 

@@ -12,6 +12,8 @@ import TextButton from '@components/TextButton'
 import TimeSelector from '@components/TimeSelector'
 import ValueDropdown, { ValueDropdownItemType } from '@components/ValueDropdown'
 
+import useConfirm from '@hooks/useConfirm'
+
 import {
     selectTTSubDayToOpenBlockForm,
     selectTTDupBlock,
@@ -31,6 +33,8 @@ import { createHandler, dangerButtonHandler, editHandler } from './utils'
 
 const BlockForm = () => {
     const appDispatch = useAppDispatch()
+
+    const confirm = useConfirm()
 
     const oldBlock = useAppSelector(selectTTSelBlock)
     const duplicateBlock = useAppSelector(selectTTDupBlock)
@@ -266,7 +270,7 @@ const BlockForm = () => {
                         <s.ButtonContainer>
                             <TextButton
                                 text={oldBlock ? `Delete` : `Discard`}
-                                onClick={() => dangerButtonHandler(state, oldBlock, appDispatch)}
+                                onClick={() => dangerButtonHandler(state, oldBlock, appDispatch, confirm)}
                                 danger
                             />
                         </s.ButtonContainer>
