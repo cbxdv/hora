@@ -26,7 +26,7 @@ const AdditionalsComponent: React.FC<AdditionalsComponentPropTypes> = ({ data, u
 }
 
 type AdditionalsComponentPropTypes = {
-    data: { id: string; name: string; value: string }
+    data: IBlockFormAdditional
     updateHandler: (data: IBlockFormAdditional) => void
     deleteHandler: (id: string) => void
 }

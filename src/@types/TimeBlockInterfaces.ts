@@ -24,8 +24,10 @@ export interface ITimeBlockBase {
     color: string
     description: string
     additionals?: {
-        [key: string]: string
-    }
+        id: string
+        name: string
+        value: string
+    }[]
 }
 
 export interface ITimeBlock extends ITimeBlockBase {

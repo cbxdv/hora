@@ -47,12 +47,8 @@ export const createHandler = (state: IBlockFormState, appDispatch: AppDispatch) 
             day: state.day
         }
     }
-    const additionals: { [key: string]: string } = {}
-    state.additionals.forEach(ad => {
-        additionals[ad.name] = ad.value
-    })
-    if (Object.keys(additionals).length !== 0) {
-        newBlock.additionals = additionals
+    if (state.additionals.length !== 0) {
+        newBlock.additionals = state.additionals
     }
     appDispatch(
         ttBlockAdded({
@@ -87,12 +83,8 @@ export const editHandler = (state: IBlockFormState, oldBlock: ITimeBlock | null,
             day: state.day
         }
     }
-    const additionals: { [key: string]: string } = {}
-    state.additionals.forEach(ad => {
-        additionals[ad.name] = ad.value
-    })
-    if (Object.keys(additionals).length !== 0) {
-        newBlock.additionals = additionals
+    if (state.additionals.length !== 0) {
+        newBlock.additionals = state.additionals
     } else {
         delete newBlock.additionals
     }

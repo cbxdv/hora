@@ -82,7 +82,7 @@ export const generateSubjects: generateSubjectsType = blocks => {
                     title: block.title,
                     description: block.description,
                     color: block.color,
-                    additionals: block.additionals || {}
+                    additionals: block.additionals || []
                 }
             }
         })
@@ -122,7 +122,7 @@ export const updateSubjects: updateSubjectsType = (subjects, block) => {
                 title: block.title,
                 description: block.description,
                 color: block.color,
-                additionals: block.additionals || {}
+                additionals: block.additionals || []
             })
         } else {
             newSubjects.push(subject)
@@ -134,7 +134,7 @@ export const updateSubjects: updateSubjectsType = (subjects, block) => {
             title: block.title,
             description: block.description,
             color: block.color,
-            additionals: block.additionals || {}
+            additionals: block.additionals || []
         })
     }
 

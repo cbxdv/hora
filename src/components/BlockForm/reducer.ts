@@ -100,15 +100,7 @@ export const createBlockFormIS: createBlockFormProps = ({ oldBlock, duplicateBlo
         endHours = hours24To12(blockToUse.endTime.hours)
         endMinutes = blockToUse.endTime.minutes
         endAmPm = getAmPm(blockToUse.endTime.hours)
-        const blockAdd = blockToUse.additionals || {}
-        if (blockAdd) {
-            additionals =
-                Object.keys(blockAdd).map(a => ({
-                    id: nanoid(),
-                    name: a,
-                    value: blockAdd[a] || ``
-                })) || []
-        }
+        additionals = blockToUse.additionals || []
     } else if (formCache != null) {
         if (formCache.day != null) {
             day = formCache.day
@@ -299,13 +291,7 @@ const blockFormSlice = createSlice({
             state.title = subject.title
             state.color = subject.color
             state.description = subject.description
-            state.additionals = Object.keys(subject.additionals).map(ad => {
-                return {
-                    id: nanoid(),
-                    name: ad,
-                    value: subject.additionals[ad]
-                }
-            })
+            state.additionals = subject.additionals
         }
     }
 })
