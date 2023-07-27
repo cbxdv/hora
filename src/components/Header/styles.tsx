@@ -6,12 +6,13 @@ import { flexCenter } from '@styles/styleDefinitions'
 export const LogoContainer = styled.div`
     height: 40px;
     width: 40px;
+    cursor: pointer;
 `
 
 export const HeaderContainer = styled.div`
     ${flexCenter({ justifyContent: `space-between` })};
     background-color: ${props => props.theme.background};
-    height: 90px;
+    height: 80px;
     width: 100%;
     padding: 10px 60px;
 `
@@ -22,7 +23,6 @@ export const DetailsContainer = styled.div`
 
 export const ActionsContainer = styled.div`
     ${flexCenter({ justifyContent: `space-between` })};
-    width: 175px;
 `
 
 const HeaderDetailVariant = {

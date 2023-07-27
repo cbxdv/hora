@@ -2,9 +2,10 @@ import { styled } from 'styled-components'
 
 import { buttonWithStyles, flexCenter } from '@styles/styleDefinitions'
 
-export const IconButtonContainer = styled(buttonWithStyles)<{ $size: number }>`
-    width: ${({ $size }) => $size}px;
-    height: ${({ $size }) => $size}px;
+export const IconButtonContainer = styled(buttonWithStyles)`
+    width: 100%;
+    height: 30px;
+    min-height: 30px;
     scale: 1;
 `
 
@@ -22,4 +23,8 @@ export const IconContainer = styled.div`
             stroke: ${({ theme }) => theme.text};
         }
     }
+`
+
+export const TextContainer = styled.div`
+    margin-left: 6px;
 `

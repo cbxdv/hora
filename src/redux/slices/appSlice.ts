@@ -22,11 +22,20 @@ const appSlice = createSlice({
         },
 
         appSettingsOpened(state) {
+            state.statuses.isAppSidebarVisible = false
             state.statuses.isSettingsVisible = true
         },
 
         appSettingsClosed(state) {
             state.statuses.isSettingsVisible = false
+        },
+
+        appSidebarOpened(state) {
+            state.statuses.isAppSidebarVisible = true
+        },
+
+        appSidebarClosed(state) {
+            state.statuses.isAppSidebarVisible = false
         },
 
         appThemeChanged(state, action: AppThemePayload) {
@@ -88,6 +97,8 @@ export const {
     appInitialized,
     appSettingsOpened,
     appSettingsClosed,
+    appSidebarOpened,
+    appSidebarClosed,
     appThemeChanged,
     appThemeToggled,
     minimizeOnCloseToggled,

@@ -1,21 +1,18 @@
 import * as s from './styles'
 
-const IconButton: React.FC<IconButtonProps> = ({ Icon, size, onClick }) => (
-    <s.IconButtonContainer $size={size} onClick={onClick}>
+const IconButton: React.FC<IconButtonProps> = ({ Icon, text, onClick }) => (
+    <s.IconButtonContainer onClick={onClick}>
         <s.IconContainer>
             <Icon />
         </s.IconContainer>
+        {text && <s.TextContainer>{text}</s.TextContainer>}
     </s.IconButtonContainer>
 )
 
 type IconButtonProps = {
     Icon: React.FunctionComponent
-    size: number
+    text?: string
     onClick: () => void
-}
-
-IconButton.defaultProps = {
-    size: 30
 }
 
 export default IconButton

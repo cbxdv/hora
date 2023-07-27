@@ -5,6 +5,7 @@ export const AppIS: IAppState = {
     statuses: {
         isLoading: true,
         isSettingsVisible: false,
+        isAppSidebarVisible: true,
         showingTheme: Themes.Dark,
         osTheme: Themes.Dark
     },

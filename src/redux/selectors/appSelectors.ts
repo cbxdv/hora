@@ -8,6 +8,8 @@ export const selectShowingTheme = (state: IState) => state.app.statuses.showingT
 
 export const selectIsAppSettingsVisible = (state: IState) => state.app.statuses.isSettingsVisible
 
+export const selectIsAppSidebarVisible = (state: IState) => state.app.statuses.isAppSidebarVisible
+
 export const selectAppVersion = (state: IState) => state.app.appInfo.version
 
 export const selectAppSettings = (state: IState) => state.app.settings

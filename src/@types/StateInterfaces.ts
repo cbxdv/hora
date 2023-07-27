@@ -7,6 +7,7 @@ export interface IAppState {
     statuses: {
         isLoading: boolean
         isSettingsVisible: boolean
+        isAppSidebarVisible: boolean
         showingTheme: Themes
         osTheme: Themes
     }

@@ -16,6 +16,7 @@ import {
     selectAppTheme,
     selectIsAppLoading,
     selectIsAppSettingsVisible,
+    selectIsAppSidebarVisible,
     selectShowingTheme
 } from '@redux/selectors/appSelectors'
 import { selectIsTTBlockFormVisible, selectIsTTSubFormVisible } from '@redux/selectors/timetableSelectors'
@@ -29,6 +30,7 @@ import '@styles/fonts.css'
 
 import { stopAllServiceTimers } from '@utils/serviceUtils'
 import { AppThemes, ToastTypes } from '@appTypes/AppInterfaces'
+import Sidebar from '@components/Sidebar'
 
 const App = () => {
     const dispatch = useAppDispatch()
@@ -77,6 +79,7 @@ const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     const isBlockFormVisible = useAppSelector(selectIsTTBlockFormVisible)
     const isSettingsVisible = useAppSelector(selectIsAppSettingsVisible)
     const isSubFormVisible = useAppSelector(selectIsTTSubFormVisible)
+    const isAppSidebarVisible = useAppSelector(selectIsAppSidebarVisible)
     const appTheme = useAppSelector(selectAppTheme)
 
     useEffect(() => {
@@ -116,6 +119,7 @@ const AppWrapper = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <>
+            <AnimatePresence>{isAppSidebarVisible && <Sidebar />}</AnimatePresence>
             <AnimatePresence>
                 {isBlockFormVisible && <BlockForm />}
                 {isSettingsVisible && <SettingsComponent />}
