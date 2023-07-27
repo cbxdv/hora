@@ -1,4 +1,4 @@
-import { IAppSettings, Themes } from '@appTypes/AppInterfaces'
+import { IAppSettings, IToastContent, Themes } from '@appTypes/AppInterfaces'
 import { INotifyObject } from '@appTypes/ServiceInterfaces'
 import { DayID, IBlocks, ITimeBlock } from '@appTypes/TimeBlockInterfaces'
 import { ITTAllocations, ITTFormCache, ITTSettings } from '@appTypes/TimetableInterfaces'
@@ -10,6 +10,7 @@ export interface IAppState {
         showingTheme: Themes
         osTheme: Themes
     }
+    toasts: IToastContent[]
     settings: IAppSettings
     appInfo: {
         version: string

@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { AppThemes, AppInitPayload, AppThemePayload, Themes } from '@appTypes/AppInterfaces'
+import { AppThemes, Themes } from '@appTypes/AppInterfaces'
 
 import { AppIS } from '@redux/initialStates'
+import { AppInitPayload, AppThemePayload, ToastAddedPayload, ToastContentPayload } from '@appTypes/AppPayloadTypes'
+import { nanoid } from 'nanoid'
 
 const appSlice = createSlice({
     name: `app`,
@@ -64,6 +66,19 @@ const appSlice = createSlice({
 
         openMinimizedToggled(state) {
             state.settings.openMinimized = !state.settings.openMinimized
+        },
+
+        toastAdded(state, action: ToastAddedPayload) {
+            if (state.toasts.length >= 5) {
+                state.toasts = state.toasts.splice(1, 5)
+            }
+            const { message, type } = action.payload
+            state.toasts.push({ id: nanoid(), message, type })
+        },
+
+        toastRemoved(state, action: ToastContentPayload) {
+            const { id } = action.payload
+            state.toasts = state.toasts.filter(toast => toast.id !== id)
         }
     }
 })
@@ -78,7 +93,9 @@ export const {
     minimizeOnCloseToggled,
     openAtStartupToggled,
     appNotificationsToggled,
-    openMinimizedToggled
+    openMinimizedToggled,
+    toastAdded,
+    toastRemoved
 } = appSlice.actions
 
 export default appSlice.reducer

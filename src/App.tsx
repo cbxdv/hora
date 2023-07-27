@@ -7,13 +7,19 @@ import Header from '@components/Header'
 import Loader from '@components/Loader'
 import SettingsComponent from '@components/SettingsComponent'
 import SubstitutionForm from '@components/SubstitutionForm'
+import { ToastsContainer } from '@components/Toast'
 import WeekViewer from '@components/WeekViewer'
 
 import { ConfirmDialogProvider } from '@hooks/useConfirm'
 
-import { selectIsAppLoading, selectIsAppSettingsVisible, selectShowingTheme } from '@redux/selectors/appSelectors'
+import {
+    selectAppTheme,
+    selectIsAppLoading,
+    selectIsAppSettingsVisible,
+    selectShowingTheme
+} from '@redux/selectors/appSelectors'
 import { selectIsTTBlockFormVisible, selectIsTTSubFormVisible } from '@redux/selectors/timetableSelectors'
-import { appSettingsOpened, appStarted, appThemeToggled } from '@redux/slices/appSlice'
+import { appSettingsOpened, appStarted, appThemeToggled, toastAdded } from '@redux/slices/appSlice'
 import { ttBlockFormedOpened, ttSubFormOpened } from '@redux/slices/timetableSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
 
@@ -22,6 +28,7 @@ import { lightThemeColors, darkThemeColors } from '@styles/styleConstants'
 import '@styles/fonts.css'
 
 import { stopAllServiceTimers } from '@utils/serviceUtils'
+import { AppThemes, ToastTypes } from '@appTypes/AppInterfaces'
 
 const App = () => {
     const dispatch = useAppDispatch()
@@ -70,10 +77,15 @@ const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     const isBlockFormVisible = useAppSelector(selectIsTTBlockFormVisible)
     const isSettingsVisible = useAppSelector(selectIsAppSettingsVisible)
     const isSubFormVisible = useAppSelector(selectIsTTSubFormVisible)
+    const appTheme = useAppSelector(selectAppTheme)
 
     useEffect(() => {
         const keyBindHandler = (event: KeyboardEvent) => {
             if (event.ctrlKey && event.key.toLowerCase() === `l`) {
+                if (appTheme === AppThemes.System) {
+                    dispatch(toastAdded({ message: 'Theme follows the System Theme', type: ToastTypes.Warn }))
+                    return
+                }
                 dispatch(appThemeToggled())
                 return
             }
@@ -110,6 +122,7 @@ const AppWrapper = ({ children }: { children: React.ReactNode }) => {
                 {isSubFormVisible && <SubstitutionForm />}
             </AnimatePresence>
             <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
+            <ToastsContainer />
         </>
     )
 }

@@ -8,12 +8,14 @@ import appListeners from './listeners/appListeners'
 import initialListeners from './listeners/initialListener'
 import serviceListener from './listeners/serviceListeners'
 import timetableListeners from './listeners/timetableListeners'
+import toastListeners from './listeners/toastListeners'
 
 const allListeners: { [key: string]: AppListeners } = {
     initial: initialListeners,
     app: appListeners,
     timetable: timetableListeners,
-    service: serviceListener
+    service: serviceListener,
+    toast: toastListeners
 }
 
 // Iterating through listeners and start listening

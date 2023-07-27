@@ -57,10 +57,8 @@ export const BlockDetail = styled.div`
     width: 100%;
 `
 
-export const BlockHeading = styled.p`
-    font-weight: bold;
-    font-size: 16px;
-    font-weight: 600;
+export const BlockHeading = styled.h1`
+    font-size: 14px;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -74,5 +72,5 @@ export const BlockSubText = styled.p`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-top: 5px;
+    margin-top: 2px;
 `

@@ -1,5 +1,3 @@
-import { PayloadAction } from '@reduxjs/toolkit'
-
 export enum Themes {
     Light = `light`,
     Dark = `dark`
@@ -19,10 +17,14 @@ export interface IAppSettings {
     openMinimized: boolean
 }
 
-export type AppInitPayload = PayloadAction<{
-    osTheme: Themes
-    showingTheme: Themes
-    settings: IAppSettings
-}>
+export enum ToastTypes {
+    Info,
+    Warn,
+    Danger
+}
 
-export type AppThemePayload = PayloadAction<AppThemes>
+export interface IToastContent {
+    id: string
+    message: string
+    type: ToastTypes
+}

@@ -8,6 +8,7 @@ export const AppIS: IAppState = {
         showingTheme: Themes.Dark,
         osTheme: Themes.Dark
     },
+    toasts: [],
     settings: {
         theme: AppThemes.System,
         notifications: true,

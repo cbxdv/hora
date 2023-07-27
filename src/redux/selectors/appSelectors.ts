@@ -15,3 +15,5 @@ export const selectAppSettings = (state: IState) => state.app.settings
 export const selectOpenAtStartup = (state: IState) => state.app.settings.openAtStartup
 
 export const selectAppNotifications = (state: IState) => state.app.settings.notifications
+
+export const selectToasts = (state: IState) => state.app.toasts
