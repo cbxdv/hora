@@ -2,10 +2,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import React, { useEffect } from 'react'
 import { ThemeProvider, styled } from 'styled-components'
 
+import { AppThemes, ToastTypes } from '@appTypes/AppInterfaces'
+
 import BlockForm from '@components/BlockForm'
 import Header from '@components/Header'
 import Loader from '@components/Loader'
 import SettingsComponent from '@components/SettingsComponent'
+import Sidebar from '@components/Sidebar'
 import SubstitutionForm from '@components/SubstitutionForm'
 import { ToastsContainer } from '@components/Toast'
 import WeekViewer from '@components/WeekViewer'
@@ -29,8 +32,6 @@ import { lightThemeColors, darkThemeColors } from '@styles/styleConstants'
 import '@styles/fonts.css'
 
 import { stopAllServiceTimers } from '@utils/serviceUtils'
-import { AppThemes, ToastTypes } from '@appTypes/AppInterfaces'
-import Sidebar from '@components/Sidebar'
 
 const App = () => {
     const dispatch = useAppDispatch()
@@ -86,7 +87,7 @@ const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         const keyBindHandler = (event: KeyboardEvent) => {
             if (event.ctrlKey && event.key.toLowerCase() === `l`) {
                 if (appTheme === AppThemes.System) {
-                    dispatch(toastAdded({ message: 'Theme follows the System Theme', type: ToastTypes.Warn }))
+                    dispatch(toastAdded({ message: `Theme follows the System Theme`, type: ToastTypes.Warn }))
                     return
                 }
                 dispatch(appThemeToggled())

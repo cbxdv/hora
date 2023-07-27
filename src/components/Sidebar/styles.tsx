@@ -1,6 +1,7 @@
-import { buttonWithStyles, flexCenter } from '@styles/styleDefinitions'
 import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
+
+import { buttonWithStyles, flexCenter } from '@styles/styleDefinitions'
 
 export const SidebarDrop = styled(motion.div).attrs(() => ({
     initial: { opacity: 0 },
@@ -21,7 +22,7 @@ export const SidebarContainer = styled(motion.div).attrs(() => ({
     initial: { translateX: -250 },
     animate: { translateX: 0 },
     exit: { translateX: -250 },
-    transition: { ease: 'easeIn', duration: 0.1 }
+    transition: { ease: `easeIn`, duration: 0.1 }
 }))`
     width: 250px;
     height: 100vh;

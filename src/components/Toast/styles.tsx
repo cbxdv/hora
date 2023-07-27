@@ -1,13 +1,15 @@
-import { ToastTypes } from '@appTypes/AppInterfaces'
-import { flexCenter, hoverAndTapMotion, subtleBorder } from '@styles/styleDefinitions'
 import { motion } from 'framer-motion'
 import { styled } from 'styled-components'
+
+import { ToastTypes } from '@appTypes/AppInterfaces'
+
+import { flexCenter, hoverAndTapMotion, subtleBorder } from '@styles/styleDefinitions'
 
 export const ToastsContainerDiv = styled.div`
     width: 100%;
     position: absolute;
     bottom: 60px;
-    ${flexCenter({ flexDirection: 'column' })};
+    ${flexCenter({ flexDirection: `column` })};
     z-index: 5;
 `
 

@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { nanoid } from 'nanoid'
 
 import { AppThemes, Themes } from '@appTypes/AppInterfaces'
+import { AppInitPayload, AppThemePayload, ToastAddedPayload, ToastContentPayload } from '@appTypes/AppPayloadTypes'
 
 import { AppIS } from '@redux/initialStates'
-import { AppInitPayload, AppThemePayload, ToastAddedPayload, ToastContentPayload } from '@appTypes/AppPayloadTypes'
-import { nanoid } from 'nanoid'
 
 const appSlice = createSlice({
     name: `app`,

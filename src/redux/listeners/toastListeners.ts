@@ -8,7 +8,7 @@ const toastListeners: AppListeners = {
         startListening({
             actionCreator: ttBlockAdded,
             effect: (_, listenerApi) => {
-                listenerApi.dispatch(toastAdded({ message: 'New block added', type: ToastTypes.Info }))
+                listenerApi.dispatch(toastAdded({ message: `New block added`, type: ToastTypes.Info }))
             }
         })
     },
@@ -17,7 +17,7 @@ const toastListeners: AppListeners = {
         startListening({
             actionCreator: ttBlockDeleted,
             effect: (_, listenerApi) => {
-                listenerApi.dispatch(toastAdded({ message: 'Block deleted', type: ToastTypes.Danger }))
+                listenerApi.dispatch(toastAdded({ message: `Block deleted`, type: ToastTypes.Danger }))
             }
         })
     },
@@ -28,7 +28,7 @@ const toastListeners: AppListeners = {
             effect: (_, listenerApi) => {
                 listenerApi.dispatch(
                     toastAdded({
-                        message: 'Block cancelled. No notification will be sent',
+                        message: `Block cancelled. No notification will be sent`,
                         type: ToastTypes.Warn
                     })
                 )
@@ -40,7 +40,7 @@ const toastListeners: AppListeners = {
         startListening({
             actionCreator: ttCancellationDeleted,
             effect: (_, listenerApi) => {
-                listenerApi.dispatch(toastAdded({ message: 'Block uncancelled', type: ToastTypes.Info }))
+                listenerApi.dispatch(toastAdded({ message: `Block uncancelled`, type: ToastTypes.Info }))
             }
         })
     }

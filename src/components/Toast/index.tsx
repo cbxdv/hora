@@ -1,16 +1,18 @@
+import { AnimatePresence } from 'framer-motion'
+import { useEffect } from 'react'
+
 import { IToastContent, ToastTypes } from '@appTypes/AppInterfaces'
+
 import CrossIcon from '@assets/icons/Cross.svg'
+import DangerIcon from '@assets/icons/Danger.svg'
+import InformationIcon from '@assets/icons/Information.svg'
+import WarningIcon from '@assets/icons/Warning.svg'
+
 import { selectToasts } from '@redux/selectors/appSelectors'
 import { toastRemoved } from '@redux/slices/appSlice'
 import { useAppDispatch, useAppSelector } from '@redux/store'
-import { useEffect } from 'react'
 
 import * as s from './styles'
-import { AnimatePresence } from 'framer-motion'
-
-import InformationIcon from '@assets/icons/Information.svg'
-import DangerIcon from '@assets/icons/Danger.svg'
-import WarningIcon from '@assets/icons/Warning.svg'
 
 const Toast: React.FC<{ toast: IToastContent }> = ({ toast }) => {
     const dispatch = useAppDispatch()
