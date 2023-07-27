@@ -42,7 +42,10 @@ export const DropdownItem = styled(motion.div).attrs(({ theme }) => ({
     & > svg {
         height: 16px;
         width: 16px;
-        stroke: ${props => props.theme.text};
-        stroke-width: 3px;
+
+        & > path {
+            stroke: ${props => props.theme.text};
+            stroke-width: 3px;
+        }
     }
 `

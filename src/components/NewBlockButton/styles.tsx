@@ -12,8 +12,7 @@ export const ButtonIconContainer = styled.div`
     width: 20px;
     margin-right: 10px;
 
-    & > svg {
-        fill: none;
+    & > svg > path {
         stroke: ${({ theme }) => theme.text};
         stroke-width: 2px;
     }

@@ -76,8 +76,6 @@ export const CloseContainer = styled(motion.div).attrs(({ theme }) => ({
     ...hoverAndTapMotion(theme.name)
 }))<{ $type: ToastTypes }>`
     ${flexCenter()};
-    /* height: 20px; */
-    /* width: 20px; */
     cursor: pointer;
     margin-left: 20px;
 

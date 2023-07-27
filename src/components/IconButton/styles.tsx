@@ -16,8 +16,10 @@ export const IconContainer = styled.div`
     & > svg {
         height: 20px;
         width: 20px;
-        stroke-width: 2px;
-        fill: none;
-        stroke: ${({ theme }) => theme.text};
+
+        & > path {
+            stroke-width: 2px;
+            stroke: ${({ theme }) => theme.text};
+        }
     }
 `

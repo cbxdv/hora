@@ -38,9 +38,11 @@ export const InputValueArrowContainer = styled.button<{ $isVisible: boolean }>`
         pointer-events: none;
         height: 14px;
         width: 14px;
-        fill: none;
-        stroke: ${({ theme }) => theme.text};
-        stroke-width: 2px;
+
+        & > path {
+            stroke: ${({ theme }) => theme.text};
+            stroke-width: 2px;
+        }
     }
 `
 

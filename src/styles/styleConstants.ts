@@ -22,7 +22,7 @@ export const darkThemeColors: StyledTheme = {
     shade1: `#25262D`,
     shade2: `#464A53`,
     selected: `#393A41`,
-    contextBackground: `rgba(70, 74, 83, 0.8)`,
+    contextBackground: `rgba(70, 74, 83, 0.9)`,
     modalBackground: `rgba(255, 255, 255, 0.05)`,
     shadow: `0px 0px 4px rgba(0, 0, 0, 0.25)`
 }

@@ -55,9 +55,11 @@ export const CloseButton = styled.div`
     & > svg {
         width: 20px;
         height: 20px;
-        fill: none;
-        stroke: ${props => props.theme.text};
-        stroke-width: 2px;
+
+        & > path {
+            stroke: ${props => props.theme.text};
+            stroke-width: 2px;
+        }
     }
 `
 

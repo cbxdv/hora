@@ -37,9 +37,11 @@ export const TitleIconContainer = styled.div`
     & > svg {
         height: 20px;
         width: 20px;
-        fill: none;
-        stroke: ${({ theme }) => theme.text};
-        stroke-width: 2px;
+
+        & > path {
+            stroke: ${({ theme }) => theme.text};
+            stroke-width: 2px;
+        }
     }
 `
 
@@ -181,8 +183,10 @@ export const AdditionalsTrashContainer = styled.div`
         ${flexCenter()};
         width: 12px;
         height: 12px;
-        fill: none;
-        stroke: #c76162;
-        stroke-width: 2px;
+
+        & > path {
+            stroke: #ff9596;
+            stroke-width: 2px;
+        }
     }
 `

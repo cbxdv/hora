@@ -31,7 +31,7 @@ export const MenuItem = styled(motion.div).attrs(({ theme }) => ({
     padding: 5px 10px;
     background: transparent;
     border-radius: 8px;
-    color: ${props => (props.$danger ? `#C76162` : props.theme.text)};
+    color: ${props => (props.$danger ? `#FF9596` : props.theme.text)};
     font-size: 13px;
     margin-bottom: 5px;
     border: 0.1px solid transparent;
@@ -46,8 +46,10 @@ export const MenuItemIcon = styled.div<{ $danger?: boolean }>`
     & > svg {
         height: 16px;
         width: 16px;
-        fill: none;
-        stroke: ${({ theme, $danger }) => ($danger ? `#C76162` : theme.text)};
-        stroke-width: 2px;
+
+        & > path {
+            stroke: ${({ theme, $danger }) => ($danger ? `#FF9596` : theme.text)};
+            stroke-width: 2px;
+        }
     }
 `

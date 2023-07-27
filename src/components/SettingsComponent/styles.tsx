@@ -84,9 +84,11 @@ export const CheckBoxContainer = styled.div`
     & > svg {
         height: 15px;
         width: 15px;
-        fill: none;
-        stroke: ${({ theme }) => theme.text};
-        stroke-width: 3px;
+
+        & > path {
+            stroke: ${({ theme }) => theme.text};
+            stroke-width: 3px;
+        }
     }
 `
 
@@ -122,7 +124,10 @@ export const LogoTextContainer = styled.div`
 
     & > svg {
         height: 30px;
-        fill: ${({ theme }) => theme.text};
+
+        & > path {
+            fill: ${({ theme }) => theme.text};
+        }
     }
 `
 
@@ -215,8 +220,10 @@ export const SubElementAction = styled(motion.div).attrs(() => ({
         ${flexCenter()};
         width: 12px;
         height: 12px;
-        fill: none;
-        stroke: #c76162;
-        stroke-width: 2px;
+
+        & > path {
+            stroke: #c76162;
+            stroke-width: 2px;
+        }
     }
 `
