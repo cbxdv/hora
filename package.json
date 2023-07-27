@@ -1,7 +1,7 @@
 {
     "name": "hora",
     "productName": "hora",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "An utility app",
     "main": ".webpack/main",
     "scripts": {
